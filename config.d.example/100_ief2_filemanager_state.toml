@@ -1,0 +1,61 @@
+# --------------------------------------------------
+# iEF2 + file-manager stateful behavior (highest precedence)
+# --------------------------------------------------
+[[keymap]]
+name = "prod_ief2_dolphin_new_folder_pref10"
+condition = "wm_class =~ '(?i)^dolphin$|^org.kde.dolphin$' and settings.DolphinUseF10NewFolder"
+[keymap.mappings]
+"Super-Shift-N" = ["SetSetting(Enter2Ent_Cmd=false)", "F10"]
+
+[[keymap]]
+name = "prod_ief2_dolphin_new_folder_modern"
+condition = "wm_class =~ '(?i)^dolphin$|^org.kde.dolphin$' and not settings.DolphinUseF10NewFolder"
+[keymap.mappings]
+"Super-Shift-N" = ["SetSetting(Enter2Ent_Cmd=false)", "Shift-C-N"]
+
+[[keymap]]
+name = "prod_ief2_krusader_new_folder"
+condition = "wm_class =~ '(?i)^org.kde.krusader$|^krusader$'"
+[keymap.mappings]
+"Super-Shift-N" = ["SetSetting(Enter2Ent_Cmd=false)", "F7"]
+
+[[keymap]]
+name = "prod_ief2_nemo_delete_latch"
+condition = "wm_class =~ '(?i)^nemo$'"
+[keymap.mappings]
+"Super-Backspace" = ["SetSetting(Enter2Ent_Cmd=false)", "Delete"]
+
+[[keymap]]
+name = "prod_ief2_nautilus_find_no_latch"
+condition = "wm_class =~ '(?i)^org.gnome.nautilus$|^nautilus$'"
+[keymap.mappings]
+"Super-F" = "Ctrl-F"
+
+[[keymap]]
+name = "prod_ief2_filemanager_toggle_enter_true"
+condition = "wm_class =~ '(?i)nautilus|org.gnome.nautilus|nemo|thunar|dolphin|org.kde.dolphin|pcmanfm|pcmanfm-qt|krusader' and settings.Enter2Ent_Cmd"
+[keymap.mappings]
+"Enter" = ["SetSetting(Enter2Ent_Cmd=false)", "F2"]
+"Super-Shift-N" = ["SetSetting(Enter2Ent_Cmd=false)", "Shift-C-N"]
+"Super-L" = ["SetSetting(Enter2Ent_Cmd=false)", "Ctrl-L"]
+"Super-F" = ["SetSetting(Enter2Ent_Cmd=false)", "Ctrl-F"]
+"Esc" = ["SetSetting(Enter2Ent_Cmd=true)", "Esc"]
+"Super-Up" = ["SetSetting(Enter2Ent_Cmd=true)", "Alt-Up"]
+"Super-Down" = ["SetSetting(Enter2Ent_Cmd=true)", "Enter"]
+"Super-Left" = ["Alt-Left"]
+"Super-Right" = ["Alt-Right"]
+
+[[keymap]]
+name = "prod_ief2_filemanager_toggle_enter_false"
+condition = "wm_class =~ '(?i)nautilus|org.gnome.nautilus|nemo|thunar|dolphin|org.kde.dolphin|pcmanfm|pcmanfm-qt|krusader' and not settings.Enter2Ent_Cmd"
+[keymap.mappings]
+"Enter" = ["SetSetting(Enter2Ent_Cmd=true)", "Enter"]
+"Super-Shift-N" = ["SetSetting(Enter2Ent_Cmd=false)", "Shift-C-N"]
+"Super-L" = ["SetSetting(Enter2Ent_Cmd=false)", "Ctrl-L"]
+"Super-F" = ["SetSetting(Enter2Ent_Cmd=false)", "Ctrl-F"]
+"Esc" = ["SetSetting(Enter2Ent_Cmd=true)", "Esc"]
+"Super-Up" = ["SetSetting(Enter2Ent_Cmd=true)", "Alt-Up"]
+"Super-Down" = ["SetSetting(Enter2Ent_Cmd=true)", "Enter"]
+"Super-Left" = ["Home"]
+"Super-Right" = ["End"]
+

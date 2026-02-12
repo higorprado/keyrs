@@ -285,6 +285,7 @@ dependencies = [
  "keyrs-core",
  "parking_lot",
  "signal-hook",
+ "toml",
 ]
 
 [[package]]
