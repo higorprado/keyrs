@@ -11,7 +11,10 @@ scripts/keyrs-service.sh install
 
 This will:
 - install binary to `~/.local/bin/keyrs`
-- copy default `config.toml` and `settings.toml` into `~/.config/keyrs/` (if missing)
+- copy config fragments from `config.d.example/` to `~/.config/keyrs/config.d/` (if missing)
+- compose `~/.config/keyrs/config.toml` from `~/.config/keyrs/config.d/`
+- validate generated config before service activation
+- copy `settings.toml` into `~/.config/keyrs/` (if missing)
 - install and enable user systemd service `keyrs.service`
 
 ## Commands
@@ -28,7 +31,8 @@ scripts/keyrs-service.sh status
 ## Notes
 
 - Installer is idempotent.
-- Existing user config files are preserved unless `--force` is provided.
+- Existing `~/.config/keyrs/config.d/` and `settings.toml` are preserved unless `--force` is provided.
+- `config.toml` is always regenerated from `~/.config/keyrs/config.d/` during install.
 - `uninstall` removes the service unit but keeps binary/config by default.
 - Use `--dry-run` to inspect actions without applying changes.
 

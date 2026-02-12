@@ -8,6 +8,8 @@ SERVICE_NAME="keyrs.service"
 SERVICE_DIR="${HOME}/.config/systemd/user"
 SERVICE_PATH="${SERVICE_DIR}/${SERVICE_NAME}"
 CONFIG_DIR="${HOME}/.config/keyrs"
+CONFIG_SOURCE_DIR="${REPO_ROOT}/config.d.example"
+CONFIG_COMPOSE_DIR="${CONFIG_DIR}/config.d"
 BIN_DIR="${HOME}/.local/bin"
 TARGET_BIN="${BIN_DIR}/keyrs"
 
@@ -153,11 +155,17 @@ install_cmd() {
   run mkdir -p "${BIN_DIR}" "${CONFIG_DIR}" "${SERVICE_DIR}"
   run install -m 755 "${BIN_SOURCE}" "${TARGET_BIN}"
 
-  if [[ ! -f "${CONFIG_DIR}/config.toml" || "${FORCE}" == true ]]; then
-    run cp "${REPO_ROOT}/config.toml" "${CONFIG_DIR}/config.toml"
-    log "Installed config.toml"
+  if [[ ! -d "${CONFIG_SOURCE_DIR}" ]]; then
+    log "Missing config examples at ${CONFIG_SOURCE_DIR}"
+    exit 1
+  fi
+
+  if [[ ! -d "${CONFIG_COMPOSE_DIR}" || "${FORCE}" == true ]]; then
+    run mkdir -p "${CONFIG_COMPOSE_DIR}"
+    run cp -a "${CONFIG_SOURCE_DIR}/." "${CONFIG_COMPOSE_DIR}/"
+    log "Installed config fragments into ${CONFIG_COMPOSE_DIR}"
   else
-    log "Keeping existing ${CONFIG_DIR}/config.toml"
+    log "Keeping existing ${CONFIG_COMPOSE_DIR}"
   fi
 
   if [[ ! -f "${CONFIG_DIR}/settings.toml" || "${FORCE}" == true ]]; then
@@ -166,6 +174,10 @@ install_cmd() {
   else
     log "Keeping existing ${CONFIG_DIR}/settings.toml"
   fi
+
+  # Compose and validate final config before service activation.
+  run "${TARGET_BIN}" --compose-config "${CONFIG_COMPOSE_DIR}" --compose-output "${CONFIG_DIR}/config.toml"
+  run "${TARGET_BIN}" --check-config --config "${CONFIG_DIR}/config.toml"
 
   write_service_file
   run "${SYSTEMCTL_BIN}" --user daemon-reload
