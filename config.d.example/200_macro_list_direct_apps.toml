@@ -444,91 +444,6 @@ condition = "settings.forced_numpad and not (wm_class =~ '(?i)terminal|alacritty
 "Numlock" = "Escape"
 
 [[keymap]]
-name = "prod_phase12_general_gui_defaults"
-condition = "not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
-[keymap.mappings]
-"Shift-Super-Left_Brace" = "Ctrl-Page_Up"
-"Shift-Super-Right_Brace" = "Ctrl-Page_Down"
-"Super-Space" = "Alt-F1"
-"Super-F3" = "Super-d"
-"Ctrl-Super-f" = "Alt-F10"
-"Super-q" = "Alt-F4"
-"Alt-Tab" = ["Ignore"]
-"Super-Tab" = ["bind", "Combo(Alt-Tab)"]
-"Shift-Super-Tab" = ["bind", "Combo(Shift-Alt-Tab)"]
-"Super-Grave" = ["bind", "Combo(Alt-Grave)"]
-"Shift-Super-Grave" = ["bind", "Combo(Shift-Alt-Grave)"]
-"RAlt-Enter" = "Insert"
-"Super-a" = "Home"
-"Super-e" = "End"
-"Super-b" = "Left"
-"Super-f" = "Right"
-"Super-n" = "Down"
-"Super-p" = "Up"
-"Super-k" = ["Shift-End", "Backspace"]
-"Super-d" = "Delete"
-"Ctrl-Left" = "Home"
-"Shift-Ctrl-Left" = "Shift-Home"
-"Ctrl-Right" = "End"
-"Shift-Ctrl-Right" = "Shift-End"
-"Ctrl-Up" = "Ctrl-Home"
-"Shift-Ctrl-Up" = "Ctrl-Shift-Home"
-"Ctrl-Down" = "Ctrl-End"
-"Shift-Ctrl-Down" = "Ctrl-Shift-End"
-"Super-Backspace" = "Ctrl-Backspace"
-"Super-Delete" = "Ctrl-Delete"
-"Ctrl-Backspace" = "Ctrl-Shift-Backspace"
-"Alt-Delete" = "Ctrl-Delete"
-"Shift-Alt-Backspace" = "Ctrl-Backspace"
-"Shift-Alt-Delete" = "Ctrl-Delete"
-"Ctrl-Super-F1" = "Ctrl-Alt-F1"
-"Ctrl-Super-F2" = "Ctrl-Alt-F2"
-"Ctrl-Super-F3" = "Ctrl-Alt-F3"
-"Ctrl-Super-F4" = "Ctrl-Alt-F4"
-"Ctrl-Super-F5" = "Ctrl-Alt-F5"
-"Ctrl-Super-F6" = "Ctrl-Alt-F6"
-"Ctrl-Super-F7" = "Ctrl-Alt-F7"
-
-[[keymap]]
-name = "prod_core_general_shortcuts"
-condition = "not (wm_class =~ '(?i)jetbrains')"
-[keymap.mappings]
-"Super-a" = "Ctrl-a"
-"Super-b" = "Ctrl-b"
-"Super-c" = "Ctrl-c"
-"Super-d" = "Ctrl-d"
-"Super-e" = "Ctrl-e"
-"Super-f" = "Ctrl-f"
-"Super-g" = "Ctrl-g"
-"Super-h" = "Ctrl-h"
-"Super-i" = "Ctrl-i"
-"Super-j" = "Ctrl-j"
-"Super-k" = "Ctrl-k"
-"Super-l" = "Ctrl-l"
-"Super-m" = "Ctrl-m"
-"Super-n" = "Ctrl-n"
-"Super-o" = "Ctrl-o"
-"Super-p" = "Ctrl-p"
-"Super-q" = "Ctrl-q"
-"Super-r" = "Ctrl-r"
-"Super-s" = "Ctrl-s"
-"Super-t" = "Ctrl-t"
-"Super-u" = "Ctrl-u"
-"Super-v" = "Ctrl-v"
-"Super-w" = "Ctrl-w"
-"Super-x" = "Ctrl-x"
-"Super-y" = "Ctrl-y"
-"Super-z" = "Ctrl-z"
-"Super-backspace" = "Ctrl-Backspace"
-"Super-delete" = "Ctrl-Delete"
-"Super-left" = "Ctrl-left"
-"Super-right" = "Ctrl-right"
-"Shift-Super-left" = "Ctrl-Shift-left"
-"Shift-Super-right" = "Ctrl-Shift-right"
-"Shift-Alt-Backspace" = "Ctrl-Backspace"
-"Shift-Alt-Delete" = "Ctrl-Delete"
-
-[[keymap]]
 name = "prod_p8_firefox_settings_macro"
 condition = "wm_class =~ '(?i)firefox|librewolf|waterfox|zen'"
 [keymap.mappings]
@@ -624,4 +539,3 @@ name = "prod_p8_transmission_prefs"
 condition = "wm_class =~ '(?i)transmission'"
 [keymap.mappings]
 "Super-comma" = ["Alt-e", "p"]
-
