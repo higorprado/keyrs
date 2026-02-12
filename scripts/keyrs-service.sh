@@ -7,6 +7,8 @@ REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 SERVICE_NAME="keyrs.service"
 SERVICE_DIR="${HOME}/.config/systemd/user"
 SERVICE_PATH="${SERVICE_DIR}/${SERVICE_NAME}"
+UDEV_RULES_SOURCE="${REPO_ROOT}/dist/keyrs-udev.rules"
+UDEV_RULES_TARGET="/etc/udev/rules.d/99-keyrs.rules"
 CONFIG_DIR="${HOME}/.config/keyrs"
 CONFIG_SOURCE_DIR="${REPO_ROOT}/config.d.example"
 CONFIG_COMPOSE_DIR="${CONFIG_DIR}/config.d"
@@ -14,6 +16,7 @@ BIN_DIR="${HOME}/.local/bin"
 TARGET_BIN="${BIN_DIR}/keyrs"
 
 SYSTEMCTL_BIN="${SYSTEMCTL_BIN:-systemctl}"
+UDEVADM_BIN="${UDEVADM_BIN:-udevadm}"
 DRY_RUN=false
 FORCE=false
 ASSUME_YES=false
@@ -27,6 +30,8 @@ Usage:
 Commands:
   install      Install binary/config and enable/start user service
   uninstall    Stop/disable service and remove service file
+  install-udev Install keyrs udev rules (root/sudo required)
+  uninstall-udev Remove keyrs udev rules (root/sudo required)
   start        Start service
   stop         Stop service
   restart      Restart service
@@ -43,6 +48,7 @@ Examples:
   scripts/keyrs-service.sh install
   scripts/keyrs-service.sh install --bin ./target/release/keyrs --force
   scripts/keyrs-service.sh install --yes
+  scripts/keyrs-service.sh install-udev
   scripts/keyrs-service.sh restart
 USAGE
 }
@@ -62,6 +68,13 @@ run() {
 ensure_systemctl_user() {
   if ! command -v "${SYSTEMCTL_BIN}" >/dev/null 2>&1; then
     log "systemctl not found: ${SYSTEMCTL_BIN}"
+    exit 1
+  fi
+}
+
+ensure_udevadm() {
+  if ! command -v "${UDEVADM_BIN}" >/dev/null 2>&1; then
+    log "udevadm not found: ${UDEVADM_BIN}"
     exit 1
   fi
 }
@@ -151,6 +164,26 @@ EOF
   esac
 }
 
+run_privileged() {
+  if ${DRY_RUN}; then
+    printf '[dry-run] %s\n' "$*"
+    return 0
+  fi
+
+  if [[ "${EUID}" -eq 0 ]]; then
+    "$@"
+    return 0
+  fi
+
+  if command -v sudo >/dev/null 2>&1; then
+    sudo "$@"
+    return 0
+  fi
+
+  log "This action requires root privileges (run as root or install sudo)."
+  exit 1
+}
+
 write_service_file() {
   local tmp
   tmp="$(mktemp)"
@@ -234,6 +267,7 @@ install_cmd() {
   run "${SYSTEMCTL_BIN}" --user --no-pager --full status "${SERVICE_NAME}"
 
   log "Install complete"
+  log "Recommended once per machine: scripts/keyrs-service.sh install-udev"
 }
 
 uninstall_cmd() {
@@ -253,6 +287,46 @@ uninstall_cmd() {
   fi
   run "${SYSTEMCTL_BIN}" --user daemon-reload
   log "Uninstall complete (config and binary kept)"
+}
+
+install_udev_cmd() {
+  ensure_udevadm
+
+  if [[ ! -f "${UDEV_RULES_SOURCE}" ]]; then
+    log "Missing udev rules source: ${UDEV_RULES_SOURCE}"
+    exit 1
+  fi
+
+  confirm_or_abort \
+    "About to install keyrs udev rules:" \
+    "  - Rules source: ${UDEV_RULES_SOURCE}
+  - Rules target: ${UDEV_RULES_TARGET}
+  - Will run: udevadm control --reload-rules
+  - Will run: udevadm trigger --subsystem-match=input
+  - Root privileges are required."
+
+  log "Installing keyrs udev rules"
+  run_privileged install -D -m 0644 "${UDEV_RULES_SOURCE}" "${UDEV_RULES_TARGET}"
+  run_privileged "${UDEVADM_BIN}" control --reload-rules
+  run_privileged "${UDEVADM_BIN}" trigger --subsystem-match=input
+  log "udev rules installed. Re-login if permissions are still denied."
+}
+
+uninstall_udev_cmd() {
+  ensure_udevadm
+
+  confirm_or_abort \
+    "About to remove keyrs udev rules:" \
+    "  - Rules target: ${UDEV_RULES_TARGET}
+  - Will run: udevadm control --reload-rules
+  - Will run: udevadm trigger --subsystem-match=input
+  - Root privileges are required."
+
+  log "Removing keyrs udev rules"
+  run_privileged rm -f "${UDEV_RULES_TARGET}"
+  run_privileged "${UDEVADM_BIN}" control --reload-rules
+  run_privileged "${UDEVADM_BIN}" trigger --subsystem-match=input
+  log "udev rules removed."
 }
 
 start_cmd() {
@@ -280,6 +354,8 @@ main() {
   case "${COMMAND}" in
     install) install_cmd ;;
     uninstall) uninstall_cmd ;;
+    install-udev) install_udev_cmd ;;
+    uninstall-udev) uninstall_udev_cmd ;;
     start) start_cmd ;;
     stop) stop_cmd ;;
     restart) restart_cmd ;;

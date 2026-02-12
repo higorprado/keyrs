@@ -1,0 +1,5 @@
+# keyrs: allow active local user session to access keyboard events and /dev/uinput.
+# Install to: /etc/udev/rules.d/99-keyrs.rules
+
+KERNEL=="uinput", MODE="0660", GROUP="input", OPTIONS+="static_node=uinput", TAG+="uaccess"
+SUBSYSTEM=="input", KERNEL=="event*", ENV{ID_INPUT_KEYBOARD}=="1", TAG+="uaccess"
