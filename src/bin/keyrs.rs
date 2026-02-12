@@ -747,6 +747,58 @@ mod tests {
         let _ = std::fs::remove_dir_all(&base);
     }
 
+    #[test]
+    #[cfg(feature = "pure-rust")]
+    fn test_default_compose_output_uses_parent_directory() {
+        let dir = PathBuf::from("./config.d.example");
+        let out = default_compose_output(&dir);
+        assert_eq!(out, PathBuf::from("./config.toml"));
+    }
+
+    #[test]
+    #[cfg(feature = "pure-rust")]
+    fn test_compose_config_dir_orders_by_filename_and_merges_modmap_default() {
+        let base = std::env::temp_dir().join(format!(
+            "keyrs-compose-order-test-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .expect("time")
+                .as_nanos()
+        ));
+        let dir = base.join("config.d");
+        std::fs::create_dir_all(&dir).expect("create config dir");
+
+        // Intentionally write files out of lexical order to verify sorting.
+        std::fs::write(
+            dir.join("200_keymaps.toml"),
+            "[[keymap]]\nname = \"later\"\n[keymap.mappings]\n\"Super-v\" = \"Ctrl-v\"\n",
+        )
+        .expect("write keymaps");
+        std::fs::write(
+            dir.join("010_base.toml"),
+            "[modmap.default]\nCAPSLOCK = \"RIGHT_CTRL\"\n",
+        )
+        .expect("write base");
+        std::fs::write(
+            dir.join("020_modmap_override.toml"),
+            "[modmap.default]\nCAPSLOCK = \"CAPSLOCK\"\n",
+        )
+        .expect("write override");
+
+        let out = base.join("config.toml");
+        compose_config_dir(&dir, &out).expect("compose");
+
+        let rendered = std::fs::read_to_string(&out).expect("read output");
+        // Later fragment should override earlier modmap.default key.
+        assert!(rendered.contains("CAPSLOCK = \"CAPSLOCK\""));
+        // Keymap must be present after merge.
+        assert!(rendered.contains("name = \"later\""));
+
+        let _ = std::fs::remove_dir_all(&base);
+    }
+
+    #[test]
+    #[cfg(feature = "pure-rust")]
     fn test_resolve_keyboard_type_uses_override_first() {
         let settings = Settings::from_toml(
             r#"

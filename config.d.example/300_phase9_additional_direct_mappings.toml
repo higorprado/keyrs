@@ -1,0 +1,269 @@
+# --------------------------------------------------
+# Additional direct mappings (phase9 batch3)
+# --------------------------------------------------
+[[keymap]]
+name = "prod_phase9_kate_editor"
+condition = "wm_class =~ '(?i)^org.kde.kate$'"
+[keymap.mappings]
+"Super-comma" = "Shift-Ctrl-comma"
+"Super-g" = "Ctrl-g"
+"Super-Shift-g" = "F3"
+
+[[keymap]]
+name = "prod_phase9_xed_editor"
+condition = "wm_class =~ '(?i)^xed$'"
+[keymap.mappings]
+"Super-t" = "Ctrl-n"
+
+[[keymap]]
+name = "prod_phase9_kwrite_close_dialog"
+condition = "wm_class =~ '(?i)^kwrite$|^org.kde.kwrite$' and wm_name =~ '(?i)^Close Document.*KWrite$'"
+[keymap.mappings]
+"Super-d" = "Alt-d"
+"Super-s" = "Alt-s"
+
+[[keymap]]
+name = "prod_phase9_kwrite_editor"
+condition = "wm_class =~ '(?i)^kwrite$|^org.kde.kwrite$'"
+[keymap.mappings]
+"Super-comma" = "Shift-Ctrl-comma"
+"Super-t" = "Ctrl-n"
+"Super-g" = "F3"
+"Super-Shift-g" = "Shift-F3"
+"Super-Alt-g" = "Ctrl-g"
+"Super-Backspace" = "Ctrl-k"
+
+[[keymap]]
+name = "prod_phase9_gnome_text_editor"
+condition = "wm_class =~ '(?i)^gnome-text-editor$|^org.gnome.texteditor$'"
+[keymap.mappings]
+"Super-slash" = ["Ignore"]
+"Super-Alt-f" = "Ctrl-h"
+
+[[keymap]]
+name = "prod_phase9_zotero"
+condition = "wm_class =~ '(?i)zotero'"
+[keymap.mappings]
+"Super-Shift-Alt-i" = "Shift-Alt-Ctrl-i"
+
+[[keymap]]
+name = "prod_phase9_vivaldi_settings_dialog"
+condition = "wm_class =~ '(?i)^vivaldi.*$' and wm_name =~ '(?i)^Vivaldi Settings:.*Vivaldi$'"
+[keymap.mappings]
+"Esc" = "Alt-F4"
+
+[[keymap]]
+name = "prod_phase9_falkon"
+condition = "wm_class =~ '(?i)^org.kde.falkon$|^falkon$'"
+[keymap.mappings]
+"Super-comma" = "Shift-Ctrl-comma"
+
+[[keymap]]
+name = "prod_phase9_cmdw_dialog_fix_escape"
+condition = "wm_name =~ '(?i)close|confirm|delete|warning|alert|save'"
+[keymap.mappings]
+"Super-w" = ["SetSetting(Enter2Ent_Cmd=true)", "Esc"]
+
+[[keymap]]
+name = "prod_phase9_cmdw_dialog_fix_altf4"
+condition = "wm_name =~ '(?i)settings|preferences|properties|dialog' and not (wm_class =~ '(?i)vivaldi')"
+[keymap.mappings]
+"Super-w" = ["SetSetting(Enter2Ent_Cmd=true)", "Alt-F4"]
+
+[[keymap]]
+name = "prod_phase9_tab_nav_ctrlshifttab_apps"
+condition = "wm_class =~ '(?i)com.raggesilver.blackbox|com.system76.cosmicterm|org.gnome.console|console|deepin-terminal|hyper|kitty|kgx'"
+[keymap.mappings]
+"Shift-Super-Left_Brace" = "Ctrl-Shift-Tab"
+"Shift-Super-Right_Brace" = "Ctrl-Tab"
+"Shift-Super-Page_Up" = "Ctrl-Shift-Tab"
+"Shift-Super-Page_Down" = "Ctrl-Tab"
+"Shift-Super-Left" = "Ctrl-Shift-Tab"
+"Shift-Super-Right" = "Ctrl-Tab"
+
+[[keymap]]
+name = "prod_phase9_tab_nav_ctrlaltpg_apps"
+condition = "wm_class =~ '(?i)^gedit$|^xed$'"
+[keymap.mappings]
+"Shift-Super-Left_Brace" = "Ctrl-Alt-Page_Up"
+"Shift-Super-Right_Brace" = "Ctrl-Alt-Page_Down"
+"Shift-Super-Page_Up" = "Ctrl-Alt-Page_Up"
+"Shift-Super-Page_Down" = "Ctrl-Alt-Page_Down"
+
+[[keymap]]
+name = "prod_phase9_konsole_tab_switching"
+condition = "wm_class =~ '(?i)^konsole$|^org.kde.konsole$'"
+[keymap.mappings]
+"Shift-Ctrl-Tab" = ["bind", "Combo(Shift-Left)"]
+"Ctrl-Tab" = ["bind", "Combo(Shift-Right)"]
+"Ctrl-Grave" = ["bind", "Combo(Shift-Left)"]
+"Shift-Super-Left_Brace" = ["bind", "Combo(Shift-Left)"]
+"Shift-Super-Right_Brace" = ["bind", "Combo(Shift-Right)"]
+"Shift-Super-Page_Up" = ["bind", "Combo(Shift-Left)"]
+"Shift-Super-Page_Down" = ["bind", "Combo(Shift-Right)"]
+
+[[keymap]]
+name = "prod_phase9_elementary_terminal_tab_switching"
+condition = "wm_class =~ '(?i)^io.elementary.terminal$|^kitty$'"
+[keymap.mappings]
+"Shift-Ctrl-Tab" = ["bind", "Combo(Shift-Ctrl-Left)"]
+"Ctrl-Grave" = ["bind", "Combo(Shift-Ctrl-Left)"]
+"Ctrl-Tab" = ["bind", "Combo(Shift-Ctrl-Right)"]
+
+[[keymap]]
+name = "prod_phase16_jdownloader"
+condition = "wm_class =~ '(?i)jdownloader|java-lang-thread'"
+[keymap.mappings]
+"Shift-Super-Left_Brace" = ["bind", "Ctrl-Shift-Tab"]
+"Shift-Super-Right_Brace" = ["bind", "Ctrl-Tab"]
+"Shift-Super-Left" = ["bind", "Ctrl-Shift-Tab"]
+"Shift-Super-Right" = ["bind", "Ctrl-Tab"]
+"Super-i" = "Alt-Enter"
+"Super-Backspace" = "Delete"
+"Super-Comma" = "Ctrl-P"
+
+[[keymap]]
+name = "prod_phase16_fileman_caja"
+condition = "wm_class =~ '(?i)^caja$'"
+[keymap.mappings]
+"Ctrl-Super-o" = "Shift-Ctrl-Enter"
+
+[[keymap]]
+name = "prod_phase16_fileman_cosmic_files"
+condition = "wm_class =~ '(?i)^com.system76.cosmicfiles$'"
+[keymap.mappings]
+"Shift-Super-Left_Brace" = ["bind", "Shift-Ctrl-Tab"]
+"Shift-Super-Right_Brace" = ["bind", "Ctrl-Tab"]
+"Shift-Super-Left" = ["bind", "Shift-Ctrl-Tab"]
+"Shift-Super-Right" = ["bind", "Ctrl-Tab"]
+"Super-i" = "Space"
+"Alt-Enter" = "Space"
+
+[[keymap]]
+name = "prod_phase16_fileman_dde"
+condition = "wm_class =~ '(?i)^dde-file-manager$'"
+[keymap.mappings]
+"Super-i" = "Ctrl-i"
+"Super-Comma" = ["Ignore"]
+"Super-Up" = "Ctrl-Up"
+"Shift-Super-Left_Brace" = ["bind", "Ctrl-Shift-Tab"]
+"Shift-Super-Right_Brace" = ["bind", "Ctrl-Tab"]
+"Shift-Super-Left" = ["bind", "Ctrl-Shift-Tab"]
+"Shift-Super-Right" = ["bind", "Ctrl-Tab"]
+
+[[keymap]]
+name = "prod_phase16_fileman_dolphin_pre_kf6"
+condition = "wm_class =~ '(?i)^dolphin$|^org.kde.dolphin$' and settings.DesktopKde and settings.KdeVersionPre6"
+[keymap.mappings]
+"Shift-Super-n" = ["SetSetting(Enter2Ent_Cmd=false)", "F10"]
+
+[[keymap]]
+name = "prod_phase16_fileman_dolphin_dialogs"
+condition = "wm_class =~ '(?i)^dolphin$|^org.kde.dolphin$' and wm_name =~ '(?i)edit places entry|create new file|folder already exists|file already exists'"
+[keymap.mappings]
+"Enter" = "Enter"
+
+[[keymap]]
+name = "prod_phase16_fileman_dolphin"
+condition = "wm_class =~ '(?i)^dolphin$|^org.kde.dolphin$'"
+[keymap.mappings]
+"Super-r" = "F5"
+"Super-2" = "Ctrl-3"
+"Super-3" = "Ctrl-2"
+"Ctrl-Super-o" = "Shift-Ctrl-o"
+"Shift-Super-n" = ["SetSetting(Enter2Ent_Cmd=false)", "Shift-Ctrl-n"]
+"Super-Comma" = "Shift-Ctrl-Comma"
+
+[[keymap]]
+name = "prod_phase16_fileman_pantheon"
+condition = "wm_class =~ '(?i)^io.elementary.files$'"
+[keymap.mappings]
+"Ctrl-Super-o" = "Shift-Enter"
+"Super-Comma" = ["Ignore"]
+
+[[keymap]]
+name = "prod_phase16_fileman_krusader"
+condition = "wm_class =~ '(?i)^org.kde.krusader$|^krusader$'"
+[keymap.mappings]
+"Shift-Super-dot" = "Alt-dot"
+"Shift-Super-n" = ["SetSetting(Enter2Ent_Cmd=false)", "F7"]
+"Super-1" = ["Ignore"]
+"Super-2" = "Alt-Shift-d"
+"Super-3" = "Alt-Shift-b"
+"Super-4" = ["Ignore"]
+"Super-Backspace" = ["Delete", "Delay(500)", "Tab", "Delay(500)", "Enter"]
+
+[[keymap]]
+name = "prod_phase16_fileman_nautilus_create_archive_dialog"
+condition = "wm_class =~ '(?i)^org.gnome.nautilus$|^nautilus$' and wm_name =~ '(?i)^create archive$'"
+[keymap.mappings]
+"Enter" = "Enter"
+
+[[keymap]]
+name = "prod_phase16_fileman_nautilus"
+condition = "wm_class =~ '(?i)^org.gnome.nautilus$|^nautilus$'"
+[keymap.mappings]
+"Super-1" = "Ctrl-2"
+"Super-2" = "Ctrl-1"
+"Ctrl-Super-o" = "Ctrl-Enter"
+"Super-Comma" = "Ctrl-Comma"
+"Super-f" = "Ctrl-f"
+
+[[keymap]]
+name = "prod_phase16_fileman_pcmanfmqt_desktop"
+condition = "wm_class =~ '(?i)^pcmanfm-qt$' and wm_name =~ '(?i)^pcmanfm-desktop.*$'"
+[keymap.mappings]
+"Enter" = "Enter"
+
+[[keymap]]
+name = "prod_phase16_fileman_pcmanfmqt"
+condition = "wm_class =~ '(?i)^pcmanfm-qt$'"
+[keymap.mappings]
+"Super-Backspace" = "Delete"
+"Super-1" = ["Alt-v", "Delay(100)", "v", "Delay(100)", "i"]
+"Super-2" = ["Alt-v", "Delay(100)", "v", "Delay(100)", "d"]
+"Super-3" = ["Alt-v", "Delay(100)", "v", "Delay(100)", "c"]
+"Super-4" = ["Alt-v", "Delay(100)", "v", "Delay(100)", "t"]
+
+[[keymap]]
+name = "prod_phase16_fileman_pcmanfm"
+condition = "wm_class =~ '(?i)^pcmanfm$|^pcmanfm-qt$'"
+[keymap.mappings]
+"Super-2" = "Ctrl-4"
+"Super-Backspace" = ["Delete", "Space"]
+"Super-f" = "Ctrl-f"
+
+[[keymap]]
+name = "prod_phase16_fileman_peony_qt"
+condition = "wm_class =~ '(?i)^peony-qt$'"
+[keymap.mappings]
+"Super-Comma" = ["Ignore"]
+"Super-Equal" = "Shift-Ctrl-Equal"
+"Shift-Super-Left_Brace" = ["bind", "Ctrl-Shift-Tab"]
+"Shift-Super-Right_Brace" = ["bind", "Ctrl-Tab"]
+"Shift-Super-Left" = ["bind", "Ctrl-Shift-Tab"]
+"Shift-Super-Right" = ["bind", "Ctrl-Tab"]
+
+[[keymap]]
+name = "prod_phase16_fileman_spacefm_find_dialog"
+condition = "wm_class =~ '(?i)^spacefm$' and wm_name =~ '(?i)find files'"
+[keymap.mappings]
+"Enter" = "Enter"
+"Esc" = "Alt-F4"
+"Super-w" = "Alt-F4"
+
+[[keymap]]
+name = "prod_phase16_fileman_spacefm"
+condition = "wm_class =~ '(?i)^spacefm$'"
+[keymap.mappings]
+"Super-Page_Up" = ["bind", "Ctrl-Shift-Tab"]
+"Super-Page_Down" = ["bind", "Ctrl-Tab"]
+"Shift-Super-Left_Brace" = ["bind", "Ctrl-Shift-Tab"]
+"Shift-Super-Right_Brace" = ["bind", "Ctrl-Tab"]
+"Shift-Super-Left" = ["bind", "Ctrl-Shift-Tab"]
+"Shift-Super-Right" = ["bind", "Ctrl-Tab"]
+"Shift-Super-n" = ["SetSetting(Enter2Ent_Cmd=false)", "Ctrl-f"]
+"Super-f" = ["Ignore"]
+"Super-Backspace" = ["Delete", "Space"]
+"Super-Comma" = ["Alt-v", "p"]
+

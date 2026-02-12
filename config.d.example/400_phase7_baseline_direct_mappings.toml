@@ -1,0 +1,202 @@
+# --------------------------------------------------
+# Baseline direct mappings (phase7 + phase7b2)
+# --------------------------------------------------
+[[keymap]]
+name = "prod_phase7_general_web_browsers"
+condition = "wm_class =~ 'firefox|librewolf|waterfox|zen|chrom|chrome|vivaldi|falkon'"
+[keymap.mappings]
+"Super-q" = "Ctrl-q"
+"Super-Alt-i" = "Ctrl-Shift-i"
+"Super-Alt-j" = "Ctrl-Shift-j"
+
+[[keymap]]
+name = "prod_phase7_chrome_overrides"
+condition = "wm_class =~ 'chrom|chrome|vivaldi|falkon'"
+[keymap.mappings]
+"Super-y" = "Ctrl-h"
+"Super-Alt-u" = "Ctrl-u"
+"Super-Shift-j" = "Ctrl-j"
+
+[[keymap]]
+name = "prod_phase7_filemanagers"
+condition = "wm_class =~ 'nautilus|dolphin|thunar|nemo|pcmanfm|krusader|spacefm|caja|cosmic|peony'"
+[keymap.mappings]
+"Super-i" = "Alt-Enter"
+"Shift-Super-dot" = "Ctrl-h"
+"Super-Backspace" = "Delete"
+"Super-Left" = "Alt-Left"
+"Super-Right" = "Alt-Right"
+"Super-Up" = "Alt-Up"
+"Super-Down" = "Enter"
+
+[[keymap]]
+name = "prod_phase17_jetbrains"
+condition = "wm_class =~ '(?i)jetbrains' and not (wm_class =~ '(?i)toolbox')"
+[keymap.mappings]
+"Ctrl-Key_0" = "Alt-Key_0"
+"Ctrl-Key_1" = "Alt-Key_1"
+"Ctrl-Key_2" = "Alt-Key_2"
+"Ctrl-Key_3" = "Alt-Key_3"
+"Ctrl-Key_4" = "Alt-Key_4"
+"Ctrl-Key_5" = "Alt-Key_5"
+"Ctrl-Key_6" = "Alt-Key_6"
+"Ctrl-Key_7" = "Alt-Key_7"
+"Ctrl-Key_8" = "Alt-Key_8"
+"Ctrl-Key_9" = "Alt-Key_9"
+"Super-Grave" = "Ctrl-Grave"
+"Ctrl-Comma" = "Ctrl-Alt-s"
+"Ctrl-Semicolon" = "Ctrl-Alt-Shift-s"
+"Ctrl-Alt-r" = "F9"
+"Ctrl-g" = "F3"
+"Ctrl-Shift-F3" = "Shift-F3"
+"Super-g" = "Alt-j"
+"Ctrl-Super-g" = "Ctrl-Alt-Shift-j"
+"Super-Shift-g" = "Alt-Shift-j"
+"Super-j" = "Ctrl-q"
+"Ctrl-n" = "Alt-Insert"
+"Super-o" = "Ctrl-o"
+"Super-i" = "Ctrl-i"
+"Alt-Up" = "Ctrl-w"
+"Alt-Down" = "Ctrl-Shift-w"
+"Super-Shift-q" = "Alt-q"
+"Super-Alt-o" = "Ctrl-Alt-o"
+"Super-Alt-i" = "Ctrl-Alt-i"
+"Ctrl-Backspace" = "Ctrl-y"
+"Super-Shift-j" = "Ctrl-Shift-j"
+"Alt-Delete" = "Ctrl-Delete"
+"Alt-Backspace" = "Ctrl-Backspace"
+"Ctrl-Shift-Equal" = "Ctrl-Shift-KPPLUS"
+"Ctrl-Minus" = "Ctrl-KPMINUS"
+"Ctrl-Shift-Minus" = "Ctrl-Shift-KPMINUS"
+"Ctrl-w" = "Ctrl-F4"
+"Ctrl-Delete" = "Alt-Delete"
+"Ctrl-t" = "Ctrl-Alt-Shift-t"
+"Ctrl-o" = "Ctrl-n"
+"Ctrl-Shift-o" = "Ctrl-Shift-n"
+"Ctrl-Alt-o" = "Ctrl-Alt-Shift-n"
+"Super-Right" = "Alt-Right"
+"Super-Left" = "Alt-Left"
+"Ctrl-l" = "Ctrl-g"
+"Alt-Space" = "Ctrl-Shift-i"
+"Ctrl-y" = "Ctrl-Shift-i"
+"Super-Shift-b" = "Ctrl-Shift-b"
+"Super-Up" = "Alt-Up"
+"Super-Down" = "Alt-Down"
+"Ctrl-Left_Brace" = "Alt-Shift-Left"
+"Ctrl-Right_Brace" = "Alt-Shift-Right"
+"Super-h" = "Ctrl-h"
+"Super-Alt-h" = "Ctrl-Alt-h"
+"Ctrl-Down" = "Ctrl-Enter"
+"Alt-Home" = "Alt-Home"
+"F2" = "F11"
+"Super-F3" = "Ctrl-F11"
+"Super-Key_0" = "Ctrl-Key_0"
+"Super-Key_1" = "Ctrl-Key_1"
+"Super-Key_2" = "Ctrl-Key_2"
+"Super-Key_3" = "Ctrl-Key_3"
+"Super-Key_4" = "Ctrl-Key_4"
+"Super-Key_5" = "Ctrl-Key_5"
+"Super-Key_6" = "Ctrl-Key_6"
+"Super-Key_7" = "Ctrl-Key_7"
+"Super-Key_8" = "Ctrl-Key_8"
+"Super-Key_9" = "Ctrl-Key_9"
+"Ctrl-F3" = "Shift-F11"
+"Super-Alt-r" = "Alt-Shift-F10"
+"Super-Alt-d" = "Alt-Shift-F9"
+"Super-r" = "Shift-F10"
+"Super-d" = "Shift-F9"
+"Super-Shift-r" = "Ctrl-Shift-F10"
+"Super-Shift-d" = "Ctrl-Shift-F9"
+"Super-v" = "Alt-Grave"
+"Super-c" = "Ctrl-c"
+
+[[keymap]]
+name = "prod_phase7_wordwise_non_vscode"
+condition = "not (wm_class =~ 'code|code-oss|vscodium|cursor')"
+[keymap.mappings]
+"Alt-Left" = "Ctrl-Left"
+"Alt-Shift-Left" = "Ctrl-Shift-Left"
+"Alt-Right" = "Ctrl-Right"
+"Alt-Shift-Right" = "Ctrl-Shift-Right"
+
+[[keymap]]
+name = "prod_phase7_vscode_overrides"
+condition = "wm_class =~ 'code|code-oss|vscodium|cursor'"
+[keymap.mappings]
+"Super-c" = "Ctrl-c"
+"Super-x" = "Ctrl-x"
+"Super-dot" = "Ctrl-dot"
+"Super-Grave" = "Ctrl-Grave"
+
+[[keymap]]
+name = "prod_phase7b2_thunderbird"
+condition = "wm_class =~ 'thunderbird|org.mozilla.thunderbird'"
+[keymap.mappings]
+"Alt-Super-i" = "Ctrl-Shift-i"
+"Super-Alt-Left" = "Ctrl-Page_Up"
+"Super-Alt-Right" = "Ctrl-Page_Down"
+
+[[keymap]]
+name = "prod_phase7b2_angry_ip_scanner"
+condition = "wm_class =~ 'angry.*ip.*scanner'"
+[keymap.mappings]
+"Super-comma" = "Ctrl-Shift-p"
+"Super-i" = "Alt-Enter"
+"Super-h" = "Ctrl-h"
+"Shift-Super-i" = "Ctrl-i"
+
+[[keymap]]
+name = "prod_phase7b2_transmission_partial"
+condition = "wm_class =~ 'transmission'"
+[keymap.mappings]
+"Super-i" = "Alt-Enter"
+
+[[keymap]]
+name = "prod_phase7b2_totem"
+condition = "wm_class =~ '^totem$'"
+[keymap.mappings]
+"Super-dot" = "Ctrl-q"
+
+[[keymap]]
+name = "prod_phase7b2_eog"
+condition = "wm_class =~ '^eog$'"
+[keymap.mappings]
+"Super-i" = "Alt-Enter"
+
+[[keymap]]
+name = "prod_phase7b2_libreoffice_writer"
+condition = "wm_class =~ 'libreoffice-writer'"
+[keymap.mappings]
+"Super-comma" = "Alt-F12"
+
+[[keymap]]
+name = "prod_phase7b2_thunar_partial"
+condition = "wm_class =~ '^thunar$'"
+[keymap.mappings]
+"Super-o" = "Ctrl-Shift-p"
+"Super-f" = "Ctrl-f"
+
+[[keymap]]
+name = "prod_phase7b2_xdg_file_dialogs"
+condition = "wm_class =~ 'xdg-desktop-portal-gnome|firefox|librewolf|waterfox|zen' and wm_name =~ 'Open File|Save As'"
+[keymap.mappings]
+"Super-Left" = "Alt-Left"
+"Super-Right" = "Alt-Right"
+"Super-Up" = "Alt-Up"
+"Super-Down" = "Enter"
+
+[[keymap]]
+name = "prod_phase7b2_firefox_overrides_partial"
+condition = "wm_class =~ 'firefox|librewolf|waterfox|zen'"
+[keymap.mappings]
+"Shift-Super-n" = "Shift-Ctrl-p"
+"Super-1" = "Alt-1"
+"Super-2" = "Alt-2"
+"Super-3" = "Alt-3"
+"Super-4" = "Alt-4"
+"Super-5" = "Alt-5"
+"Super-6" = "Alt-6"
+"Super-7" = "Alt-7"
+"Super-8" = "Alt-8"
+"Super-9" = "Alt-9"
+
