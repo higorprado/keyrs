@@ -154,12 +154,12 @@ mappings = { LEFT_CTRL = "LEFT_CTRL", LEFT_META = "LEFT_ALT", LEFT_ALT = "RIGHT_
 [[modmap.conditionals]]
 name = "prod_modmap_terms_mac_multi_lang_off"
 condition = "not settings.multi_lang and keyboard_type =~ 'Mac' and wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal'"
-mappings = { RIGHT_META = "RIGHT_CTRL", RIGHT_CTRL = "LEFT_CTRL" }
+mappings = { LEFT_META = "RIGHT_CTRL", RIGHT_META = "RIGHT_CTRL", RIGHT_CTRL = "LEFT_CTRL" }
 
 [[modmap.conditionals]]
 name = "prod_modmap_terms_mac"
 condition = "keyboard_type =~ 'Mac' and wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal'"
-mappings = { LEFT_CTRL = "LEFT_CTRL", LEFT_ALT = "LEFT_ALT", LEFT_META = "LEFT_META", RIGHT_ALT = "RIGHT_ALT" }
+mappings = { LEFT_CTRL = "LEFT_CTRL", LEFT_ALT = "LEFT_ALT", LEFT_META = "RIGHT_CTRL", RIGHT_ALT = "RIGHT_ALT", RIGHT_META = "RIGHT_CTRL" }
 
 
 # --------------------------------------------------

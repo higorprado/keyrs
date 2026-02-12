@@ -968,9 +968,15 @@ impl TransformEngine {
             }
         }
 
-        // Get updated modifier state (now includes this key's remapped value if it's a modifier)
+        // Get updated modifier state (modifiers are stored as physical keys in keystore).
         let pressed_mods = self.keystore.read().get_pressed_mods_keys();
-        let shift_pressed = pressed_mods
+        // Also compute logical (modmapped) modifiers for fallback matching, so default
+        // Super->Ctrl behavior works unless an explicit Super-* mapping is present.
+        let logical_pressed_mods: Vec<Key> = pressed_mods
+            .iter()
+            .map(|k| self.lookup_modmap(*k, &modifier_snapshot))
+            .collect();
+        let shift_pressed = logical_pressed_mods
             .iter()
             .any(|k| *k == Key::from(42) || *k == Key::from(54));
 
@@ -991,8 +997,19 @@ impl TransformEngine {
             }
         }
 
-        // Combo matching with full modifier expansion
-        let combo_result = self.find_combo_expanded(&pressed_mods, modmapped_key);
+        // Combo matching with precedence:
+        // 1) physical modifiers (explicit Super-* exceptions)
+        // 2) logical/modmapped modifiers (default Super->Ctrl behavior)
+        let mut combo_result = self.find_combo_expanded(&pressed_mods, modmapped_key);
+        let mut combo_mods = pressed_mods.clone();
+        if matches!(combo_result, ComboMatchResult::NotFound) && logical_pressed_mods != pressed_mods
+        {
+            let logical_result = self.find_combo_expanded(&logical_pressed_mods, modmapped_key);
+            if !matches!(logical_result, ComboMatchResult::NotFound) {
+                combo_result = logical_result;
+                combo_mods = logical_pressed_mods.clone();
+            }
+        }
 
         let result = match combo_result {
             ComboMatchResult::FoundKey(output_key) => {
@@ -1002,7 +1019,7 @@ impl TransformEngine {
                 // Check if this is a release of a key that was already matched as a combo
                 // This prevents duplicate paste events when releasing a key while modifiers are held
                 if action == Action::Release {
-                    let combo_key = (pressed_mods.clone(), output_key);
+                    let combo_key = (combo_mods.clone(), output_key);
                     if self.active_combos.contains(&combo_key) {
                         // Already matched this combo on press, just pass through the release
                         // This prevents duplicate output on release
@@ -1014,7 +1031,7 @@ impl TransformEngine {
 
                 // Track this combo as active on Press (but not for modifier-only combos)
                 if action == Action::Press {
-                    let combo_key = (pressed_mods.clone(), output_key);
+                    let combo_key = (combo_mods.clone(), output_key);
                     self.active_combos.insert(combo_key);
                 }
 
@@ -1030,7 +1047,7 @@ impl TransformEngine {
                 }
                 // Same fix for FoundCombo - prevent duplicate on Release
                 if action == Action::Release {
-                    let combo_key = (pressed_mods.clone(), combo.key());
+                    let combo_key = (combo_mods.clone(), combo.key());
                     if self.active_combos.contains(&combo_key) {
                         self.active_combos.remove(&combo_key);
                         return TransformResult::Suppress;
@@ -1039,7 +1056,7 @@ impl TransformEngine {
 
                 // Track this combo as active on Press
                 if action == Action::Press {
-                    let combo_key = (pressed_mods.clone(), combo.key());
+                    let combo_key = (combo_mods.clone(), combo.key());
                     self.active_combos.insert(combo_key);
                 }
 
@@ -2065,6 +2082,72 @@ mod tests {
         // Combo must still match Super-comma even though Super is modmapped.
         let comma_press = engine.process_event(Key::from(51), Action::Press);
         assert_eq!(comma_press, TransformResult::ComboKey(Key::from(46)));
+    }
+
+    #[test]
+    #[cfg(feature = "pure-rust")]
+    fn test_super_alt_combo_falls_back_to_ctrl_alt_when_not_explicitly_overridden() {
+        use crate::Combo;
+
+        let mut default_map = HashMap::new();
+        default_map.insert(Key::from(125), Key::from(29)); // LEFT_META -> LEFT_CTRL
+
+        let ctrl = Modifier::from_alias("Ctrl").expect("Ctrl modifier should exist");
+        let alt = Modifier::from_alias("Alt").expect("Alt modifier should exist");
+        let mut keymap = Keymap::new("ctrl-alt-fallback");
+        keymap.insert(
+            Combo::new(vec![ctrl, alt], Key::from(46)), // Ctrl-Alt-c
+            KeymapValue::Key(Key::from(30)),            // emit A key
+        );
+
+        let config = TransformConfig {
+            modmaps: vec![Modmap::new("default", default_map)],
+            keymaps: vec![keymap],
+            ..TransformConfig::default()
+        };
+        let mut engine = TransformEngine::new(config);
+
+        let _ = engine.process_event(Key::from(125), Action::Press); // Super (modmapped to Ctrl)
+        let _ = engine.process_event(Key::from(56), Action::Press); // Alt
+        let c_press = engine.process_event(Key::from(46), Action::Press); // c
+
+        assert_eq!(c_press, TransformResult::ComboKey(Key::from(30)));
+    }
+
+    #[test]
+    #[cfg(feature = "pure-rust")]
+    fn test_explicit_super_alt_combo_overrides_ctrl_alt_fallback() {
+        use crate::Combo;
+
+        let mut default_map = HashMap::new();
+        default_map.insert(Key::from(125), Key::from(29)); // LEFT_META -> LEFT_CTRL
+
+        let ctrl = Modifier::from_alias("Ctrl").expect("Ctrl modifier should exist");
+        let alt = Modifier::from_alias("Alt").expect("Alt modifier should exist");
+        let meta = Modifier::from_name("META").expect("META modifier should exist");
+
+        let mut keymap = Keymap::new("super-alt-override");
+        keymap.insert(
+            Combo::new(vec![ctrl, alt.clone()], Key::from(46)), // Ctrl-Alt-c fallback
+            KeymapValue::Key(Key::from(30)),                    // emit A
+        );
+        keymap.insert(
+            Combo::new(vec![meta, alt], Key::from(46)), // explicit Super-Alt-c
+            KeymapValue::Key(Key::from(48)),            // emit B
+        );
+
+        let config = TransformConfig {
+            modmaps: vec![Modmap::new("default", default_map)],
+            keymaps: vec![keymap],
+            ..TransformConfig::default()
+        };
+        let mut engine = TransformEngine::new(config);
+
+        let _ = engine.process_event(Key::from(125), Action::Press); // Super
+        let _ = engine.process_event(Key::from(56), Action::Press); // Alt
+        let c_press = engine.process_event(Key::from(46), Action::Press); // c
+
+        assert_eq!(c_press, TransformResult::ComboKey(Key::from(48)));
     }
 
     #[test]
