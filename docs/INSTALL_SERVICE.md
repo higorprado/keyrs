@@ -7,6 +7,8 @@ From repo root:
 ```bash
 cargo build --release --features pure-rust --bin keyrs
 scripts/keyrs-service.sh install
+# or non-interactive:
+scripts/keyrs-service.sh install --yes
 ```
 
 This will:
@@ -20,7 +22,7 @@ This will:
 ## Commands
 
 ```bash
-scripts/keyrs-service.sh install [--bin <path>] [--force]
+scripts/keyrs-service.sh install [--bin <path>] [--force] [--yes]
 scripts/keyrs-service.sh uninstall
 scripts/keyrs-service.sh start
 scripts/keyrs-service.sh stop
@@ -29,6 +31,9 @@ scripts/keyrs-service.sh status
 ```
 
 ## Notes
+
+- `install` and `uninstall` show a confirmation summary before applying changes.
+- Use `--yes` to skip the confirmation prompt (for automation).
 
 - Installer is idempotent.
 - Existing `~/.config/keyrs/config.d/` and `settings.toml` are preserved unless `--force` is provided.

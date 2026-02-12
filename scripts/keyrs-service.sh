@@ -16,6 +16,7 @@ TARGET_BIN="${BIN_DIR}/keyrs"
 SYSTEMCTL_BIN="${SYSTEMCTL_BIN:-systemctl}"
 DRY_RUN=false
 FORCE=false
+ASSUME_YES=false
 BIN_SOURCE=""
 
 usage() {
@@ -34,12 +35,14 @@ Commands:
 Options:
   --bin <path>     Binary source path (default: ./target/release/keyrs)
   --force          Overwrite existing config files during install
+  --yes            Skip confirmation prompt
   --dry-run        Print actions without executing system changes
   -h, --help       Show this help
 
 Examples:
   scripts/keyrs-service.sh install
   scripts/keyrs-service.sh install --bin ./target/release/keyrs --force
+  scripts/keyrs-service.sh install --yes
   scripts/keyrs-service.sh restart
 USAGE
 }
@@ -81,6 +84,10 @@ parse_args() {
         FORCE=true
         shift
         ;;
+      --yes)
+        ASSUME_YES=true
+        shift
+        ;;
       --dry-run)
         DRY_RUN=true
         shift
@@ -113,6 +120,35 @@ resolve_bin_source() {
 
   log "Could not resolve binary source. Build first: cargo build --release --features pure-rust --bin keyrs"
   exit 1
+}
+
+confirm_or_abort() {
+  local prompt_title="$1"
+  local details="$2"
+
+  if ${ASSUME_YES}; then
+    log "Confirmation skipped (--yes)"
+    return
+  fi
+
+  cat <<EOF
+
+${prompt_title}
+${details}
+
+Proceed? [y/N]
+EOF
+
+  local answer
+  read -r answer
+  case "${answer}" in
+    y|Y|yes|YES)
+      ;;
+    *)
+      log "Aborted by user."
+      exit 1
+      ;;
+  esac
 }
 
 write_service_file() {
@@ -150,6 +186,19 @@ UNIT
 install_cmd() {
   ensure_systemctl_user
   resolve_bin_source
+
+  confirm_or_abort \
+    "About to install and activate keyrs service:" \
+    "  - Binary source: ${BIN_SOURCE}
+  - Install binary: ${TARGET_BIN}
+  - Config fragments source: ${CONFIG_SOURCE_DIR}
+  - Config fragments target: ${CONFIG_COMPOSE_DIR}
+  - Compose output: ${CONFIG_DIR}/config.toml
+  - Settings target: ${CONFIG_DIR}/settings.toml
+  - Service file: ${SERVICE_PATH}
+  - Will run: systemctl --user daemon-reload
+  - Will run: systemctl --user enable --now ${SERVICE_NAME}
+  - Existing configs are preserved unless --force is used."
 
   log "Installing keyrs service"
   run mkdir -p "${BIN_DIR}" "${CONFIG_DIR}" "${SERVICE_DIR}"
@@ -189,6 +238,12 @@ install_cmd() {
 
 uninstall_cmd() {
   ensure_systemctl_user
+  confirm_or_abort \
+    "About to uninstall keyrs service integration:" \
+    "  - Will stop and disable: ${SERVICE_NAME}
+  - Will remove service file: ${SERVICE_PATH}
+  - Will keep binary/config files in ~/.local/bin and ~/.config/keyrs"
+
   log "Uninstalling keyrs service"
 
   run "${SYSTEMCTL_BIN}" --user disable --now "${SERVICE_NAME}" || true
