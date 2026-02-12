@@ -10,14 +10,22 @@ clap = { version = "4.5", optional = true, features = ["derive"] }
 evdev = { version = "0.12", optional = true }
 signal-hook = { version = "0.3", optional = true }
 toml = { version = "0.8", optional = true }
+ratatui = { version = "0.28", optional = true }
+crossterm = { version = "0.28", optional = true }
+serde = { workspace = true, optional = true }
 
 [features]
-pure-rust = ["dep:clap", "dep:evdev", "dep:signal-hook", "dep:toml"]
+pure-rust = ["dep:clap", "dep:evdev", "dep:signal-hook", "dep:toml", "dep:ratatui", "dep:crossterm", "dep:serde"]
 default = []
 
 [[bin]]
 name = "keyrs"
 path = "src/bin/keyrs.rs"
+required-features = ["pure-rust"]
+
+[[bin]]
+name = "keyrs-tui"
+path = "src/bin/keyrs-tui.rs"
 required-features = ["pure-rust"]
 
 [workspace]

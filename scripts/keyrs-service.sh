@@ -15,6 +15,7 @@ CONFIG_COMPOSE_DIR="${CONFIG_DIR}/config.d"
 CONFIG_UDEV_RULES="${CONFIG_DIR}/keyrs-udev.rules"
 BIN_DIR="${HOME}/.local/bin"
 TARGET_BIN="${BIN_DIR}/keyrs"
+TARGET_TUI_BIN="${BIN_DIR}/keyrs-tui"
 RUNTIME_CTL="${BIN_DIR}/keyrs-service"
 
 SYSTEMCTL_BIN="${SYSTEMCTL_BIN:-systemctl}"
@@ -23,6 +24,7 @@ DRY_RUN=false
 FORCE=false
 ASSUME_YES=false
 BIN_SOURCE=""
+TUI_BIN_SOURCE=""
 COMPOSE_SOURCE_DIR=""
 RUNTIME_ONLY=false
 if [[ "${KEYRS_RUNTIME_ONLY:-0}" == "1" || "${SCRIPT_PATH}" == "${RUNTIME_CTL}" ]]; then
@@ -169,6 +171,21 @@ resolve_bin_source() {
   exit 1
 }
 
+resolve_tui_bin_source() {
+  if [[ -n "${TUI_BIN_SOURCE}" ]]; then
+    return
+  fi
+  if [[ -x "${REPO_ROOT}/target/release/keyrs-tui" ]]; then
+    TUI_BIN_SOURCE="${REPO_ROOT}/target/release/keyrs-tui"
+    return
+  fi
+  if command -v keyrs-tui >/dev/null 2>&1; then
+    TUI_BIN_SOURCE="$(command -v keyrs-tui)"
+    return
+  fi
+  TUI_BIN_SOURCE=""
+}
+
 resolve_runtime_bin() {
   if [[ -x "${TARGET_BIN}" ]]; then
     return
@@ -286,11 +303,13 @@ install_cmd() {
     exit 1
   fi
   resolve_bin_source
+  resolve_tui_bin_source
 
   confirm_or_abort \
     "About to install and activate keyrs service:" \
     "  - Binary source: ${BIN_SOURCE}
   - Install binary: ${TARGET_BIN}
+  - Install TUI binary: ${TARGET_TUI_BIN}
   - Config fragments source: ${CONFIG_SOURCE_DIR}
   - Config fragments target: ${CONFIG_COMPOSE_DIR}
   - Compose output: ${CONFIG_DIR}/config.toml
@@ -303,6 +322,11 @@ install_cmd() {
   log "Installing keyrs service"
   run mkdir -p "${BIN_DIR}" "${CONFIG_DIR}" "${SERVICE_DIR}"
   run install -m 755 "${BIN_SOURCE}" "${TARGET_BIN}"
+  if [[ -n "${TUI_BIN_SOURCE}" ]]; then
+    run install -m 755 "${TUI_BIN_SOURCE}" "${TARGET_TUI_BIN}"
+  else
+    log "keyrs-tui binary not found; skipping ${TARGET_TUI_BIN} install"
+  fi
   run install -m 755 "${SCRIPT_PATH}" "${RUNTIME_CTL}"
 
   if [[ ! -d "${CONFIG_SOURCE_DIR}" ]]; then
