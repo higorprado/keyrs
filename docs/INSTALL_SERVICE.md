@@ -15,6 +15,7 @@ scripts/keyrs-service.sh install-udev --yes
 
 This will:
 - install binary to `~/.local/bin/keyrs`
+- install runtime controller to `~/.local/bin/keyrs-service` (no install/uninstall commands)
 - copy config fragments from `config.d.example/` to `~/.config/keyrs/config.d/` (if missing)
 - compose `~/.config/keyrs/config.toml` from `~/.config/keyrs/config.d/`
 - validate generated config before service activation
@@ -27,6 +28,7 @@ This will:
 ```bash
 scripts/keyrs-service.sh install [--bin <path>] [--force] [--yes]
 scripts/keyrs-service.sh uninstall
+scripts/keyrs-service.sh apply-config [--source-dir <path>] [--yes]
 scripts/keyrs-service.sh install-udev [--yes]
 scripts/keyrs-service.sh uninstall-udev [--yes]
 scripts/keyrs-service.sh start
@@ -44,6 +46,8 @@ scripts/keyrs-service.sh status
 - Installer is idempotent.
 - Existing `~/.config/keyrs/config.d/` and `settings.toml` are preserved unless `--force` is provided.
 - `config.toml` is always regenerated from `~/.config/keyrs/config.d/` during install.
+- After installation, use `keyrs-service apply-config` to safely regenerate/validate/swap `config.toml` and restart the service.
+- Runtime mode (`~/.local/bin/keyrs-service`) intentionally does not expose `install`/`uninstall`.
 - `uninstall` removes the service unit but keeps binary/config by default.
 - udev rules are installed at `/etc/udev/rules.d/99-keyrs.rules`.
 - Use `--dry-run` to inspect actions without applying changes.

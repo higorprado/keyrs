@@ -727,108 +727,6 @@ name = "prod_phase12_forced_numpad_numlock_clear"
 Numlock = "Escape"
 
 [[keymap]]
-condition = "not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
-name = "prod_phase12_general_gui_defaults"
-
-[keymap.mappings]
-Alt-Delete = "Ctrl-Delete"
-Alt-Tab = ["Ignore"]
-Ctrl-Backspace = "Ctrl-Shift-Backspace"
-Ctrl-Down = "Ctrl-End"
-Ctrl-Left = "Home"
-Ctrl-Right = "End"
-Ctrl-Super-F1 = "Ctrl-Alt-F1"
-Ctrl-Super-F2 = "Ctrl-Alt-F2"
-Ctrl-Super-F3 = "Ctrl-Alt-F3"
-Ctrl-Super-F4 = "Ctrl-Alt-F4"
-Ctrl-Super-F5 = "Ctrl-Alt-F5"
-Ctrl-Super-F6 = "Ctrl-Alt-F6"
-Ctrl-Super-F7 = "Ctrl-Alt-F7"
-Ctrl-Super-f = "Alt-F10"
-Ctrl-Up = "Ctrl-Home"
-RAlt-Enter = "Insert"
-Shift-Alt-Backspace = "Ctrl-Backspace"
-Shift-Alt-Delete = "Ctrl-Delete"
-Shift-Ctrl-Down = "Ctrl-Shift-End"
-Shift-Ctrl-Left = "Shift-Home"
-Shift-Ctrl-Right = "Shift-End"
-Shift-Ctrl-Up = "Ctrl-Shift-Home"
-Shift-Super-Grave = [
-    "bind",
-    "Combo(Shift-Alt-Grave)",
-]
-Shift-Super-Left_Brace = "Ctrl-Page_Up"
-Shift-Super-Right_Brace = "Ctrl-Page_Down"
-Shift-Super-Tab = [
-    "bind",
-    "Combo(Shift-Alt-Tab)",
-]
-Super-Backspace = "Ctrl-Backspace"
-Super-Delete = "Ctrl-Delete"
-Super-F3 = "Super-d"
-Super-Grave = [
-    "bind",
-    "Combo(Alt-Grave)",
-]
-Super-Space = "Alt-F1"
-Super-Tab = [
-    "bind",
-    "Combo(Alt-Tab)",
-]
-Super-a = "Home"
-Super-b = "Left"
-Super-d = "Delete"
-Super-e = "End"
-Super-f = "Right"
-Super-k = [
-    "Shift-End",
-    "Backspace",
-]
-Super-n = "Down"
-Super-p = "Up"
-Super-q = "Alt-F4"
-
-[[keymap]]
-condition = "not (wm_class =~ '(?i)jetbrains')"
-name = "prod_core_general_shortcuts"
-
-[keymap.mappings]
-Shift-Alt-Backspace = "Ctrl-Backspace"
-Shift-Alt-Delete = "Ctrl-Delete"
-Shift-Super-left = "Ctrl-Shift-left"
-Shift-Super-right = "Ctrl-Shift-right"
-Super-a = "Ctrl-a"
-Super-b = "Ctrl-b"
-Super-backspace = "Ctrl-Backspace"
-Super-c = "Ctrl-c"
-Super-d = "Ctrl-d"
-Super-delete = "Ctrl-Delete"
-Super-e = "Ctrl-e"
-Super-f = "Ctrl-f"
-Super-g = "Ctrl-g"
-Super-h = "Ctrl-h"
-Super-i = "Ctrl-i"
-Super-j = "Ctrl-j"
-Super-k = "Ctrl-k"
-Super-l = "Ctrl-l"
-Super-left = "Ctrl-left"
-Super-m = "Ctrl-m"
-Super-n = "Ctrl-n"
-Super-o = "Ctrl-o"
-Super-p = "Ctrl-p"
-Super-q = "Ctrl-q"
-Super-r = "Ctrl-r"
-Super-right = "Ctrl-right"
-Super-s = "Ctrl-s"
-Super-t = "Ctrl-t"
-Super-u = "Ctrl-u"
-Super-v = "Ctrl-v"
-Super-w = "Ctrl-w"
-Super-x = "Ctrl-x"
-Super-y = "Ctrl-y"
-Super-z = "Ctrl-z"
-
-[[keymap]]
 condition = "wm_class =~ '(?i)firefox|librewolf|waterfox|zen'"
 name = "prod_p8_firefox_settings_macro"
 
@@ -1612,6 +1510,7 @@ name = "prod_phase7_vscode_overrides"
 Super-Grave = "Ctrl-Grave"
 Super-c = "Ctrl-c"
 Super-dot = "Ctrl-dot"
+Super-f = "Ctrl-f"
 Super-x = "Ctrl-x"
 
 [[keymap]]
@@ -1694,6 +1593,115 @@ Super-6 = "Alt-6"
 Super-7 = "Alt-7"
 Super-8 = "Alt-8"
 Super-9 = "Alt-9"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)code|code-oss|vscodium|cursor'"
+name = "prod_phase12_vscode_find_fix"
+
+[keymap.mappings]
+Super-f = "Ctrl-f"
+
+[[keymap]]
+condition = "not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "prod_phase12_general_gui_defaults"
+
+[keymap.mappings]
+Alt-Delete = "Ctrl-Delete"
+Alt-Tab = ["Ignore"]
+Ctrl-Backspace = "Ctrl-Shift-Backspace"
+Ctrl-Down = "Ctrl-End"
+Ctrl-Left = "Home"
+Ctrl-Right = "End"
+Ctrl-Super-F1 = "Ctrl-Alt-F1"
+Ctrl-Super-F2 = "Ctrl-Alt-F2"
+Ctrl-Super-F3 = "Ctrl-Alt-F3"
+Ctrl-Super-F4 = "Ctrl-Alt-F4"
+Ctrl-Super-F5 = "Ctrl-Alt-F5"
+Ctrl-Super-F6 = "Ctrl-Alt-F6"
+Ctrl-Super-F7 = "Ctrl-Alt-F7"
+Ctrl-Super-f = "Alt-F10"
+Ctrl-Up = "Ctrl-Home"
+RAlt-Enter = "Insert"
+Shift-Alt-Backspace = "Ctrl-Backspace"
+Shift-Alt-Delete = "Ctrl-Delete"
+Shift-Ctrl-Down = "Ctrl-Shift-End"
+Shift-Ctrl-Left = "Shift-Home"
+Shift-Ctrl-Right = "Shift-End"
+Shift-Ctrl-Up = "Ctrl-Shift-Home"
+Shift-Super-Grave = [
+    "bind",
+    "Combo(Shift-Alt-Grave)",
+]
+Shift-Super-Left_Brace = "Ctrl-Page_Up"
+Shift-Super-Right_Brace = "Ctrl-Page_Down"
+Shift-Super-Tab = [
+    "bind",
+    "Combo(Shift-Alt-Tab)",
+]
+Super-Backspace = "Ctrl-Backspace"
+Super-Delete = "Ctrl-Delete"
+Super-F3 = "Super-d"
+Super-Grave = [
+    "bind",
+    "Combo(Alt-Grave)",
+]
+Super-Space = "Alt-F1"
+Super-Tab = [
+    "bind",
+    "Combo(Alt-Tab)",
+]
+Super-a = "Home"
+Super-b = "Left"
+Super-d = "Delete"
+Super-e = "End"
+Super-f = "Right"
+Super-k = [
+    "Shift-End",
+    "Backspace",
+]
+Super-n = "Down"
+Super-p = "Up"
+Super-q = "Alt-F4"
+
+[[keymap]]
+condition = "not (wm_class =~ '(?i)jetbrains')"
+name = "prod_core_general_shortcuts"
+
+[keymap.mappings]
+Shift-Alt-Backspace = "Ctrl-Backspace"
+Shift-Alt-Delete = "Ctrl-Delete"
+Shift-Super-left = "Ctrl-Shift-left"
+Shift-Super-right = "Ctrl-Shift-right"
+Super-a = "Ctrl-a"
+Super-b = "Ctrl-b"
+Super-backspace = "Ctrl-Backspace"
+Super-c = "Ctrl-c"
+Super-d = "Ctrl-d"
+Super-delete = "Ctrl-Delete"
+Super-e = "Ctrl-e"
+Super-f = "Ctrl-f"
+Super-g = "Ctrl-g"
+Super-h = "Ctrl-h"
+Super-i = "Ctrl-i"
+Super-j = "Ctrl-j"
+Super-k = "Ctrl-k"
+Super-l = "Ctrl-l"
+Super-left = "Ctrl-left"
+Super-m = "Ctrl-m"
+Super-n = "Ctrl-n"
+Super-o = "Ctrl-o"
+Super-p = "Ctrl-p"
+Super-q = "Ctrl-q"
+Super-r = "Ctrl-r"
+Super-right = "Ctrl-right"
+Super-s = "Ctrl-s"
+Super-t = "Ctrl-t"
+Super-u = "Ctrl-u"
+Super-v = "Ctrl-v"
+Super-w = "Ctrl-w"
+Super-x = "Ctrl-x"
+Super-y = "Ctrl-y"
+Super-z = "Ctrl-z"
 
 [[modmap.conditionals]]
 condition = "settings.forced_numpad"

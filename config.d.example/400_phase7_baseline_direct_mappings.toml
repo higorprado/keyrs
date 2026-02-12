@@ -123,6 +123,7 @@ condition = "not (wm_class =~ 'code|code-oss|vscodium|cursor')"
 name = "prod_phase7_vscode_overrides"
 condition = "wm_class =~ 'code|code-oss|vscodium|cursor'"
 [keymap.mappings]
+"Super-f" = "Ctrl-f"
 "Super-c" = "Ctrl-c"
 "Super-x" = "Ctrl-x"
 "Super-dot" = "Ctrl-dot"
@@ -199,4 +200,3 @@ condition = "wm_class =~ 'firefox|librewolf|waterfox|zen'"
 "Super-7" = "Alt-7"
 "Super-8" = "Alt-8"
 "Super-9" = "Alt-9"
-
