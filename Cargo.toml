@@ -9,9 +9,10 @@ keyrs-core = { path = "crates/keyrs-core", features = ["pure-rust"] }
 clap = { version = "4.5", optional = true, features = ["derive"] }
 evdev = { version = "0.12", optional = true }
 signal-hook = { version = "0.3", optional = true }
+toml = { version = "0.8", optional = true }
 
 [features]
-pure-rust = ["dep:clap", "dep:evdev", "dep:signal-hook"]
+pure-rust = ["dep:clap", "dep:evdev", "dep:signal-hook", "dep:toml"]
 default = []
 
 [[bin]]

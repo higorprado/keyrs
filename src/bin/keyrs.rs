@@ -3,13 +3,16 @@
 
 #![cfg_attr(feature = "pure-rust", allow(dead_code))]
 
-use std::path::PathBuf;
+use std::fs;
+use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::time::Duration;
 
 #[cfg(feature = "pure-rust")]
 use clap::Parser;
+#[cfg(feature = "pure-rust")]
+use toml::Value;
 
 #[cfg(feature = "pure-rust")]
 use keyrs_core::config::parser::Config;
@@ -64,6 +67,14 @@ struct Args {
     /// List available keyboard devices
     #[arg(long)]
     list_devices: bool,
+
+    /// Compose modular TOML config directory into a single config file and exit
+    #[arg(long, value_name = "DIR")]
+    compose_config: Option<PathBuf>,
+
+    /// Output path for --compose-config (default: parent of DIR/config.toml)
+    #[arg(long, value_name = "FILE")]
+    compose_output: Option<PathBuf>,
 }
 
 /// Main application state
@@ -91,6 +102,110 @@ fn resolve_keyboard_type(settings: &Settings, devices: &[KeyboardDeviceInfo]) ->
     }
 
     KeyboardType::Unknown
+}
+
+#[cfg(feature = "pure-rust")]
+fn default_compose_output(dir: &Path) -> PathBuf {
+    let base = dir.parent().unwrap_or_else(|| Path::new("."));
+    base.join("config.toml")
+}
+
+#[cfg(feature = "pure-rust")]
+fn merge_table_entries(dst: &mut toml::map::Map<String, Value>, src: toml::map::Map<String, Value>) {
+    for (k, v) in src {
+        dst.insert(k, v);
+    }
+}
+
+#[cfg(feature = "pure-rust")]
+fn merge_modmap(root: &mut toml::map::Map<String, Value>, src: toml::map::Map<String, Value>) {
+    let modmap = root
+        .entry("modmap".to_string())
+        .or_insert_with(|| Value::Table(toml::map::Map::new()));
+    let modmap_tbl = modmap.as_table_mut().expect("modmap must be table");
+
+    for (k, v) in src {
+        match (k.as_str(), v) {
+            ("default", Value::Table(default_src)) => {
+                let default_dst = modmap_tbl
+                    .entry("default".to_string())
+                    .or_insert_with(|| Value::Table(toml::map::Map::new()));
+                let default_tbl = default_dst.as_table_mut().expect("modmap.default must be table");
+                merge_table_entries(default_tbl, default_src);
+            }
+            ("conditionals", Value::Array(src_items)) => {
+                let cond_dst = modmap_tbl
+                    .entry("conditionals".to_string())
+                    .or_insert_with(|| Value::Array(Vec::new()));
+                let cond_array = cond_dst.as_array_mut().expect("modmap.conditionals must be array");
+                cond_array.extend(src_items);
+            }
+            (other, value) => {
+                modmap_tbl.insert(other.to_string(), value);
+            }
+        }
+    }
+}
+
+#[cfg(feature = "pure-rust")]
+fn merge_config_fragment(root: &mut toml::map::Map<String, Value>, fragment: toml::map::Map<String, Value>) {
+    for (k, v) in fragment {
+        match (k.as_str(), v) {
+            ("general", Value::Table(src)) | ("timeouts", Value::Table(src)) => {
+                let dst = root
+                    .entry(k.clone())
+                    .or_insert_with(|| Value::Table(toml::map::Map::new()));
+                let dst_tbl = dst.as_table_mut().expect("section must be table");
+                merge_table_entries(dst_tbl, src);
+            }
+            ("modmap", Value::Table(src)) => merge_modmap(root, src),
+            ("multipurpose", Value::Array(items)) | ("keymap", Value::Array(items)) => {
+                let dst = root
+                    .entry(k.clone())
+                    .or_insert_with(|| Value::Array(Vec::new()));
+                let dst_arr = dst.as_array_mut().expect("section must be array");
+                dst_arr.extend(items);
+            }
+            (_, value) => {
+                root.insert(k, value);
+            }
+        }
+    }
+}
+
+#[cfg(feature = "pure-rust")]
+fn compose_config_dir(dir: &Path, output: &Path) -> Result<(), Box<dyn std::error::Error>> {
+    let mut files: Vec<PathBuf> = fs::read_dir(dir)?
+        .filter_map(|entry| entry.ok().map(|e| e.path()))
+        .filter(|p| p.extension().and_then(|e| e.to_str()) == Some("toml"))
+        .collect();
+    files.sort();
+
+    if files.is_empty() {
+        return Err(format!("No TOML files found in {}", dir.display()).into());
+    }
+
+    let mut root = toml::map::Map::new();
+
+    for path in files {
+        let content = fs::read_to_string(&path)?;
+        let value: Value = toml::from_str(&content)
+            .map_err(|e| format!("Failed parsing {}: {}", path.display(), e))?;
+        let table = value
+            .as_table()
+            .ok_or_else(|| format!("Root must be TOML table: {}", path.display()))?
+            .clone();
+        merge_config_fragment(&mut root, table);
+    }
+
+    let rendered = toml::to_string_pretty(&Value::Table(root))?;
+    if let Some(parent) = output.parent() {
+        if !parent.as_os_str().is_empty() {
+            fs::create_dir_all(parent)?;
+        }
+    }
+    fs::write(output, rendered)?;
+    Ok(())
 }
 
 #[cfg(feature = "pure-rust")]
@@ -471,14 +586,25 @@ impl Application {
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
 
-    // Handle list-devices flag (doesn't require config)
+    // Handle list-devices flag (does not require config)
     if args.list_devices {
         return Application::list_devices();
     }
 
-    // Get config path (required for other operations)
+    // Compose modular config and exit (does not require --config).
+    if let Some(compose_dir) = args.compose_config.clone() {
+        let output = args
+            .compose_output
+            .clone()
+            .unwrap_or_else(|| default_compose_output(&compose_dir));
+        compose_config_dir(&compose_dir, &output)?;
+        println!("Composed config: {}", output.display());
+        return Ok(());
+    }
+
+    // Get config path (required for runtime/check mode).
     let config_path = args.config.clone().ok_or_else(|| {
-        Box::<dyn std::error::Error>::from("--config is required when not using --list-devices")
+        Box::<dyn std::error::Error>::from("--config is required when not using --list-devices or --compose-config")
     })?;
 
     // Create application
@@ -519,6 +645,8 @@ mod tests {
         assert!(!args.verbose);
         assert!(!args.check_config);
         assert!(!args.list_devices);
+        assert!(args.compose_config.is_none());
+        assert!(args.compose_output.is_none());
     }
 
     #[test]
@@ -552,6 +680,7 @@ mod tests {
         let args = Args::parse_from(&["keyrs", "--list-devices"]);
 
         assert!(args.list_devices);
+        assert!(args.compose_config.is_none());
     }
 
     #[test]
@@ -567,6 +696,57 @@ mod tests {
 
     #[test]
     #[cfg(feature = "pure-rust")]
+    fn test_args_compose_config() {
+        use std::path::PathBuf;
+
+        let args = Args::parse_from(&[
+            "keyrs",
+            "--compose-config",
+            "./config.d",
+            "--compose-output",
+            "./generated.toml",
+        ]);
+
+        assert_eq!(args.compose_config, Some(PathBuf::from("./config.d")));
+        assert_eq!(args.compose_output, Some(PathBuf::from("./generated.toml")));
+        assert!(args.config.is_none());
+    }
+
+    #[test]
+    #[cfg(feature = "pure-rust")]
+    fn test_compose_config_dir_merges_fragments() {
+        let base = std::env::temp_dir().join(format!(
+            "keyrs-compose-test-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .expect("time")
+                .as_nanos()
+        ));
+        let dir = base.join("config.d");
+        std::fs::create_dir_all(&dir).expect("create config dir");
+
+        std::fs::write(
+            dir.join("000_base.toml"),
+            "[general]\nsuspend_key = \"F11\"\n[modmap.default]\nCAPSLOCK = \"CAPSLOCK\"\n",
+        )
+        .expect("write base");
+        std::fs::write(
+            dir.join("100_terminal.toml"),
+            "[[keymap]]\nname = \"k1\"\n[keymap.mappings]\n\"Super-c\" = \"Ctrl-c\"\n",
+        )
+        .expect("write fragment");
+
+        let out = base.join("config.toml");
+        compose_config_dir(&dir, &out).expect("compose");
+
+        let rendered = std::fs::read_to_string(&out).expect("read output");
+        assert!(rendered.contains("suspend_key"));
+        assert!(rendered.contains("[[keymap]]"));
+        assert!(rendered.contains("CAPSLOCK"));
+
+        let _ = std::fs::remove_dir_all(&base);
+    }
+
     fn test_resolve_keyboard_type_uses_override_first() {
         let settings = Settings::from_toml(
             r#"
