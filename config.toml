@@ -1320,3 +1320,4 @@ condition = "wm_class =~ 'firefox|librewolf|waterfox|zen'"
 "Super-7" = "Alt-7"
 "Super-8" = "Alt-8"
 "Super-9" = "Alt-9"
+
