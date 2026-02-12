@@ -1,0 +1,13 @@
+[Unit]
+Description=keyrs keyboard remapper
+After=graphical-session.target
+Wants=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/keyrs --config %h/.config/keyrs/config.toml
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=default.target
