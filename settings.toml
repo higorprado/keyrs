@@ -1,0 +1,19 @@
+[features]
+# Try changing these values after testing!
+Enter2Ent_Cmd = true
+Caps2Esc_Cmd = true
+forced_numpad = true
+DistroFedoraGnome = false
+DistroPop = false
+DistroUbuntuOrFedoraGnome = false
+DesktopBudgie = false
+DesktopCosmicOrPop = false
+DesktopGnome = false
+DesktopKde = false
+DesktopPantheon = false
+DesktopSway = false
+DesktopXfce = false
+
+
+[keyboard]
+override_type = "Apple"

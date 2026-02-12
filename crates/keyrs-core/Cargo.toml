@@ -1,0 +1,47 @@
+[package]
+name = "keyrs-core"
+version.workspace = true
+edition.workspace = true
+
+[features]
+default = []
+pure-rust = ["evdev", "dep:toml"]
+python-runtime = []
+x11-backend = ["x11rb"]
+window-context = ["x11-backend"]
+unicode_output = []
+
+[dependencies]
+indexmap.workspace = true
+strum.workspace = true
+strum_macros.workspace = true
+serde.workspace = true
+thiserror.workspace = true
+anyhow.workspace = true
+parking_lot.workspace = true
+smallvec.workspace = true
+regex.workspace = true
+libc = "0.2"
+
+# Wayland protocol support
+wayland-client = "0.31"
+wayland-protocols = { version = "0.31", features = ["unstable", "client"] }
+wayland-protocols-wlr = { version = "0.3", features = ["client"] }
+wayland-backend = "0.3"
+
+# Event device handling (optional, for pure Rust event loop)
+evdev = { version = "0.12", optional = true }
+
+# TOML parsing (for pure-rust config)
+toml = { version = "0.8", optional = true }
+
+# Python bindings (optional, for hybrid event loop)
+
+# X11 support (optional, for window context on X11)
+x11rb = { version = "0.13", optional = true, features = ["resource_manager"] }
+
+# Directory utilities for config paths
+dirs = "5.0"
+
+[dev-dependencies]
+# Test utilities

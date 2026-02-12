@@ -1,0 +1,39 @@
+[package]
+name = "keyrs"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+parking_lot = "0.12"
+keyrs-core = { path = "crates/keyrs-core", features = ["pure-rust"] }
+clap = { version = "4.5", optional = true, features = ["derive"] }
+evdev = { version = "0.12", optional = true }
+signal-hook = { version = "0.3", optional = true }
+
+[features]
+pure-rust = ["dep:clap", "dep:evdev", "dep:signal-hook"]
+default = []
+
+[[bin]]
+name = "keyrs"
+path = "src/bin/keyrs.rs"
+required-features = ["pure-rust"]
+
+[workspace]
+members = ["crates/keyrs-core"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+
+[workspace.dependencies]
+parking_lot = "0.12"
+indexmap = "2.7"
+strum = "0.26"
+strum_macros = "0.26"
+serde = { version = "1.0", features = ["derive"] }
+thiserror = "2.0"
+anyhow = "1.0"
+smallvec = "1.13"
+regex = "1.11"
