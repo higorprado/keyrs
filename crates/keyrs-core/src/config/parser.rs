@@ -77,6 +77,10 @@ pub struct ConfigToml {
     /// Output throttle delays
     #[serde(default)]
     pub delays: Option<DelayConfig>,
+
+    // Main event loop and window polling behavior
+    #[serde(default)]
+    pub window: Option<WindowConfig>,
 }
 
 /// General settings
@@ -193,6 +197,18 @@ pub struct DelayConfig {
     pub key_post_delay_ms: Option<u64>,
 }
 
+/// Main loop / window polling configuration (milliseconds)
+#[derive(Debug, Clone, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct WindowConfig {
+    /// Timeout passed to evdev poll loop
+    pub poll_timeout_ms: Option<u64>,
+    /// Interval between window context refreshes
+    pub update_interval_ms: Option<u64>,
+    /// Sleep duration after a no-event poll error path
+    pub idle_sleep_ms: Option<u64>,
+}
+
 // Use TimeoutConfig directly (serde handles both singular and plural)
 // The #[serde(default)] attribute makes both forms work
 
@@ -221,6 +237,12 @@ pub struct Config {
     pub key_pre_delay_ms: Option<u64>,
     /// Post-key output delay in milliseconds
     pub key_post_delay_ms: Option<u64>,
+    // Event poll timeout in milliseconds
+    pub poll_timeout_ms: Option<u64>,
+    // Window context refresh interval in milliseconds
+    pub window_update_interval_ms: Option<u64>,
+    // Idle loop sleep in milliseconds
+    pub idle_sleep_ms: Option<u64>,
 }
 
 impl Default for Config {
@@ -237,6 +259,9 @@ impl Default for Config {
             device_filter: vec![],
             key_pre_delay_ms: None,
             key_post_delay_ms: None,
+            poll_timeout_ms: None,
+            window_update_interval_ms: None,
+            idle_sleep_ms: None,
         }
     }
 }
@@ -576,6 +601,37 @@ impl ConfigToml {
                     )));
                 }
                 config.key_post_delay_ms = Some(post);
+            }
+        }
+
+        // Parse window loop timing controls
+        if let Some(window) = &self.window {
+            if let Some(poll) = window.poll_timeout_ms {
+                if poll == 0 || poll > 5000 {
+                    return Err(ConfigError::TimeoutOutOfRange(format!(
+                        "window.poll_timeout_ms must be 1-5000ms, got {}",
+                        poll
+                    )));
+                }
+                config.poll_timeout_ms = Some(poll);
+            }
+            if let Some(update) = window.update_interval_ms {
+                if update < 10 || update > 10000 {
+                    return Err(ConfigError::TimeoutOutOfRange(format!(
+                        "window.update_interval_ms must be 10-10000ms, got {}",
+                        update
+                    )));
+                }
+                config.window_update_interval_ms = Some(update);
+            }
+            if let Some(idle) = window.idle_sleep_ms {
+                if idle > 1000 {
+                    return Err(ConfigError::TimeoutOutOfRange(format!(
+                        "window.idle_sleep_ms must be 0-1000ms, got {}",
+                        idle
+                    )));
+                }
+                config.idle_sleep_ms = Some(idle);
             }
         }
 
@@ -1097,6 +1153,11 @@ mod tests {
             [delays]
             key_pre_delay_ms = 8
             key_post_delay_ms = 12
+
+            [window]
+            poll_timeout_ms = 120
+            update_interval_ms = 450
+            idle_sleep_ms = 7
         "#;
 
         let config = Config::from_toml(toml).unwrap();
@@ -1120,6 +1181,9 @@ mod tests {
         assert_eq!(config.device_filter, vec!["Telink Wireless Gaming Keyboard".to_string()]);
         assert_eq!(config.key_pre_delay_ms, Some(8));
         assert_eq!(config.key_post_delay_ms, Some(12));
+        assert_eq!(config.poll_timeout_ms, Some(120));
+        assert_eq!(config.window_update_interval_ms, Some(450));
+        assert_eq!(config.idle_sleep_ms, Some(7));
     }
 
     #[test]
