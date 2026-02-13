@@ -5,7 +5,7 @@ edition.workspace = true
 
 [features]
 default = []
-pure-rust = ["evdev", "dep:toml"]
+pure-rust = ["evdev", "dep:toml", "udev"]
 python-runtime = []
 x11-backend = ["x11rb"]
 window-context = ["x11-backend"]
@@ -32,6 +32,9 @@ wayland-backend = "0.3"
 
 # Event device handling (optional, for pure Rust event loop)
 evdev = { version = "0.12", optional = true }
+
+# udev monitoring for device hotplug
+udev = { version = "0.9", optional = true }
 
 # TOML parsing (for pure-rust config)
 toml = { version = "0.8", optional = true }
