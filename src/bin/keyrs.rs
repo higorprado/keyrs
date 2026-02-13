@@ -7,7 +7,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 #[cfg(feature = "pure-rust")]
 use clap::Parser;
@@ -443,6 +443,9 @@ impl Application {
             &mut output_device,
             config.diagnostics_key,
             config.emergency_eject_key,
+            config.poll_timeout_ms.unwrap_or(100) as i32,
+            config.window_update_interval_ms.unwrap_or(500),
+            config.idle_sleep_ms.unwrap_or(10),
         );
 
         // Cleanup: ungrab devices and release keys
@@ -462,18 +465,21 @@ impl Application {
         output_device: &mut VirtualDevice,
         diagnostics_key: Option<Key>,
         emergency_eject_key: Option<Key>,
+        poll_timeout_ms: i32,
+        window_update_interval_ms: u64,
+        idle_sleep_ms: u64,
     ) -> Result<(), Box<dyn std::error::Error>> {
         use evdev::EventType;
         use keyrs_core::Action;
 
         println!("keyrs is running. Press Ctrl+C to exit.");
 
-        // Counter for periodic window context updates
-        let mut window_update_counter: u32 = 0;
+        // Timestamp for periodic window context updates
+        let mut last_window_update = Instant::now();
 
         while self.running.load(Ordering::SeqCst) {
-            // Poll for events with 100ms timeout
-            match event_loop.poll_for_events_with_device(100) {
+            // Poll for events with configurable timeout
+            match event_loop.poll_for_events_with_device(poll_timeout_ms) {
                 Ok(events) => {
                     for event in events {
                         engine.set_device_name(Some(event.device_name.clone()));
@@ -536,10 +542,9 @@ impl Application {
                         }
                     }
                     
-                    // Update window context periodically (every ~500ms)
-                    window_update_counter += 1;
-                    if window_update_counter >= 5 {
-                        window_update_counter = 0;
+                    // Update window context periodically.
+                    if last_window_update.elapsed() >= Duration::from_millis(window_update_interval_ms) {
+                        last_window_update = Instant::now();
                         if engine.update_from_window_manager() {
                             if self.args.verbose {
                                 println!("Window context updated");
@@ -562,10 +567,9 @@ impl Application {
                         }
                     }
                     
-                    // Update window context periodically even when no events
-                    window_update_counter += 1;
-                    if window_update_counter >= 5 {
-                        window_update_counter = 0;
+                    // Update window context periodically even when no events.
+                    if last_window_update.elapsed() >= Duration::from_millis(window_update_interval_ms) {
+                        last_window_update = Instant::now();
                         if engine.update_from_window_manager() {
                             if self.args.verbose {
                                 println!("Window context updated (no events)");
@@ -574,7 +578,7 @@ impl Application {
                         }
                     }
                     
-                    std::thread::sleep(Duration::from_millis(10));
+                    std::thread::sleep(Duration::from_millis(idle_sleep_ms));
                 }
             }
         }
