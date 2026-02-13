@@ -21,6 +21,7 @@ anyhow.workspace = true
 parking_lot.workspace = true
 smallvec.workspace = true
 regex.workspace = true
+log.workspace = true
 libc = "0.2"
 
 # Wayland protocol support

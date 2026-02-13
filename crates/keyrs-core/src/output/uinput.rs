@@ -49,7 +49,7 @@ impl VirtualDevice {
 
     fn debug_output_log(&self, message: &str) {
         if Self::debug_output_enabled() {
-            eprintln!("[OUTPUT-DEBUG] {}", message);
+            log::debug!("[OUTPUT] {}", message);
         }
     }
 

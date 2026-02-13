@@ -13,9 +13,11 @@ toml = { version = "0.8", optional = true }
 ratatui = { version = "0.28", optional = true }
 crossterm = { version = "0.28", optional = true }
 serde = { workspace = true, optional = true }
+log = { version = "0.4", optional = true }
+env_logger = { version = "0.11", optional = true }
 
 [features]
-pure-rust = ["dep:clap", "dep:evdev", "dep:signal-hook", "dep:toml", "dep:ratatui", "dep:crossterm", "dep:serde"]
+pure-rust = ["dep:clap", "dep:evdev", "dep:signal-hook", "dep:toml", "dep:ratatui", "dep:crossterm", "dep:serde", "dep:log", "dep:env_logger"]
 default = []
 
 [[bin]]
@@ -46,3 +48,4 @@ thiserror = "2.0"
 anyhow = "1.0"
 smallvec = "1.13"
 regex = "1.11"
+log = "0.4"

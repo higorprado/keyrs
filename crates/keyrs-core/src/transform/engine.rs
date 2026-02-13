@@ -1414,7 +1414,7 @@ impl TransformEngine {
     /// Print current window context for debugging
     pub fn print_window_context(&self) {
         let context = self.window_context.read();
-        eprintln!(
+        log::debug!(
             "WINDOW: wm_class={:?} wm_name={:?} device_name={:?} keyboard_type={:?} numlock={} capslock={}",
             context.wm_class.as_deref().unwrap_or("(none)"),
             context.wm_name.as_deref().unwrap_or("(none)"),

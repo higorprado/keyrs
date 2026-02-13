@@ -303,7 +303,7 @@ impl Config {
     pub fn to_transform_config(&self) -> TransformConfig {
         use std::collections::HashMap;
 
-        eprintln!("CONFIG: to_transform_config called with {} keymaps", self.keymaps.len());
+        log::debug!("to_transform_config called with {} keymaps", self.keymaps.len());
 
         TransformConfig {
             modmaps: self
@@ -348,16 +348,16 @@ impl Config {
                                 mappings.insert(combo, value);
                             }
                             Err(e) => {
-                                eprintln!(
-                                    "WARNING: Failed to parse input combo '{}' in keymap '{}': {}",
+                                log::warn!(
+                                    "Failed to parse input combo '{}' in keymap '{}': {}",
                                     combo_str, entry.name, e
                                 );
                             }
                         }
                     }
 
-                    eprintln!(
-                        "TRANSFORM: Keymap '{}' converted with {} mappings",
+                    log::debug!(
+                        "Keymap '{}' converted with {} mappings",
                         entry.name,
                         mappings.len()
                     );
@@ -489,8 +489,8 @@ impl ConfigToml {
                                         mappings.insert(combo_str.clone(), KeymapOutput::Key(key));
                                     }
                                     Err(_) => {
-                                        eprintln!(
-                                            "WARNING: Failed to parse keymap output '{}' in keymap '{}': {}",
+                                        log::warn!(
+                                            "Failed to parse keymap output '{}' in keymap '{}': {}",
                                             s, keymap_name, e
                                         );
                                     }
@@ -512,8 +512,8 @@ impl ConfigToml {
                                 steps.push(step);
                             } else {
                                 invalid = true;
-                                eprintln!(
-                                    "WARNING: Invalid sequence step '{}' in keymap '{}' mapping '{}'",
+                                log::warn!(
+                                    "Invalid sequence step '{}' in keymap '{}' mapping '{}'",
                                     item, keymap_name, combo_str
                                 );
                             }
@@ -522,8 +522,8 @@ impl ConfigToml {
                         if !invalid && !steps.is_empty() {
                             mappings.insert(combo_str.clone(), KeymapOutput::Sequence(steps));
                         } else {
-                            eprintln!(
-                                "WARNING: Invalid sequence in keymap '{}' mapping '{}'",
+                            log::warn!(
+                                "Invalid sequence in keymap '{}' mapping '{}'",
                                 keymap_name, combo_str
                             );
                         }
@@ -531,8 +531,8 @@ impl ConfigToml {
                 }
             }
 
-            eprintln!(
-                "CONFIG: Loaded keymap '{}' with {} mappings, conditional={}",
+            log::debug!(
+                "Loaded keymap '{}' with {} mappings, conditional={}",
                 keymap_name,
                 mappings.len(),
                 keymap_entry.condition.is_some()
@@ -541,8 +541,8 @@ impl ConfigToml {
             #[cfg(feature = "pure-rust")]
             if config_debug_enabled() {
                 for (combo, output) in &mappings {
-                    eprintln!(
-                        "CONFIG-DEBUG: keymap='{}' combo='{}' output={:?}",
+                    log::trace!(
+                        "keymap='{}' combo='{}' output={:?}",
                         keymap_name, combo, output
                     );
                 }

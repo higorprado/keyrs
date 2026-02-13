@@ -278,6 +278,8 @@ Type=simple
 ExecStart=%h/.local/bin/keyrs --config %h/.config/keyrs/config.toml
 Restart=on-failure
 RestartSec=2
+StandardOutput=journal
+StandardError=journal
 
 [Install]
 WantedBy=default.target
