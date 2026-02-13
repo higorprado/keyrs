@@ -527,3 +527,12 @@ wmctrl -lx
 1. Check `keyboard_type` detection in verbose logs
 2. Set `override_type` in `settings.toml` if needed
 3. Verify the key codes in `modmap` are correct
+
+---
+
+## See Also
+
+- [CONDITION_PATTERNS.md](CONDITION_PATTERNS.md) - Copy-paste ready condition patterns
+- [SHORTCUT_CONFIGURATION_GUIDE.md](SHORTCUT_CONFIGURATION_GUIDE.md) - Practical shortcut configuration guide
+- [CONFIG_SYNTAX_REFERENCE.md](CONFIG_SYNTAX_REFERENCE.md) - Full syntax reference
+- [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - Debugging and diagnostics

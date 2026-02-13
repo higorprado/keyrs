@@ -324,3 +324,12 @@ condition = "wm_class =~ '(?i)jetbrains' and not (wm_class =~ '(?i)toolbox')"
 | All Editors | `wm_class =~ '(?i)code|code-oss|vscodium|cursor|jetbrains|kate|kwrite|sublime|gedit|xed'` |
 | Not Terminal | `not (wm_class =~ '(?i)terminal|...')` |
 | GNOME GUI | `settings.DesktopGnome and not (wm_class =~ '(?i)terminal|...')` |
+
+---
+
+## See Also
+
+- [CONFIG_EXAMPLES.md](CONFIG_EXAMPLES.md) - Real-world configuration examples
+- [SHORTCUT_CONFIGURATION_GUIDE.md](SHORTCUT_CONFIGURATION_GUIDE.md) - Practical shortcut configuration guide
+- [CONFIG_SYNTAX_REFERENCE.md](CONFIG_SYNTAX_REFERENCE.md) - Full syntax reference
+- [SETTINGS_REFERENCE.md](SETTINGS_REFERENCE.md) - Complete settings.toml reference

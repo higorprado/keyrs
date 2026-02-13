@@ -73,6 +73,12 @@ keyrs solves this with context-aware keymaps, conditions, stateful actions, and 
 - `docs/CONFIG_SYNTAX_REFERENCE.md`
   Full syntax reference for sections, actions, conditions, and validation.
 
+- `docs/CONDITION_PATTERNS.md`
+  Copy-paste ready condition patterns for terminals, browsers, file managers, and more.
+
+- `docs/CONFIG_EXAMPLES.md`
+  Real-world configuration examples for common use cases.
+
 - `docs/SETTINGS_REFERENCE.md`
   Complete `settings.toml` reference and runtime semantics.
 
