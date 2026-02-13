@@ -60,6 +60,10 @@ impl EventLoop {
     /// Virtual device prefix to filter out
     const VIRT_DEVICE_PREFIX: &str = "Keyrs (virtual)";
 
+    /// Poll flags indicating device disconnection
+    const DISCONNECT_FLAGS: libc::c_short =
+        libc::POLLHUP | libc::POLLERR | libc::POLLNVAL;
+
     /// Create a new event loop by finding keyboard devices
     pub fn new() -> EventLoopResult<Self> {
         let devices = Self::find_keyboards()?;
@@ -281,8 +285,22 @@ impl EventLoop {
         }
 
         // Read events from devices that have data available
+        // Track disconnected devices for removal
+        let mut disconnected_indices: Vec<usize> = Vec::new();
+
         for (i, device) in self.devices.iter_mut().enumerate() {
-            if self.poll_fds[i].revents & libc::POLLIN != 0 {
+            let revents = self.poll_fds[i].revents;
+
+            // Check for device disconnection first
+            if revents & Self::DISCONNECT_FLAGS != 0 {
+                let device_name = device.name().unwrap_or("Unknown");
+                log::warn!("Device disconnected: {}", device_name);
+                disconnected_indices.push(i);
+                continue;
+            }
+
+            // Normal event processing
+            if revents & libc::POLLIN != 0 {
                 let device_name = device.name().unwrap_or("Unknown").to_string();
                 if let Ok(device_events) = device.fetch_events() {
                     for event in device_events {
@@ -293,6 +311,12 @@ impl EventLoop {
                     }
                 }
             }
+        }
+
+        // Remove disconnected devices (reverse order to maintain valid indices)
+        for i in disconnected_indices.into_iter().rev() {
+            self.devices.remove(i);
+            self.poll_fds.remove(i);
         }
 
         Ok(events)
