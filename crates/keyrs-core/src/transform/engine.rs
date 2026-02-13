@@ -1307,6 +1307,9 @@ impl TransformEngine {
 
         // Clear keymap stack when window changes
         self.keymap_stack.clear();
+
+        // Clear multipurpose state on window change
+        self.multipurpose_manager.clear();
     }
 
     /// Set the window context provider
@@ -2254,5 +2257,29 @@ mod tests {
 
         let after_false = engine.process_event(Key::from(66), Action::Press);
         assert_eq!(after_false, TransformResult::Text("FALSE".to_string()));
+    }
+
+    #[test]
+    #[cfg(feature = "pure-rust")]
+    fn test_multipurpose_cleared_on_window_change() {
+        let config = TransformConfig::default();
+        let mut engine = TransformEngine::new(config);
+        engine.add_multipurpose(Key::from(58), Key::from(1), Key::from(97)); // Caps -> Esc/Ctrl
+
+        // Press the multipurpose key
+        let _ = engine.process_event(Key::from(58), Action::Press);
+        assert!(
+            engine.is_multipurpose_hold_active() || engine.multipurpose_manager.has_active(),
+            "Multipurpose should be active after press"
+        );
+
+        // Window changes
+        engine.update_window_context(Some("new-app".to_string()), Some("New Window".to_string()));
+
+        // Multipurpose state should be cleared
+        assert!(
+            !engine.multipurpose_manager.has_active(),
+            "Multipurpose state should be cleared on window change"
+        );
     }
 }
