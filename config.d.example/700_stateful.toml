@@ -1,38 +1,70 @@
-# --------------------------------------------------
-# iEF2 + file-manager stateful behavior (highest precedence)
-# --------------------------------------------------
+## ============================================================
+## STATEFUL KEYMAPS
+## ============================================================
+## These keymaps maintain state between key presses.
+## The iEF2 (Enter-to-Enter Command) pattern allows the Enter key
+## to behave differently based on current mode:
+##
+## - Enter2Ent_Cmd=true:  Enter opens files (command mode)
+## - Enter2Ent_Cmd=false: Enter renames files (edit mode)
+##
+## This file has high precedence to ensure stateful behavior works
+## correctly before other keymaps are applied.
+
+## ------------------------------------------------------------
+## Dolphin (KDE) - New Folder Configuration
+## Different versions use different shortcuts
+## ------------------------------------------------------------
+
 [[keymap]]
-name = "prod_ief2_dolphin_new_folder_pref10"
+name = "stateful_dolphin_new_folder_f10"
 condition = "wm_class =~ '(?i)^dolphin$|^org.kde.dolphin$' and settings.DolphinUseF10NewFolder"
 [keymap.mappings]
 "Super-Shift-N" = ["SetSetting(Enter2Ent_Cmd=false)", "F10"]
 
 [[keymap]]
-name = "prod_ief2_dolphin_new_folder_modern"
+name = "stateful_dolphin_new_folder_modern"
 condition = "wm_class =~ '(?i)^dolphin$|^org.kde.dolphin$' and not settings.DolphinUseF10NewFolder"
 [keymap.mappings]
 "Super-Shift-N" = ["SetSetting(Enter2Ent_Cmd=false)", "Shift-C-N"]
 
+## ------------------------------------------------------------
+## Krusader (KDE) - New Folder
+## ------------------------------------------------------------
+
 [[keymap]]
-name = "prod_ief2_krusader_new_folder"
+name = "stateful_krusader_new_folder"
 condition = "wm_class =~ '(?i)^org.kde.krusader$|^krusader$'"
 [keymap.mappings]
 "Super-Shift-N" = ["SetSetting(Enter2Ent_Cmd=false)", "F7"]
 
+## ------------------------------------------------------------
+## Nemo (Cinnamon) - Delete Latch
+## ------------------------------------------------------------
+
 [[keymap]]
-name = "prod_ief2_nemo_delete_latch"
+name = "stateful_nemo_delete_latch"
 condition = "wm_class =~ '(?i)^nemo$'"
 [keymap.mappings]
 "Super-Backspace" = ["SetSetting(Enter2Ent_Cmd=false)", "Delete"]
 
+## ------------------------------------------------------------
+## Nautilus (GNOME Files) - Find (No Latch)
+## ------------------------------------------------------------
+
 [[keymap]]
-name = "prod_ief2_nautilus_find_no_latch"
+name = "stateful_nautilus_find"
 condition = "wm_class =~ '(?i)^org.gnome.nautilus$|^nautilus$'"
 [keymap.mappings]
 "Super-F" = "Ctrl-F"
 
+## ------------------------------------------------------------
+## File Manager iEF2 Toggle (Enter-to-Enter Command Mode)
+## Core stateful behavior for all file managers
+## ------------------------------------------------------------
+
 [[keymap]]
-name = "prod_ief2_filemanager_toggle_enter_true"
+name = "stateful_filemanager_toggle_enter_true"
 condition = "wm_class =~ '(?i)nautilus|org.gnome.nautilus|nemo|thunar|dolphin|org.kde.dolphin|pcmanfm|pcmanfm-qt|krusader' and settings.Enter2Ent_Cmd"
 [keymap.mappings]
 "Enter" = ["SetSetting(Enter2Ent_Cmd=false)", "F2"]
@@ -46,7 +78,7 @@ condition = "wm_class =~ '(?i)nautilus|org.gnome.nautilus|nemo|thunar|dolphin|or
 "Super-Right" = ["Alt-Right"]
 
 [[keymap]]
-name = "prod_ief2_filemanager_toggle_enter_false"
+name = "stateful_filemanager_toggle_enter_false"
 condition = "wm_class =~ '(?i)nautilus|org.gnome.nautilus|nemo|thunar|dolphin|org.kde.dolphin|pcmanfm|pcmanfm-qt|krusader' and not settings.Enter2Ent_Cmd"
 [keymap.mappings]
 "Enter" = ["SetSetting(Enter2Ent_Cmd=true)", "Enter"]
@@ -58,4 +90,3 @@ condition = "wm_class =~ '(?i)nautilus|org.gnome.nautilus|nemo|thunar|dolphin|or
 "Super-Down" = ["SetSetting(Enter2Ent_Cmd=true)", "Enter"]
 "Super-Left" = ["Home"]
 "Super-Right" = ["End"]
-

@@ -1,0 +1,45 @@
+## ============================================================
+## MULTIPURPOSE KEY CONFIGURATION
+## ============================================================
+## Tap/hold behavior for modifier keys.
+## When tapped, produces the original key. When held, acts as a modifier.
+##
+## Settings:
+## - Enter2Ent_Cmd: When enabled, Enter acts as Ctrl when held
+## - Caps2Esc_Cmd: When enabled, CapsLock acts as Esc/Ctrl
+
+[timeouts]
+multipurpose = 200
+suspend = 1000
+
+## ------------------------------------------------------------
+## Enter to Control (when held)
+## Useful for Emacs-style editing with Enter as Ctrl
+## ------------------------------------------------------------
+
+[[multipurpose]]
+name = "enter_to_ctrl"
+trigger = "ENTER"
+tap = "ENTER"
+hold = "RIGHT_CTRL"
+condition = "settings.Enter2Ent_Cmd"
+
+## ------------------------------------------------------------
+## CapsLock to Escape/Control
+## Standard macOS-like behavior: tap for Escape, hold for Control
+## Different trigger key for Chromebook keyboards (use Left Meta)
+## ------------------------------------------------------------
+
+[[multipurpose]]
+name = "caps_to_esc_not_chromebook"
+trigger = "CAPSLOCK"
+tap = "ESCAPE"
+hold = "RIGHT_CTRL"
+condition = "settings.Caps2Esc_Cmd and not (keyboard_type =~ 'Chromebook')"
+
+[[multipurpose]]
+name = "caps_to_esc_chromebook"
+trigger = "LEFT_META"
+tap = "ESCAPE"
+hold = "RIGHT_CTRL"
+condition = "settings.Caps2Esc_Cmd and (keyboard_type =~ 'Chromebook')"

@@ -1,0 +1,170 @@
+## ============================================================
+## TERMINAL SHORTCUTS
+## ============================================================
+## Keymaps for terminal emulators.
+## Most terminals use Ctrl+Shift for clipboard operations,
+## so we map Super (Cmd) to Ctrl+Shift.
+##
+## Terminal Classes: alacritty, blackbox, contour, cosmicterm,
+##   deepin-terminal, ghostty, gnome-terminal, hyper, kgx,
+##   kitty, konsole, terminology, wave, wezterm, xfce4-terminal
+
+## ------------------------------------------------------------
+## Core Terminal Shortcuts
+## Maps Super key to Ctrl+Shift for standard terminal operations
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "terminals_core_shortcuts"
+condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty'"
+[keymap.mappings]
+"Super-c" = "Ctrl-Shift-c"
+"Super-v" = "Ctrl-Shift-v"
+"Super-w" = "Ctrl-Shift-w"
+"Super-t" = "Ctrl-Shift-t"
+"Super-n" = "Ctrl-Shift-n"
+"Super-f" = "Ctrl-Shift-f"
+"Super-s" = "Ctrl-Shift-s"
+"Super-d" = "Ctrl-Shift-d"
+"Super-l" = "Ctrl-Shift-l"
+"Super-minus" = "Ctrl-minus"
+"Super-equal" = "Ctrl-Shift-equal"
+"Super-dot" = "Ctrl-c"
+"Alt-Backspace" = "Ctrl-w"
+"Alt-Delete" = ["Esc", "d"]
+"Super-Backspace" = "Ctrl-u"
+"Super-Delete" = "Ctrl-k"
+
+[[keymap]]
+name = "terminals_general"
+condition = "wm_class =~ '(?i)terminal|alacritty|kitty|konsole|ghostty|wave|terminology|deepin-terminal|contour|hyper'"
+[keymap.mappings]
+"Alt-Delete" = ["Esc", "d"]
+
+## ------------------------------------------------------------
+## Terminal-Specific Overrides
+## Each terminal has unique keybinding quirks
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "terminal_alacritty"
+condition = "wm_class =~ '(?i)^alacritty$'"
+[keymap.mappings]
+"Super-k" = "Ctrl-l"
+
+[[keymap]]
+name = "terminal_contour"
+condition = "wm_class =~ '(?i)^contour$'"
+[keymap.mappings]
+"Super-minus" = "Ctrl-Shift-minus"
+
+[[keymap]]
+name = "terminal_cosmic"
+condition = "wm_class =~ '(?i)^com.system76.cosmicterm$'"
+[keymap.mappings]
+"Super-equal" = "Ctrl-equal"
+
+[[keymap]]
+name = "terminal_deepin"
+condition = "wm_class =~ '(?i)^deepin-terminal$'"
+[keymap.mappings]
+"Super-w" = "Alt-w"
+"Super-j" = ["Ignore"]
+"Super-minus" = "Ctrl-minus"
+"Super-equal" = "Ctrl-equal"
+
+[[keymap]]
+name = "terminal_ghostty"
+condition = "wm_class =~ '(?i)ghostty'"
+[keymap.mappings]
+"Super-equal" = "Ctrl-equal"
+"Super-d" = "Super-Shift-o"
+"Shift-Super-d" = "Super-Shift-e"
+"Super-Alt-i" = "Super-Shift-i"
+"Super-k" = "Ctrl-l"
+
+[[keymap]]
+name = "terminal_hyper"
+condition = "wm_class =~ '(?i)^hyper$'"
+[keymap.mappings]
+"Super-equal" = "Ctrl-equal"
+"Shift-Ctrl-Tab" = ["bind", "Combo(Shift-Ctrl-Tab)"]
+"Ctrl-Tab" = ["bind", "Combo(Ctrl-Tab)"]
+
+[[keymap]]
+name = "terminal_kitty"
+condition = "wm_class =~ '(?i)^kitty$'"
+[keymap.mappings]
+"Super-l" = "Ctrl-l"
+"Super-k" = "Ctrl-l"
+
+[[keymap]]
+name = "terminal_konsole"
+condition = "wm_class =~ '(?i)^konsole$|^org.kde.konsole$'"
+[keymap.mappings]
+"Super-comma" = "Shift-Ctrl-comma"
+"Super-0" = "Ctrl-Alt-0"
+"Super-k" = "Shift-Ctrl-k"
+
+[[keymap]]
+name = "terminal_terminology"
+condition = "wm_class =~ '(?i)^terminology$'"
+[keymap.mappings]
+"Super-w" = "Shift-Ctrl-End"
+"Super-c" = "Alt-w"
+"Super-v" = "Alt-Enter"
+"Super-0" = "Ctrl-Alt-0"
+"Super-minus" = "Ctrl-Alt-minus"
+"Super-equal" = "Ctrl-Alt-equal"
+
+[[keymap]]
+name = "terminal_wave"
+condition = "wm_class =~ '(?i)^wave$'"
+[keymap.mappings]
+"Super-t" = "Alt-t"
+"Super-n" = "Alt-n"
+"Shift-Super-n" = "Shift-Alt-n"
+"Super-w" = "Alt-w"
+"Shift-Super-w" = "Shift-Alt-w"
+
+[[keymap]]
+name = "terminal_xfce4"
+condition = "wm_class =~ '(?i)^xfce4-terminal$'"
+[keymap.mappings]
+"Super-comma" = ["Alt-e", "Delay(100)", "e"]
+
+## ------------------------------------------------------------
+## Tab Navigation for Terminals
+## Different terminals use different shortcuts for tab switching
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "terminal_tab_nav_ctrlshifttab"
+condition = "wm_class =~ '(?i)com.raggesilver.blackbox|com.system76.cosmicterm|org.gnome.console|console|deepin-terminal|hyper|kitty|kgx'"
+[keymap.mappings]
+"Shift-Super-Left_Brace" = "Ctrl-Shift-Tab"
+"Shift-Super-Right_Brace" = "Ctrl-Tab"
+"Shift-Super-Page_Up" = "Ctrl-Shift-Tab"
+"Shift-Super-Page_Down" = "Ctrl-Tab"
+"Shift-Super-Left" = "Ctrl-Shift-Tab"
+"Shift-Super-Right" = "Ctrl-Tab"
+
+[[keymap]]
+name = "terminal_konsole_tab_switching"
+condition = "wm_class =~ '(?i)^konsole$|^org.kde.konsole$'"
+[keymap.mappings]
+"Shift-Ctrl-Tab" = ["bind", "Combo(Shift-Left)"]
+"Ctrl-Tab" = ["bind", "Combo(Shift-Right)"]
+"Ctrl-Grave" = ["bind", "Combo(Shift-Left)"]
+"Shift-Super-Left_Brace" = ["bind", "Combo(Shift-Left)"]
+"Shift-Super-Right_Brace" = ["bind", "Combo(Shift-Right)"]
+"Shift-Super-Page_Up" = ["bind", "Combo(Shift-Left)"]
+"Shift-Super-Page_Down" = ["bind", "Combo(Shift-Right)"]
+
+[[keymap]]
+name = "terminal_elementary_kitty_tab_switching"
+condition = "wm_class =~ '(?i)^io.elementary.terminal$|^kitty$'"
+[keymap.mappings]
+"Shift-Ctrl-Tab" = ["bind", "Combo(Shift-Ctrl-Left)"]
+"Ctrl-Grave" = ["bind", "Combo(Shift-Ctrl-Left)"]
+"Ctrl-Tab" = ["bind", "Combo(Shift-Ctrl-Right)"]

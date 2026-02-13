@@ -1,13 +1,30 @@
-# Fallback keymaps loaded last so app-specific keymaps in 000-400 win precedence.
+# ============================================================================
+# FALLBACK KEYMAPS
+# ============================================================================
+# These keymaps are loaded last (900 series) so that app-specific keymaps
+# in 000-700 files take precedence. Fallbacks provide sensible defaults
+# for applications without specific configurations.
+# ============================================================================
+
+# ============================================================================
+# VSCode Family - Find Fix
+# ============================================================================
 
 [[keymap]]
-name = "prod_phase12_vscode_find_fix"
+name = "fallback_vscode_find"
 condition = "wm_class =~ '(?i)code|code-oss|vscodium|cursor'"
 [keymap.mappings]
 "Super-f" = "Ctrl-f"
 
+# ============================================================================
+# General GUI Defaults
+# ============================================================================
+# Applied to all non-terminal applications as a baseline. These provide
+# macOS-style Super key navigation that works across most GUI apps.
+# ============================================================================
+
 [[keymap]]
-name = "prod_phase12_general_gui_defaults"
+name = "fallback_gui_defaults"
 condition = "not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
 "Shift-Super-Left_Brace" = "Ctrl-Page_Up"
@@ -52,8 +69,15 @@ condition = "not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-termin
 "Ctrl-Super-F6" = "Ctrl-Alt-F6"
 "Ctrl-Super-F7" = "Ctrl-Alt-F7"
 
+# ============================================================================
+# Core General Shortcuts
+# ============================================================================
+# Super-to-Ctrl mappings for all alphabetics. Excluded from JetBrains IDEs
+# which have their own comprehensive mappings in 500_editors.toml.
+# ============================================================================
+
 [[keymap]]
-name = "prod_core_general_shortcuts"
+name = "fallback_core_shortcuts"
 condition = "not (wm_class =~ '(?i)jetbrains')"
 [keymap.mappings]
 "Super-a" = "Ctrl-a"

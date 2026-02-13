@@ -1,0 +1,275 @@
+## ============================================================
+## FILE MANAGER SHORTCUTS
+## ============================================================
+## Keymaps for file manager applications.
+## Maps Super (Cmd) to Alt for navigation, provides macOS-like shortcuts.
+##
+## File Manager Classes: nautilus, dolphin, thunar, nemo, pcmanfm,
+##   pcmanfm-qt, krusader, spacefm, caja, cosmic, peony
+
+## ------------------------------------------------------------
+## Core File Manager Shortcuts
+## Common shortcuts for all file managers
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanagers_core"
+condition = "wm_class =~ 'nautilus|dolphin|thunar|nemo|pcmanfm|krusader|spacefm|caja|cosmic|peony'"
+[keymap.mappings]
+"Super-i" = "Alt-Enter"
+"Shift-Super-dot" = "Ctrl-h"
+"Super-Backspace" = "Delete"
+"Super-Left" = "Alt-Left"
+"Super-Right" = "Alt-Right"
+"Super-Up" = "Alt-Up"
+"Super-Down" = "Enter"
+
+[[keymap]]
+name = "filemanagers_preferences"
+condition = "wm_class =~ '(?i)nautilus|dolphin|thunar|nemo|pcmanfm|krusader|spacefm|caja|cosmic|peony'"
+[keymap.mappings]
+"Super-comma" = ["Alt-e", "n"]
+"Super-Backspace" = "Delete"
+
+## ------------------------------------------------------------
+## Nautilus (GNOME Files)
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanager_nautilus"
+condition = "wm_class =~ '(?i)^org.gnome.nautilus$|^nautilus$'"
+[keymap.mappings]
+"Super-1" = "Ctrl-2"
+"Super-2" = "Ctrl-1"
+"Ctrl-Super-o" = "Ctrl-Enter"
+"Super-Comma" = "Ctrl-Comma"
+"Super-f" = "Ctrl-f"
+
+[[keymap]]
+name = "filemanager_nautilus_create_archive_dialog"
+condition = "wm_class =~ '(?i)^org.gnome.nautilus$|^nautilus$' and wm_name =~ '(?i)^create archive$'"
+[keymap.mappings]
+"Enter" = "Enter"
+
+## ------------------------------------------------------------
+## Dolphin (KDE)
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanager_dolphin"
+condition = "wm_class =~ '(?i)^dolphin$|^org.kde.dolphin$'"
+[keymap.mappings]
+"Super-r" = "F5"
+"Super-2" = "Ctrl-3"
+"Super-3" = "Ctrl-2"
+"Ctrl-Super-o" = "Shift-Ctrl-o"
+"Shift-Super-n" = ["SetSetting(Enter2Ent_Cmd=false)", "Shift-Ctrl-n"]
+"Super-Comma" = "Shift-Ctrl-Comma"
+
+[[keymap]]
+name = "filemanager_dolphin_dialogs"
+condition = "wm_class =~ '(?i)^dolphin$|^org.kde.dolphin$' and wm_name =~ '(?i)edit places entry|create new file|folder already exists|file already exists'"
+[keymap.mappings]
+"Enter" = "Enter"
+
+[[keymap]]
+name = "filemanager_dolphin_pre_kf6"
+condition = "wm_class =~ '(?i)^dolphin$|^org.kde.dolphin$' and settings.DesktopKde and settings.KdeVersionPre6"
+[keymap.mappings]
+"Shift-Super-n" = ["SetSetting(Enter2Ent_Cmd=false)", "F10"]
+
+## ------------------------------------------------------------
+## Krusader (KDE)
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanager_krusader"
+condition = "wm_class =~ '(?i)^org.kde.krusader$|^krusader$'"
+[keymap.mappings]
+"Shift-Super-dot" = "Alt-dot"
+"Shift-Super-n" = ["SetSetting(Enter2Ent_Cmd=false)", "F7"]
+"Super-1" = ["Ignore"]
+"Super-2" = "Alt-Shift-d"
+"Super-3" = "Alt-Shift-b"
+"Super-4" = ["Ignore"]
+"Super-Backspace" = ["Delete", "Delay(500)", "Tab", "Delay(500)", "Enter"]
+
+[[keymap]]
+name = "filemanager_krusader_delete_confirm"
+condition = "wm_class =~ '(?i)^org.kde.krusader$|^krusader$'"
+[keymap.mappings]
+"Super-Backspace" = ["Delete", "Delay(500)", "Tab", "Delay(500)", "Enter"]
+
+## ------------------------------------------------------------
+## Thunar (XFCE)
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanager_thunar"
+condition = "wm_class =~ '(?i)^thunar$'"
+[keymap.mappings]
+"Super-comma" = ["Alt-e", "e"]
+
+[[keymap]]
+name = "filemanager_thunar_partial"
+condition = "wm_class =~ '^thunar$'"
+[keymap.mappings]
+"Super-o" = "Ctrl-Shift-p"
+"Super-f" = "Ctrl-f"
+
+## ------------------------------------------------------------
+## PCManFM
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanager_pcmanfm"
+condition = "wm_class =~ '(?i)^pcmanfm$|^pcmanfm-qt$'"
+[keymap.mappings]
+"Super-2" = "Ctrl-4"
+"Super-Backspace" = ["Delete", "Space"]
+"Super-f" = "Ctrl-f"
+
+[[keymap]]
+name = "filemanager_pcmanfm_overrides"
+condition = "wm_class =~ '(?i)^pcmanfm$|^pcmanfm-qt$'"
+[keymap.mappings]
+"Super-Backspace" = ["Delete", "Space"]
+
+[[keymap]]
+name = "filemanager_pcmanfmqt"
+condition = "wm_class =~ '(?i)^pcmanfm-qt$'"
+[keymap.mappings]
+"Super-Backspace" = "Delete"
+"Super-1" = ["Alt-v", "Delay(100)", "v", "Delay(100)", "i"]
+"Super-2" = ["Alt-v", "Delay(100)", "v", "Delay(100)", "d"]
+"Super-3" = ["Alt-v", "Delay(100)", "v", "Delay(100)", "c"]
+"Super-4" = ["Alt-v", "Delay(100)", "v", "Delay(100)", "t"]
+
+[[keymap]]
+name = "filemanager_pcmanfmqt_view_modes"
+condition = "wm_class =~ '(?i)^pcmanfm-qt$'"
+[keymap.mappings]
+"Super-1" = ["Alt-v", "Delay(100)", "v", "Delay(100)", "i"]
+"Super-2" = ["Alt-v", "Delay(100)", "v", "Delay(100)", "d"]
+"Super-3" = ["Alt-v", "Delay(100)", "v", "Delay(100)", "c"]
+"Super-4" = ["Alt-v", "Delay(100)", "v", "Delay(100)", "t"]
+
+[[keymap]]
+name = "filemanager_pcmanfmqt_desktop"
+condition = "wm_class =~ '(?i)^pcmanfm-qt$' and wm_name =~ '(?i)^pcmanfm-desktop.*$'"
+[keymap.mappings]
+"Enter" = "Enter"
+
+## ------------------------------------------------------------
+## SpaceFM
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanager_spacefm"
+condition = "wm_class =~ '(?i)^spacefm$'"
+[keymap.mappings]
+"Super-Page_Up" = ["bind", "Ctrl-Shift-Tab"]
+"Super-Page_Down" = ["bind", "Ctrl-Tab"]
+"Shift-Super-Left_Brace" = ["bind", "Ctrl-Shift-Tab"]
+"Shift-Super-Right_Brace" = ["bind", "Ctrl-Tab"]
+"Shift-Super-Left" = ["bind", "Ctrl-Shift-Tab"]
+"Shift-Super-Right" = ["bind", "Ctrl-Tab"]
+"Shift-Super-n" = ["SetSetting(Enter2Ent_Cmd=false)", "Ctrl-f"]
+"Super-f" = ["Ignore"]
+"Super-Backspace" = ["Delete", "Space"]
+"Super-Comma" = ["Alt-v", "p"]
+
+[[keymap]]
+name = "filemanager_spacefm_overrides"
+condition = "wm_class =~ '(?i)^spacefm$'"
+[keymap.mappings]
+"Super-Backspace" = ["Delete", "Space"]
+"Super-comma" = ["Alt-v", "p"]
+
+[[keymap]]
+name = "filemanager_spacefm_find_dialog"
+condition = "wm_class =~ '(?i)^spacefm$' and wm_name =~ '(?i)find files'"
+[keymap.mappings]
+"Enter" = "Enter"
+"Esc" = "Alt-F4"
+"Super-w" = "Alt-F4"
+
+## ------------------------------------------------------------
+## Caja (MATE)
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanager_caja"
+condition = "wm_class =~ '(?i)^caja$'"
+[keymap.mappings]
+"Ctrl-Super-o" = "Shift-Ctrl-Enter"
+
+## ------------------------------------------------------------
+## COSMIC Files
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanager_cosmic_files"
+condition = "wm_class =~ '(?i)^com.system76.cosmicfiles$'"
+[keymap.mappings]
+"Shift-Super-Left_Brace" = ["bind", "Shift-Ctrl-Tab"]
+"Shift-Super-Right_Brace" = ["bind", "Ctrl-Tab"]
+"Shift-Super-Left" = ["bind", "Shift-Ctrl-Tab"]
+"Shift-Super-Right" = ["bind", "Ctrl-Tab"]
+"Super-i" = "Space"
+"Alt-Enter" = "Space"
+
+## ------------------------------------------------------------
+## DDE File Manager (Deepin)
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanager_dde"
+condition = "wm_class =~ '(?i)^dde-file-manager$'"
+[keymap.mappings]
+"Super-i" = "Ctrl-i"
+"Super-Comma" = ["Ignore"]
+"Super-Up" = "Ctrl-Up"
+"Shift-Super-Left_Brace" = ["bind", "Ctrl-Shift-Tab"]
+"Shift-Super-Right_Brace" = ["bind", "Ctrl-Tab"]
+"Shift-Super-Left" = ["bind", "Ctrl-Shift-Tab"]
+"Shift-Super-Right" = ["bind", "Ctrl-Tab"]
+
+## ------------------------------------------------------------
+## Pantheon Files (Elementary)
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanager_pantheon"
+condition = "wm_class =~ '(?i)^io.elementary.files$'"
+[keymap.mappings]
+"Ctrl-Super-o" = "Shift-Enter"
+"Super-Comma" = ["Ignore"]
+
+## ------------------------------------------------------------
+## Peony (UKUI)
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanager_peony"
+condition = "wm_class =~ '(?i)^peony-qt$'"
+[keymap.mappings]
+"Super-Comma" = ["Ignore"]
+"Super-Equal" = "Shift-Ctrl-Equal"
+"Shift-Super-Left_Brace" = ["bind", "Ctrl-Shift-Tab"]
+"Shift-Super-Right_Brace" = ["bind", "Ctrl-Tab"]
+"Shift-Super-Left" = ["bind", "Ctrl-Shift-Tab"]
+"Shift-Super-Right" = ["bind", "Ctrl-Tab"]
+
+## ------------------------------------------------------------
+## XDG File Dialogs
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filedialogs_xdg"
+condition = "wm_class =~ 'xdg-desktop-portal-gnome|firefox|librewolf|waterfox|zen' and wm_name =~ 'Open File|Save As'"
+[keymap.mappings]
+"Super-Left" = "Alt-Left"
+"Super-Right" = "Alt-Right"
+"Super-Up" = "Alt-Up"
+"Super-Down" = "Enter"

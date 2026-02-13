@@ -1,0 +1,222 @@
+## ============================================================
+## EDITOR AND IDE SHORTCUTS
+## ============================================================
+## Keymaps for text editors and integrated development environments.
+## Maps Super (Cmd) to Ctrl for common editor operations.
+##
+## Editor Classes: code, code-oss, vscodium, cursor, jetbrains,
+##   kate, kwrite, sublime, gedit, xed, gnome-text-editor
+
+## ------------------------------------------------------------
+## Core Editor Shortcuts
+## Word-wise navigation for non-VSCode applications
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "editors_wordwise_non_vscode"
+condition = "not (wm_class =~ 'code|code-oss|vscodium|cursor')"
+[keymap.mappings]
+"Alt-Left" = "Ctrl-Left"
+"Alt-Shift-Left" = "Ctrl-Shift-Left"
+"Alt-Right" = "Ctrl-Right"
+"Alt-Shift-Right" = "Ctrl-Shift-Right"
+
+## ------------------------------------------------------------
+## VSCode / VSCodium / Cursor
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "editor_vscode_overrides"
+condition = "wm_class =~ 'code|code-oss|vscodium|cursor'"
+[keymap.mappings]
+"Super-f" = "Ctrl-f"
+"Super-c" = "Ctrl-c"
+"Super-x" = "Ctrl-x"
+"Super-dot" = "Ctrl-dot"
+"Super-Grave" = "Ctrl-Grave"
+
+[[keymap]]
+name = "editor_vscode_navigation"
+condition = "wm_class =~ '(?i)code|code-oss|vscodium|cursor'"
+[keymap.mappings]
+"Alt-Left" = "Ctrl-Left"
+"Alt-Right" = "Ctrl-Right"
+"Alt-Shift-Left" = "Ctrl-Shift-Left"
+"Alt-Shift-Right" = "Ctrl-Shift-Right"
+"Super-Backspace" = ["Shift-Home", "Delete"]
+"Super-Delete" = ["Shift-End", "Delete"]
+
+## ------------------------------------------------------------
+## JetBrains IDEs (IntelliJ, PyCharm, WebStorm, etc.)
+## Extensive remapping for macOS-like shortcuts
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "editor_jetbrains"
+condition = "wm_class =~ '(?i)jetbrains' and not (wm_class =~ '(?i)toolbox')"
+[keymap.mappings]
+"Ctrl-Key_0" = "Alt-Key_0"
+"Ctrl-Key_1" = "Alt-Key_1"
+"Ctrl-Key_2" = "Alt-Key_2"
+"Ctrl-Key_3" = "Alt-Key_3"
+"Ctrl-Key_4" = "Alt-Key_4"
+"Ctrl-Key_5" = "Alt-Key_5"
+"Ctrl-Key_6" = "Alt-Key_6"
+"Ctrl-Key_7" = "Alt-Key_7"
+"Ctrl-Key_8" = "Alt-Key_8"
+"Ctrl-Key_9" = "Alt-Key_9"
+"Super-Grave" = "Ctrl-Grave"
+"Ctrl-Comma" = "Ctrl-Alt-s"
+"Ctrl-Semicolon" = "Ctrl-Alt-Shift-s"
+"Ctrl-Alt-r" = "F9"
+"Ctrl-g" = "F3"
+"Ctrl-Shift-F3" = "Shift-F3"
+"Super-g" = "Alt-j"
+"Ctrl-Super-g" = "Ctrl-Alt-Shift-j"
+"Super-Shift-g" = "Alt-Shift-j"
+"Super-j" = "Ctrl-q"
+"Ctrl-n" = "Alt-Insert"
+"Super-o" = "Ctrl-o"
+"Super-i" = "Ctrl-i"
+"Alt-Up" = "Ctrl-w"
+"Alt-Down" = "Ctrl-Shift-w"
+"Super-Shift-q" = "Alt-q"
+"Super-Alt-o" = "Ctrl-Alt-o"
+"Super-Alt-i" = "Ctrl-Alt-i"
+"Ctrl-Backspace" = "Ctrl-y"
+"Super-Shift-j" = "Ctrl-Shift-j"
+"Alt-Delete" = "Ctrl-Delete"
+"Alt-Backspace" = "Ctrl-Backspace"
+"Ctrl-Shift-Equal" = "Ctrl-Shift-KPPLUS"
+"Ctrl-Minus" = "Ctrl-KPMINUS"
+"Ctrl-Shift-Minus" = "Ctrl-Shift-KPMINUS"
+"Ctrl-w" = "Ctrl-F4"
+"Ctrl-Delete" = "Alt-Delete"
+"Ctrl-t" = "Ctrl-Alt-Shift-t"
+"Ctrl-o" = "Ctrl-n"
+"Ctrl-Shift-o" = "Ctrl-Shift-n"
+"Ctrl-Alt-o" = "Ctrl-Alt-Shift-n"
+"Super-Right" = "Alt-Right"
+"Super-Left" = "Alt-Left"
+"Ctrl-l" = "Ctrl-g"
+"Alt-Space" = "Ctrl-Shift-i"
+"Ctrl-y" = "Ctrl-Shift-i"
+"Super-Shift-b" = "Ctrl-Shift-b"
+"Super-Up" = "Alt-Up"
+"Super-Down" = "Alt-Down"
+"Ctrl-Left_Brace" = "Alt-Shift-Left"
+"Ctrl-Right_Brace" = "Alt-Shift-Right"
+"Super-h" = "Ctrl-h"
+"Super-Alt-h" = "Ctrl-Alt-h"
+"Ctrl-Down" = "Ctrl-Enter"
+"Alt-Home" = "Alt-Home"
+"F2" = "F11"
+"Super-F3" = "Ctrl-F11"
+"Super-Key_0" = "Ctrl-Key_0"
+"Super-Key_1" = "Ctrl-Key_1"
+"Super-Key_2" = "Ctrl-Key_2"
+"Super-Key_3" = "Ctrl-Key_3"
+"Super-Key_4" = "Ctrl-Key_4"
+"Super-Key_5" = "Ctrl-Key_5"
+"Super-Key_6" = "Ctrl-Key_6"
+"Super-Key_7" = "Ctrl-Key_7"
+"Super-Key_8" = "Ctrl-Key_8"
+"Super-Key_9" = "Ctrl-Key_9"
+"Ctrl-F3" = "Shift-F11"
+"Super-Alt-r" = "Alt-Shift-F10"
+"Super-Alt-d" = "Alt-Shift-F9"
+"Super-r" = "Shift-F10"
+"Super-d" = "Shift-F9"
+"Super-Shift-r" = "Ctrl-Shift-F10"
+"Super-Shift-d" = "Ctrl-Shift-F9"
+"Super-v" = "Alt-Grave"
+"Super-c" = "Ctrl-c"
+
+## ------------------------------------------------------------
+## Kate (KDE Advanced Text Editor)
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "editor_kate"
+condition = "wm_class =~ '(?i)^org.kde.kate$'"
+[keymap.mappings]
+"Super-comma" = "Shift-Ctrl-comma"
+"Super-g" = "Ctrl-g"
+"Super-Shift-g" = "F3"
+
+## ------------------------------------------------------------
+## KWrite (KDE Simple Text Editor)
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "editor_kwrite"
+condition = "wm_class =~ '(?i)^kwrite$|^org.kde.kwrite$'"
+[keymap.mappings]
+"Super-comma" = "Shift-Ctrl-comma"
+"Super-t" = "Ctrl-n"
+"Super-g" = "F3"
+"Super-Shift-g" = "Shift-F3"
+"Super-Alt-g" = "Ctrl-g"
+"Super-Backspace" = "Ctrl-k"
+
+[[keymap]]
+name = "editor_kwrite_close_dialog"
+condition = "wm_class =~ '(?i)^kwrite$|^org.kde.kwrite$' and wm_name =~ '(?i)^Close Document.*KWrite$'"
+[keymap.mappings]
+"Super-d" = "Alt-d"
+"Super-s" = "Alt-s"
+
+## ------------------------------------------------------------
+## gedit / xed (GNOME/Mint Text Editors)
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "editor_gedit_xed_tab_nav"
+condition = "wm_class =~ '(?i)^gedit$|^xed$'"
+[keymap.mappings]
+"Shift-Super-Left_Brace" = "Ctrl-Alt-Page_Up"
+"Shift-Super-Right_Brace" = "Ctrl-Alt-Page_Down"
+"Shift-Super-Page_Up" = "Ctrl-Alt-Page_Up"
+"Shift-Super-Page_Down" = "Ctrl-Alt-Page_Down"
+
+[[keymap]]
+name = "editor_xed"
+condition = "wm_class =~ '(?i)^xed$'"
+[keymap.mappings]
+"Super-t" = "Ctrl-n"
+
+## ------------------------------------------------------------
+## GNOME Text Editor
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "editor_gnome_text_editor"
+condition = "wm_class =~ '(?i)^gnome-text-editor$|^org.gnome.texteditor$'"
+[keymap.mappings]
+"Super-slash" = ["Ignore"]
+"Super-Alt-f" = "Ctrl-h"
+
+## ------------------------------------------------------------
+## Sublime Text
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "editor_sublime"
+condition = "wm_class =~ '(?i)sublime'"
+[keymap.mappings]
+"Ctrl-Alt-v" = ["Ctrl-k", "Ctrl-v"]
+
+## ------------------------------------------------------------
+## LibreOffice Writer
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "editor_libreoffice_writer"
+condition = "wm_class =~ 'libreoffice-writer'"
+[keymap.mappings]
+"Super-comma" = "Alt-F12"
+
+## ------------------------------------------------------------
+## Tab Navigation for Editors
+## Applications using Ctrl+Alt+Page Up/Down for tab switching
+## ------------------------------------------------------------

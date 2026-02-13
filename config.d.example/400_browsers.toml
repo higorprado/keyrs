@@ -1,0 +1,93 @@
+## ============================================================
+## BROWSER SHORTCUTS
+## ============================================================
+## Keymaps for web browsers.
+## Maps Super (Cmd) to Ctrl for common browser operations.
+##
+## Browser Classes: firefox, librewolf, waterfox, zen, chrome,
+##   chromium, brave, microsoft-edge, vivaldi, falkon
+
+## ------------------------------------------------------------
+## Core Browser Shortcuts
+## Common shortcuts for all browsers
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "browsers_core"
+condition = "wm_class =~ 'firefox|librewolf|waterfox|zen|chrom|chrome|vivaldi|falkon'"
+[keymap.mappings]
+"Super-q" = "Ctrl-q"
+"Super-Alt-i" = "Ctrl-Shift-i"
+"Super-Alt-j" = "Ctrl-Shift-j"
+
+[[keymap]]
+name = "browsers_chromium"
+condition = "wm_class =~ 'chrom|chrome|vivaldi|falkon'"
+[keymap.mappings]
+"Super-y" = "Ctrl-h"
+"Super-Alt-u" = "Ctrl-u"
+"Super-Shift-j" = "Ctrl-j"
+
+## ------------------------------------------------------------
+## Firefox
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "browser_firefox_macros"
+condition = "wm_class =~ '(?i)firefox|librewolf|waterfox|zen'"
+[keymap.mappings]
+"Super-comma" = ["Ctrl-l", "Delay(120)", "Text(about:preferences)", "Delay(160)", "Enter"]
+"Super-Backspace" = ["Shift-Home", "Backspace"]
+"Super-Delete" = ["Shift-End", "Delete"]
+
+[[keymap]]
+name = "browser_firefox_overrides"
+condition = "wm_class =~ 'firefox|librewolf|waterfox|zen'"
+[keymap.mappings]
+"Shift-Super-n" = "Shift-Ctrl-p"
+"Super-1" = "Alt-1"
+"Super-2" = "Alt-2"
+"Super-3" = "Alt-3"
+"Super-4" = "Alt-4"
+"Super-5" = "Alt-5"
+"Super-6" = "Alt-6"
+"Super-7" = "Alt-7"
+"Super-8" = "Alt-8"
+"Super-9" = "Alt-9"
+
+## ------------------------------------------------------------
+## Chrome/Chromium
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "browser_chrome_settings"
+condition = "wm_class =~ '(?i)google-chrome|chromium|brave|microsoft-edge|vivaldi-stable'"
+[keymap.mappings]
+"Super-comma" = ["Ctrl-l", "Delay(120)", "Text(chrome://settings)", "Delay(160)", "Enter"]
+
+## ------------------------------------------------------------
+## Vivaldi
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "browser_vivaldi_macros"
+condition = "wm_class =~ '(?i)^vivaldi.*$'"
+[keymap.mappings]
+"Super-slash" = ["F10", "Delay(200)", "H", "Delay(200)", "K"]
+"Super-comma" = ["F10", "Delay(200)", "S"]
+
+[[keymap]]
+name = "browser_vivaldi_settings_dialog"
+condition = "wm_class =~ '(?i)^vivaldi.*$' and wm_name =~ '(?i)^Vivaldi Settings:.*Vivaldi$'"
+[keymap.mappings]
+"Esc" = "Alt-F4"
+
+## ------------------------------------------------------------
+## Falkon (KDE)
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "browser_falkon"
+condition = "wm_class =~ '(?i)^org.kde.falkon$|^falkon$'"
+[keymap.mappings]
+"Super-comma" = "Shift-Ctrl-comma"
