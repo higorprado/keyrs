@@ -116,12 +116,7 @@ condition = "wm_class =~ '(?i)^org.kde.krusader$|^krusader$'"
 # Delete with confirmation sequence
 "Super-Backspace" = ["Delete", "Delay(500)", "Tab", "Delay(500)", "Enter"]
 
-[[keymap]]
-name = "filemanager_krusader_delete_confirm"
-condition = "wm_class =~ '(?i)^org.kde.krusader$|^krusader$'"
-[keymap.mappings]
-# Delete with confirmation dialog
-"Super-Backspace" = ["Delete", "Delay(500)", "Tab", "Delay(500)", "Enter"]
+
 
 ## ------------------------------------------------------------
 ## Thunar (XFCE)
@@ -159,32 +154,13 @@ condition = "wm_class =~ '(?i)^pcmanfm$|^pcmanfm-qt$'"
 "Super-f" = "Ctrl-f"
 
 [[keymap]]
-name = "filemanager_pcmanfm_overrides"
-condition = "wm_class =~ '(?i)^pcmanfm$|^pcmanfm-qt$'"
-[keymap.mappings]
-# Delete with confirmation
-"Super-Backspace" = ["Delete", "Space"]
-
-[[keymap]]
 name = "filemanager_pcmanfmqt"
 condition = "wm_class =~ '(?i)^pcmanfm-qt$'"
 [keymap.mappings]
 # Delete file without confirmation
 "Super-Backspace" = "Delete"
-# View mode: Icon view
-"Super-1" = ["Alt-v", "Delay(100)", "v", "Delay(100)", "i"]
-# View mode: Detailed list view
-"Super-2" = ["Alt-v", "Delay(100)", "v", "Delay(100)", "d"]
-# View mode: Compact view
-"Super-3" = ["Alt-v", "Delay(100)", "v", "Delay(100)", "c"]
-# View mode: Thumbnail view
-"Super-4" = ["Alt-v", "Delay(100)", "v", "Delay(100)", "t"]
-
-[[keymap]]
-name = "filemanager_pcmanfmqt_view_modes"
-condition = "wm_class =~ '(?i)^pcmanfm-qt$'"
-[keymap.mappings]
-# View mode: Icon view
+# View modes (Super+1/2/3/4 for different views)
+# Icon view
 "Super-1" = ["Alt-v", "Delay(100)", "v", "Delay(100)", "i"]
 # View mode: Detailed list view
 "Super-2" = ["Alt-v", "Delay(100)", "v", "Delay(100)", "d"]
@@ -224,15 +200,6 @@ condition = "wm_class =~ '(?i)^spacefm$'"
 "Shift-Super-n" = ["SetSetting(Enter2Ent_Cmd=false)", "Ctrl-f"]
 # Disable global find shortcut in favor of SpaceFM native
 "Super-f" = ["Ignore"]
-# Delete with confirmation
-"Super-Backspace" = ["Delete", "Space"]
-# Toggle show hidden files
-"Super-Comma" = ["Alt-v", "p"]
-
-[[keymap]]
-name = "filemanager_spacefm_overrides"
-condition = "wm_class =~ '(?i)^spacefm$'"
-[keymap.mappings]
 # Delete with confirmation
 "Super-Backspace" = ["Delete", "Space"]
 # Toggle show hidden files

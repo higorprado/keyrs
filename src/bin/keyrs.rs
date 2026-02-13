@@ -825,4 +825,47 @@ mod tests {
         let kb_type = resolve_keyboard_type(&settings, &device_infos);
         assert_eq!(kb_type, KeyboardType::IBM);
     }
+
+    #[test]
+    #[cfg(feature = "pure-rust")]
+    fn test_example_config_no_duplicate_keymap_names() {
+        use std::collections::HashSet;
+
+        let config_dir = PathBuf::from("./config.d.example");
+        if !config_dir.exists() {
+            return;
+        }
+
+        let out = std::env::temp_dir().join("keyrs-duplicate-check.toml");
+        compose_config_dir(&config_dir, &out).expect("compose");
+
+        let rendered = std::fs::read_to_string(&out).expect("read output");
+
+        let mut seen_names: HashSet<String> = HashSet::new();
+        let mut duplicates: Vec<String> = Vec::new();
+
+        for line in rendered.lines() {
+            let trimmed = line.trim();
+            if trimmed.starts_with("name = ") {
+                let name = trimmed
+                    .strip_prefix("name = ")
+                    .unwrap_or("")
+                    .trim_matches('"')
+                    .to_string();
+                if !name.is_empty() {
+                    if !seen_names.insert(name.clone()) {
+                        duplicates.push(name);
+                    }
+                }
+            }
+        }
+
+        let _ = std::fs::remove_file(&out);
+
+        assert!(
+            duplicates.is_empty(),
+            "Duplicate keymap names found: {:?}",
+            duplicates
+        );
+    }
 }
