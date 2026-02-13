@@ -1,0 +1,31 @@
+# Writer Profile - Content Creation Focus
+# Minimal remapping with text navigation enhancements
+
+[general]
+suspend_key = "F11"
+
+[timeouts]
+multipurpose = 200
+suspend = 1000
+
+[[keymap]]
+name = "writer_clipboard"
+[keymap.mappings]
+"Super-c" = "Ctrl-c"
+"Super-v" = "Ctrl-v"
+"Super-x" = "Ctrl-x"
+"Super-a" = "Ctrl-a"
+"Super-z" = "Ctrl-z"
+"Super-y" = "Ctrl-y"
+"Super-s" = "Ctrl-s"
+
+[[keymap]]
+name = "writer_navigation"
+[keymap.mappings]
+"Super-Left" = "Home"
+"Super-Right" = "End"
+"Super-Up" = "Ctrl-Home"
+"Super-Down" = "Ctrl-End"
+"Super-b" = "Ctrl-b"
+"Super-i" = "Ctrl-i"
+"Super-u" = "Ctrl-u"

@@ -1,0 +1,1643 @@
+[general]
+suspend_key = "F11"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty'"
+name = "terminals_core_shortcuts"
+
+[keymap.mappings]
+Alt-Backspace = "Ctrl-w"
+Alt-Delete = [
+    "Esc",
+    "d",
+]
+Super-Backspace = "Ctrl-u"
+Super-Delete = "Ctrl-k"
+Super-c = "Ctrl-Shift-c"
+Super-d = "Ctrl-Shift-d"
+Super-dot = "Ctrl-c"
+Super-equal = "Ctrl-Shift-equal"
+Super-f = "Ctrl-Shift-f"
+Super-l = "Ctrl-Shift-l"
+Super-minus = "Ctrl-minus"
+Super-n = "Ctrl-Shift-n"
+Super-s = "Ctrl-Shift-s"
+Super-t = "Ctrl-Shift-t"
+Super-v = "Ctrl-Shift-v"
+Super-w = "Ctrl-Shift-w"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)terminal|alacritty|kitty|konsole|ghostty|wave|terminology|deepin-terminal|contour|hyper'"
+name = "terminals_general"
+
+[keymap.mappings]
+Alt-Delete = [
+    "Esc",
+    "d",
+]
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^alacritty$'"
+name = "terminal_alacritty"
+
+[keymap.mappings]
+Super-k = "Ctrl-l"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^contour$'"
+name = "terminal_contour"
+
+[keymap.mappings]
+Super-minus = "Ctrl-Shift-minus"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^com.system76.cosmicterm$'"
+name = "terminal_cosmic"
+
+[keymap.mappings]
+Super-equal = "Ctrl-equal"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^deepin-terminal$'"
+name = "terminal_deepin"
+
+[keymap.mappings]
+Super-equal = "Ctrl-equal"
+Super-j = ["Ignore"]
+Super-minus = "Ctrl-minus"
+Super-w = "Alt-w"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)ghostty'"
+name = "terminal_ghostty"
+
+[keymap.mappings]
+Shift-Super-d = "Super-Shift-e"
+Super-Alt-i = "Super-Shift-i"
+Super-d = "Super-Shift-o"
+Super-equal = "Ctrl-equal"
+Super-k = "Ctrl-l"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^hyper$'"
+name = "terminal_hyper"
+
+[keymap.mappings]
+Ctrl-Tab = [
+    "bind",
+    "Combo(Ctrl-Tab)",
+]
+Shift-Ctrl-Tab = [
+    "bind",
+    "Combo(Shift-Ctrl-Tab)",
+]
+Super-equal = "Ctrl-equal"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^kitty$'"
+name = "terminal_kitty"
+
+[keymap.mappings]
+Super-k = "Ctrl-l"
+Super-l = "Ctrl-l"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^konsole$|^org.kde.konsole$'"
+name = "terminal_konsole"
+
+[keymap.mappings]
+Super-0 = "Ctrl-Alt-0"
+Super-comma = "Shift-Ctrl-comma"
+Super-k = "Shift-Ctrl-k"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^terminology$'"
+name = "terminal_terminology"
+
+[keymap.mappings]
+Super-0 = "Ctrl-Alt-0"
+Super-c = "Alt-w"
+Super-equal = "Ctrl-Alt-equal"
+Super-minus = "Ctrl-Alt-minus"
+Super-v = "Alt-Enter"
+Super-w = "Shift-Ctrl-End"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^wave$'"
+name = "terminal_wave"
+
+[keymap.mappings]
+Shift-Super-n = "Shift-Alt-n"
+Shift-Super-w = "Shift-Alt-w"
+Super-n = "Alt-n"
+Super-t = "Alt-t"
+Super-w = "Alt-w"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^xfce4-terminal$'"
+name = "terminal_xfce4"
+
+[keymap.mappings]
+Super-comma = [
+    "Alt-e",
+    "Delay(100)",
+    "e",
+]
+
+[[keymap]]
+condition = "wm_class =~ '(?i)com.raggesilver.blackbox|com.system76.cosmicterm|org.gnome.console|console|deepin-terminal|hyper|kitty|kgx'"
+name = "terminal_tab_nav_ctrlshifttab"
+
+[keymap.mappings]
+Shift-Super-Left = "Ctrl-Shift-Tab"
+Shift-Super-Left_Brace = "Ctrl-Shift-Tab"
+Shift-Super-Page_Down = "Ctrl-Tab"
+Shift-Super-Page_Up = "Ctrl-Shift-Tab"
+Shift-Super-Right = "Ctrl-Tab"
+Shift-Super-Right_Brace = "Ctrl-Tab"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^konsole$|^org.kde.konsole$'"
+name = "terminal_konsole_tab_switching"
+
+[keymap.mappings]
+Ctrl-Grave = [
+    "bind",
+    "Combo(Shift-Left)",
+]
+Ctrl-Tab = [
+    "bind",
+    "Combo(Shift-Right)",
+]
+Shift-Ctrl-Tab = [
+    "bind",
+    "Combo(Shift-Left)",
+]
+Shift-Super-Left_Brace = [
+    "bind",
+    "Combo(Shift-Left)",
+]
+Shift-Super-Page_Down = [
+    "bind",
+    "Combo(Shift-Right)",
+]
+Shift-Super-Page_Up = [
+    "bind",
+    "Combo(Shift-Left)",
+]
+Shift-Super-Right_Brace = [
+    "bind",
+    "Combo(Shift-Right)",
+]
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^io.elementary.terminal$|^kitty$'"
+name = "terminal_elementary_kitty_tab_switching"
+
+[keymap.mappings]
+Ctrl-Grave = [
+    "bind",
+    "Combo(Shift-Ctrl-Left)",
+]
+Ctrl-Tab = [
+    "bind",
+    "Combo(Shift-Ctrl-Right)",
+]
+Shift-Ctrl-Tab = [
+    "bind",
+    "Combo(Shift-Ctrl-Left)",
+]
+
+[[keymap]]
+condition = "wm_class =~ 'nautilus|dolphin|thunar|nemo|pcmanfm|krusader|spacefm|caja|cosmic|peony'"
+name = "filemanagers_core"
+
+[keymap.mappings]
+Shift-Super-dot = "Ctrl-h"
+Super-Backspace = "Delete"
+Super-Down = "Enter"
+Super-Left = "Alt-Left"
+Super-Right = "Alt-Right"
+Super-Up = "Alt-Up"
+Super-i = "Alt-Enter"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)nautilus|dolphin|thunar|nemo|pcmanfm|krusader|spacefm|caja|cosmic|peony'"
+name = "filemanagers_preferences"
+
+[keymap.mappings]
+Super-Backspace = "Delete"
+Super-comma = [
+    "Alt-e",
+    "n",
+]
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^org.gnome.nautilus$|^nautilus$'"
+name = "filemanager_nautilus"
+
+[keymap.mappings]
+Ctrl-Super-o = "Ctrl-Enter"
+Super-1 = "Ctrl-2"
+Super-2 = "Ctrl-1"
+Super-Comma = "Ctrl-Comma"
+Super-f = "Ctrl-f"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^org.gnome.nautilus$|^nautilus$' and wm_name =~ '(?i)^create archive$'"
+name = "filemanager_nautilus_create_archive_dialog"
+
+[keymap.mappings]
+Enter = "Enter"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^dolphin$|^org.kde.dolphin$'"
+name = "filemanager_dolphin"
+
+[keymap.mappings]
+Ctrl-Super-o = "Shift-Ctrl-o"
+Shift-Super-n = [
+    "SetSetting(Enter2Ent_Cmd=false)",
+    "Shift-Ctrl-n",
+]
+Super-2 = "Ctrl-3"
+Super-3 = "Ctrl-2"
+Super-Comma = "Shift-Ctrl-Comma"
+Super-r = "F5"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^dolphin$|^org.kde.dolphin$' and wm_name =~ '(?i)edit places entry|create new file|folder already exists|file already exists'"
+name = "filemanager_dolphin_dialogs"
+
+[keymap.mappings]
+Enter = "Enter"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^dolphin$|^org.kde.dolphin$' and settings.DesktopKde and settings.KdeVersionPre6"
+name = "filemanager_dolphin_pre_kf6"
+
+[keymap.mappings]
+Shift-Super-n = [
+    "SetSetting(Enter2Ent_Cmd=false)",
+    "F10",
+]
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^org.kde.krusader$|^krusader$'"
+name = "filemanager_krusader"
+
+[keymap.mappings]
+Shift-Super-dot = "Alt-dot"
+Shift-Super-n = [
+    "SetSetting(Enter2Ent_Cmd=false)",
+    "F7",
+]
+Super-1 = ["Ignore"]
+Super-2 = "Alt-Shift-d"
+Super-3 = "Alt-Shift-b"
+Super-4 = ["Ignore"]
+Super-Backspace = [
+    "Delete",
+    "Delay(500)",
+    "Tab",
+    "Delay(500)",
+    "Enter",
+]
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^thunar$'"
+name = "filemanager_thunar"
+
+[keymap.mappings]
+Super-comma = [
+    "Alt-e",
+    "e",
+]
+
+[[keymap]]
+condition = "wm_class =~ '^thunar$'"
+name = "filemanager_thunar_partial"
+
+[keymap.mappings]
+Super-f = "Ctrl-f"
+Super-o = "Ctrl-Shift-p"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^pcmanfm$|^pcmanfm-qt$'"
+name = "filemanager_pcmanfm"
+
+[keymap.mappings]
+Super-2 = "Ctrl-4"
+Super-Backspace = [
+    "Delete",
+    "Space",
+]
+Super-f = "Ctrl-f"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^pcmanfm-qt$'"
+name = "filemanager_pcmanfmqt"
+
+[keymap.mappings]
+Super-1 = [
+    "Alt-v",
+    "Delay(100)",
+    "v",
+    "Delay(100)",
+    "i",
+]
+Super-2 = [
+    "Alt-v",
+    "Delay(100)",
+    "v",
+    "Delay(100)",
+    "d",
+]
+Super-3 = [
+    "Alt-v",
+    "Delay(100)",
+    "v",
+    "Delay(100)",
+    "c",
+]
+Super-4 = [
+    "Alt-v",
+    "Delay(100)",
+    "v",
+    "Delay(100)",
+    "t",
+]
+Super-Backspace = "Delete"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^pcmanfm-qt$' and wm_name =~ '(?i)^pcmanfm-desktop.*$'"
+name = "filemanager_pcmanfmqt_desktop"
+
+[keymap.mappings]
+Enter = "Enter"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^spacefm$'"
+name = "filemanager_spacefm"
+
+[keymap.mappings]
+Shift-Super-Left = [
+    "bind",
+    "Ctrl-Shift-Tab",
+]
+Shift-Super-Left_Brace = [
+    "bind",
+    "Ctrl-Shift-Tab",
+]
+Shift-Super-Right = [
+    "bind",
+    "Ctrl-Tab",
+]
+Shift-Super-Right_Brace = [
+    "bind",
+    "Ctrl-Tab",
+]
+Shift-Super-n = [
+    "SetSetting(Enter2Ent_Cmd=false)",
+    "Ctrl-f",
+]
+Super-Backspace = [
+    "Delete",
+    "Space",
+]
+Super-Page_Down = [
+    "bind",
+    "Ctrl-Tab",
+]
+Super-Page_Up = [
+    "bind",
+    "Ctrl-Shift-Tab",
+]
+Super-comma = [
+    "Alt-v",
+    "p",
+]
+Super-f = ["Ignore"]
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^spacefm$' and wm_name =~ '(?i)find files'"
+name = "filemanager_spacefm_find_dialog"
+
+[keymap.mappings]
+Enter = "Enter"
+Esc = "Alt-F4"
+Super-w = "Alt-F4"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^caja$'"
+name = "filemanager_caja"
+
+[keymap.mappings]
+Ctrl-Super-o = "Shift-Ctrl-Enter"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^com.system76.cosmicfiles$'"
+name = "filemanager_cosmic_files"
+
+[keymap.mappings]
+Alt-Enter = "Space"
+Shift-Super-Left = [
+    "bind",
+    "Shift-Ctrl-Tab",
+]
+Shift-Super-Left_Brace = [
+    "bind",
+    "Shift-Ctrl-Tab",
+]
+Shift-Super-Right = [
+    "bind",
+    "Ctrl-Tab",
+]
+Shift-Super-Right_Brace = [
+    "bind",
+    "Ctrl-Tab",
+]
+Super-i = "Space"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^dde-file-manager$'"
+name = "filemanager_dde"
+
+[keymap.mappings]
+Shift-Super-Left = [
+    "bind",
+    "Ctrl-Shift-Tab",
+]
+Shift-Super-Left_Brace = [
+    "bind",
+    "Ctrl-Shift-Tab",
+]
+Shift-Super-Right = [
+    "bind",
+    "Ctrl-Tab",
+]
+Shift-Super-Right_Brace = [
+    "bind",
+    "Ctrl-Tab",
+]
+Super-Comma = ["Ignore"]
+Super-Up = "Ctrl-Up"
+Super-i = "Ctrl-i"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^io.elementary.files$'"
+name = "filemanager_pantheon"
+
+[keymap.mappings]
+Ctrl-Super-o = "Shift-Enter"
+Super-Comma = ["Ignore"]
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^peony-qt$'"
+name = "filemanager_peony"
+
+[keymap.mappings]
+Shift-Super-Left = [
+    "bind",
+    "Ctrl-Shift-Tab",
+]
+Shift-Super-Left_Brace = [
+    "bind",
+    "Ctrl-Shift-Tab",
+]
+Shift-Super-Right = [
+    "bind",
+    "Ctrl-Tab",
+]
+Shift-Super-Right_Brace = [
+    "bind",
+    "Ctrl-Tab",
+]
+Super-Comma = ["Ignore"]
+Super-Equal = "Shift-Ctrl-Equal"
+
+[[keymap]]
+condition = "wm_class =~ 'xdg-desktop-portal-gnome|firefox|librewolf|waterfox|zen' and wm_name =~ 'Open File|Save As'"
+name = "filedialogs_xdg"
+
+[keymap.mappings]
+Super-Down = "Enter"
+Super-Left = "Alt-Left"
+Super-Right = "Alt-Right"
+Super-Up = "Alt-Up"
+
+[[keymap]]
+condition = "wm_class =~ 'firefox|librewolf|waterfox|zen|chrom|chrome|vivaldi|falkon'"
+name = "browsers_core"
+
+[keymap.mappings]
+Super-Alt-i = "Ctrl-Shift-i"
+Super-Alt-j = "Ctrl-Shift-j"
+Super-q = "Ctrl-q"
+
+[[keymap]]
+condition = "wm_class =~ 'chrom|chrome|vivaldi|falkon'"
+name = "browsers_chromium"
+
+[keymap.mappings]
+Super-Alt-u = "Ctrl-u"
+Super-Shift-j = "Ctrl-j"
+Super-y = "Ctrl-h"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)firefox|librewolf|waterfox|zen'"
+name = "browser_firefox_macros"
+
+[keymap.mappings]
+Super-Backspace = [
+    "Shift-Home",
+    "Backspace",
+]
+Super-Delete = [
+    "Shift-End",
+    "Delete",
+]
+Super-comma = [
+    "Ctrl-l",
+    "Delay(120)",
+    "Text(about:preferences)",
+    "Delay(160)",
+    "Enter",
+]
+
+[[keymap]]
+condition = "wm_class =~ 'firefox|librewolf|waterfox|zen'"
+name = "browser_firefox_overrides"
+
+[keymap.mappings]
+Shift-Super-n = "Shift-Ctrl-p"
+Super-1 = "Alt-1"
+Super-2 = "Alt-2"
+Super-3 = "Alt-3"
+Super-4 = "Alt-4"
+Super-5 = "Alt-5"
+Super-6 = "Alt-6"
+Super-7 = "Alt-7"
+Super-8 = "Alt-8"
+Super-9 = "Alt-9"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)google-chrome|chromium|brave|microsoft-edge|vivaldi-stable'"
+name = "browser_chrome_settings"
+
+[keymap.mappings]
+Super-comma = [
+    "Ctrl-l",
+    "Delay(120)",
+    "Text(chrome://settings)",
+    "Delay(160)",
+    "Enter",
+]
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^vivaldi.*$'"
+name = "browser_vivaldi_macros"
+
+[keymap.mappings]
+Super-comma = [
+    "F10",
+    "Delay(200)",
+    "S",
+]
+Super-slash = [
+    "F10",
+    "Delay(200)",
+    "H",
+    "Delay(200)",
+    "K",
+]
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^vivaldi.*$' and wm_name =~ '(?i)^Vivaldi Settings:.*Vivaldi$'"
+name = "browser_vivaldi_settings_dialog"
+
+[keymap.mappings]
+Esc = "Alt-F4"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^org.kde.falkon$|^falkon$'"
+name = "browser_falkon"
+
+[keymap.mappings]
+Super-comma = "Shift-Ctrl-comma"
+
+[[keymap]]
+condition = "not (wm_class =~ 'code|code-oss|vscodium|cursor')"
+name = "editors_wordwise_non_vscode"
+
+[keymap.mappings]
+Alt-Left = "Ctrl-Left"
+Alt-Right = "Ctrl-Right"
+Alt-Shift-Left = "Ctrl-Shift-Left"
+Alt-Shift-Right = "Ctrl-Shift-Right"
+
+[[keymap]]
+condition = "wm_class =~ 'code|code-oss|vscodium|cursor'"
+name = "editor_vscode_overrides"
+
+[keymap.mappings]
+Super-Grave = "Ctrl-Grave"
+Super-c = "Ctrl-c"
+Super-dot = "Ctrl-dot"
+Super-f = "Ctrl-f"
+Super-x = "Ctrl-x"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)code|code-oss|vscodium|cursor'"
+name = "editor_vscode_navigation"
+
+[keymap.mappings]
+Alt-Left = "Ctrl-Left"
+Alt-Right = "Ctrl-Right"
+Alt-Shift-Left = "Ctrl-Shift-Left"
+Alt-Shift-Right = "Ctrl-Shift-Right"
+Super-Backspace = [
+    "Shift-Home",
+    "Delete",
+]
+Super-Delete = [
+    "Shift-End",
+    "Delete",
+]
+
+[[keymap]]
+condition = "wm_class =~ '(?i)jetbrains' and not (wm_class =~ '(?i)toolbox')"
+name = "editor_jetbrains"
+
+[keymap.mappings]
+Alt-Backspace = "Ctrl-Backspace"
+Alt-Delete = "Ctrl-Delete"
+Alt-Down = "Ctrl-Shift-w"
+Alt-Home = "Alt-Home"
+Alt-Space = "Ctrl-Shift-i"
+Alt-Up = "Ctrl-w"
+Ctrl-Alt-o = "Ctrl-Alt-Shift-n"
+Ctrl-Alt-r = "F9"
+Ctrl-Backspace = "Ctrl-y"
+Ctrl-Comma = "Ctrl-Alt-s"
+Ctrl-Delete = "Alt-Delete"
+Ctrl-Down = "Ctrl-Enter"
+Ctrl-F3 = "Shift-F11"
+Ctrl-Key_0 = "Alt-Key_0"
+Ctrl-Key_1 = "Alt-Key_1"
+Ctrl-Key_2 = "Alt-Key_2"
+Ctrl-Key_3 = "Alt-Key_3"
+Ctrl-Key_4 = "Alt-Key_4"
+Ctrl-Key_5 = "Alt-Key_5"
+Ctrl-Key_6 = "Alt-Key_6"
+Ctrl-Key_7 = "Alt-Key_7"
+Ctrl-Key_8 = "Alt-Key_8"
+Ctrl-Key_9 = "Alt-Key_9"
+Ctrl-Left_Brace = "Alt-Shift-Left"
+Ctrl-Minus = "Ctrl-KPMINUS"
+Ctrl-Right_Brace = "Alt-Shift-Right"
+Ctrl-Semicolon = "Ctrl-Alt-Shift-s"
+Ctrl-Shift-Equal = "Ctrl-Shift-KPPLUS"
+Ctrl-Shift-F3 = "Shift-F3"
+Ctrl-Shift-Minus = "Ctrl-Shift-KPMINUS"
+Ctrl-Shift-o = "Ctrl-Shift-n"
+Ctrl-Super-g = "Ctrl-Alt-Shift-j"
+Ctrl-g = "F3"
+Ctrl-l = "Ctrl-g"
+Ctrl-n = "Alt-Insert"
+Ctrl-o = "Ctrl-n"
+Ctrl-t = "Ctrl-Alt-Shift-t"
+Ctrl-w = "Ctrl-F4"
+Ctrl-y = "Ctrl-Shift-i"
+F2 = "F11"
+Super-Alt-d = "Alt-Shift-F9"
+Super-Alt-h = "Ctrl-Alt-h"
+Super-Alt-i = "Ctrl-Alt-i"
+Super-Alt-o = "Ctrl-Alt-o"
+Super-Alt-r = "Alt-Shift-F10"
+Super-Down = "Alt-Down"
+Super-F3 = "Ctrl-F11"
+Super-Grave = "Ctrl-Grave"
+Super-Key_0 = "Ctrl-Key_0"
+Super-Key_1 = "Ctrl-Key_1"
+Super-Key_2 = "Ctrl-Key_2"
+Super-Key_3 = "Ctrl-Key_3"
+Super-Key_4 = "Ctrl-Key_4"
+Super-Key_5 = "Ctrl-Key_5"
+Super-Key_6 = "Ctrl-Key_6"
+Super-Key_7 = "Ctrl-Key_7"
+Super-Key_8 = "Ctrl-Key_8"
+Super-Key_9 = "Ctrl-Key_9"
+Super-Left = "Alt-Left"
+Super-Right = "Alt-Right"
+Super-Shift-b = "Ctrl-Shift-b"
+Super-Shift-d = "Ctrl-Shift-F9"
+Super-Shift-g = "Alt-Shift-j"
+Super-Shift-j = "Ctrl-Shift-j"
+Super-Shift-q = "Alt-q"
+Super-Shift-r = "Ctrl-Shift-F10"
+Super-Up = "Alt-Up"
+Super-c = "Ctrl-c"
+Super-d = "Shift-F9"
+Super-g = "Alt-j"
+Super-h = "Ctrl-h"
+Super-i = "Ctrl-i"
+Super-j = "Ctrl-q"
+Super-o = "Ctrl-o"
+Super-r = "Shift-F10"
+Super-v = "Alt-Grave"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^org.kde.kate$'"
+name = "editor_kate"
+
+[keymap.mappings]
+Super-Shift-g = "F3"
+Super-comma = "Shift-Ctrl-comma"
+Super-g = "Ctrl-g"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^kwrite$|^org.kde.kwrite$'"
+name = "editor_kwrite"
+
+[keymap.mappings]
+Super-Alt-g = "Ctrl-g"
+Super-Backspace = "Ctrl-k"
+Super-Shift-g = "Shift-F3"
+Super-comma = "Shift-Ctrl-comma"
+Super-g = "F3"
+Super-t = "Ctrl-n"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^kwrite$|^org.kde.kwrite$' and wm_name =~ '(?i)^Close Document.*KWrite$'"
+name = "editor_kwrite_close_dialog"
+
+[keymap.mappings]
+Super-d = "Alt-d"
+Super-s = "Alt-s"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^gedit$|^xed$'"
+name = "editor_gedit_xed_tab_nav"
+
+[keymap.mappings]
+Shift-Super-Left_Brace = "Ctrl-Alt-Page_Up"
+Shift-Super-Page_Down = "Ctrl-Alt-Page_Down"
+Shift-Super-Page_Up = "Ctrl-Alt-Page_Up"
+Shift-Super-Right_Brace = "Ctrl-Alt-Page_Down"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^xed$'"
+name = "editor_xed"
+
+[keymap.mappings]
+Super-t = "Ctrl-n"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)^gnome-text-editor$|^org.gnome.texteditor$'"
+name = "editor_gnome_text_editor"
+
+[keymap.mappings]
+Super-Alt-f = "Ctrl-h"
+Super-slash = ["Ignore"]
+
+[[keymap]]
+condition = "wm_class =~ '(?i)sublime'"
+name = "editor_sublime"
+
+[keymap.mappings]
+Ctrl-Alt-v = [
+    "Ctrl-k",
+    "Ctrl-v",
+]
+
+[[keymap]]
+condition = "wm_class =~ 'libreoffice-writer'"
+name = "editor_libreoffice_writer"
+
+[keymap.mappings]
+Super-comma = "Alt-F12"
+
+[[keymap]]
+condition = "not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_cmd_dot_not_terminals"
+
+[keymap.mappings]
+Super-dot = "Esc"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox' and settings.DesktopGnome"
+name = "desktop_gnome_terminals"
+
+[keymap.mappings]
+Ctrl-Space = [
+    "bind",
+    "Combo(Super-Space)",
+]
+Shift-Ctrl-Space = [
+    "bind",
+    "Combo(Shift-Super-Space)",
+]
+
+[[keymap]]
+condition = "settings.DesktopGnome and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_gnome_gui"
+
+[keymap.mappings]
+Ctrl-Super-f = "Alt-F10"
+Shift-Super-3 = "Shift-PRINT"
+Shift-Super-4 = "Alt-PRINT"
+Shift-Super-5 = "PRINT"
+Super-F3 = "Super-d"
+Super-Space = "Shift-Ctrl-Space"
+Super-h = "Super-h"
+
+[[keymap]]
+condition = "settings.DesktopGnomePre45 and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_gnome_pre45_gui"
+
+[keymap.mappings]
+Super-Space = "Super-s"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox' and settings.DistroFedoraGnome"
+name = "desktop_fedora_gnome_terminals"
+
+[keymap.mappings]
+Ctrl-h = "Super-h"
+
+[[keymap]]
+condition = "settings.DistroFedoraGnome and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_fedora_gnome_gui"
+
+[keymap.mappings]
+Ctrl-Super-q = "Super-l"
+Super-Left = [
+    "bind",
+    "Combo(Super-Page_Down)",
+]
+Super-Right = [
+    "bind",
+    "Combo(Super-Page_Up)",
+]
+Super-h = "Super-h"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox' and settings.DistroUbuntuOrFedoraGnome"
+name = "desktop_ubuntu_fedora_gnome_terminals"
+
+[keymap.mappings]
+Ctrl-Left = [
+    "bind",
+    "Combo(Super-Page_Down)",
+]
+Ctrl-Right = [
+    "bind",
+    "Combo(Super-Page_Up)",
+]
+Ctrl-Super-q = "Super-l"
+
+[[keymap]]
+condition = "settings.DistroUbuntuOrFedoraGnome and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_ubuntu_gui"
+
+[keymap.mappings]
+Ctrl-Super-q = "Super-l"
+Super-Left = [
+    "bind",
+    "Combo(Super-Page_Down)",
+]
+Super-Right = [
+    "bind",
+    "Combo(Super-Page_Up)",
+]
+
+[[keymap]]
+condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox' and settings.DistroPop"
+name = "desktop_pop_os_terminals"
+
+[keymap.mappings]
+Ctrl-Left = [
+    "bind",
+    "Combo(Super-Ctrl-Down)",
+]
+Ctrl-Right = [
+    "bind",
+    "Combo(Super-Ctrl-Up)",
+]
+
+[[keymap]]
+condition = "settings.DistroPop and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_pop_os_gui"
+
+[keymap.mappings]
+Super-Left = [
+    "bind",
+    "Combo(Super-Ctrl-Down)",
+]
+Super-Right = [
+    "bind",
+    "Combo(Super-Ctrl-Up)",
+]
+Super-Space = "Super-slash"
+Super-h = "Super-h"
+Super-q = "Super-q"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox' and settings.DesktopCosmicOrPop"
+name = "desktop_cosmic_terminals"
+
+[keymap.mappings]
+Ctrl-Super-f = "Super-m"
+
+[[keymap]]
+condition = "settings.DesktopCosmicOrPop and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_cosmic_gui"
+
+[keymap.mappings]
+Ctrl-Super-f = "Super-m"
+Super-Space = "LEFT_META"
+Super-q = "Super-q"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox' and settings.DesktopKde"
+name = "desktop_kde_terminals"
+
+[keymap.mappings]
+Ctrl-Left = "Ctrl-Super-Left"
+Ctrl-Right = "Ctrl-Super-Right"
+Ctrl-Space = [
+    "bind",
+    "Combo(Super-Alt-l)",
+]
+Ctrl-Super-f = "Super-Page_Up"
+Ctrl-h = "Super-Page_Down"
+Shift-Ctrl-Space = [
+    "bind",
+    "Combo(Super-Alt-k)",
+]
+
+[[keymap]]
+condition = "settings.DesktopKde and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_kde_gui"
+
+[keymap.mappings]
+Ctrl-Super-f = "Super-Page_Up"
+Shift-Super-Space = [
+    "bind",
+    "Combo(Super-Alt-k)",
+]
+Super-F3 = "Super-d"
+Super-Left = "Ctrl-Super-Left"
+Super-Right = "Ctrl-Super-Right"
+Super-Space = [
+    "bind",
+    "Combo(Super-Alt-l)",
+]
+Super-h = "Super-Page_Down"
+
+[[keymap]]
+condition = "settings.DistroKdeNeon and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_kde_neon_gui"
+
+[keymap.mappings]
+Super-f = "Super-Page_Up"
+Super-h = "Super-Page_Down"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox' and settings.DesktopXfce"
+name = "desktop_xfce_terminals"
+
+[keymap.mappings]
+Ctrl-Grave = [
+    "bind",
+    "Combo(Super-Tab)",
+]
+Ctrl-Left = [
+    "bind",
+    "Combo(Ctrl-Alt-End)",
+]
+Ctrl-Right = [
+    "bind",
+    "Combo(Ctrl-Alt-Home)",
+]
+Shift-Ctrl-Grave = [
+    "bind",
+    "Combo(Shift-Super-Tab)",
+]
+
+[[keymap]]
+condition = "settings.DesktopXfce and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_xfce_gui"
+
+[keymap.mappings]
+Shift-Super-3 = "PRINT"
+Shift-Super-4 = "Alt-PRINT"
+Shift-Super-5 = "Shift-PRINT"
+Shift-Super-Grave = [
+    "bind",
+    "Combo(Shift-Super-Tab)",
+]
+Super-F3 = "Ctrl-Alt-d"
+Super-Grave = [
+    "bind",
+    "Combo(Super-Tab)",
+]
+Super-Space = "Ctrl-Esc"
+Super-h = "Alt-F9"
+
+[[keymap]]
+condition = "settings.DistroDebianXfce and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_debian_xfce_gui"
+
+[keymap.mappings]
+Super-Space = "Alt-F1"
+
+[[keymap]]
+condition = "settings.DistroAlmaRockyXfce and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_alma_rocky_xfce_gui"
+
+[keymap.mappings]
+Super-Space = "Alt-F3"
+
+[[keymap]]
+condition = "settings.DistroMintXfce and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_mint_xfce_gui"
+
+[keymap.mappings]
+Super-Space = "Super-Space"
+
+[[keymap]]
+condition = "settings.DistroZorinXfce and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_zorin_xfce_gui"
+
+[keymap.mappings]
+Super-Space = "Alt-Pause"
+
+[[keymap]]
+condition = "settings.DistroManjaroXfce and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_manjaro_xfce_gui"
+
+[keymap.mappings]
+Super-Space = "Alt-F1"
+
+[[keymap]]
+condition = "settings.DesktopCinnamon and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_cinnamon_gui"
+
+[keymap.mappings]
+Super-Space = "Ctrl-Esc"
+
+[[keymap]]
+condition = "settings.DesktopMateMint and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_mate_mint_gui"
+
+[keymap.mappings]
+Super-Space = "Alt-Space"
+
+[[keymap]]
+condition = "settings.DesktopMateUbuntu and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_mate_ubuntu_gui"
+
+[keymap.mappings]
+Super-Space = "LEFT_META"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox' and settings.DesktopBudgie"
+name = "desktop_budgie_terminals"
+
+[keymap.mappings]
+Ctrl-Left = [
+    "bind",
+    "Combo(Ctrl-Alt-Left)",
+]
+Ctrl-Right = [
+    "bind",
+    "Combo(Ctrl-Alt-Right)",
+]
+
+[[keymap]]
+condition = "settings.DesktopBudgie and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_budgie_gui"
+
+[keymap.mappings]
+Super-Left = "Ctrl-Alt-Left"
+Super-Right = "Ctrl-Alt-Right"
+Super-Space = "LEFT_META"
+Super-h = "Super-h"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox' and settings.DesktopPantheon"
+name = "desktop_elementary_terminals"
+
+[keymap.mappings]
+Ctrl-Left = [
+    "bind",
+    "Combo(Super-Left)",
+]
+Ctrl-Right = [
+    "bind",
+    "Combo(Super-Right)",
+]
+
+[[keymap]]
+condition = "settings.DesktopPantheon and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_pantheon_gui"
+
+[keymap.mappings]
+Ctrl-Super-f = "Super-Up"
+Super-F3 = "Super-d"
+Super-Space = "Alt-F2"
+
+[[keymap]]
+condition = "settings.DesktopDeepin and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_deepin_gui"
+
+[keymap.mappings]
+Alt-Super-Space = "Super-e"
+Super-h = "Super-n"
+
+[[keymap]]
+condition = "settings.DesktopDde and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_dde_gui"
+
+[keymap.mappings]
+Super-Space = "LEFT_META"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox' and settings.DesktopSway"
+name = "desktop_sway_terminals"
+
+[keymap.mappings]
+Super-q = "Shift-Ctrl-q"
+
+[[keymap]]
+condition = "settings.DesktopSway and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_sway_gui"
+
+[keymap.mappings]
+Super-Space = "Super-d"
+Super-q = "Ctrl-q"
+
+[[keymap]]
+condition = "settings.DesktopHyprland and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_hyprland_gui"
+
+[keymap.mappings]
+Super-Space = "Super-d"
+
+[[keymap]]
+condition = "settings.DesktopMiracleWm and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_miraclewm_gui"
+
+[keymap.mappings]
+Super-Space = "Super-d"
+
+[[keymap]]
+condition = "settings.DesktopEnlightenment and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_enlightenment_gui"
+
+[keymap.mappings]
+Super-Space = "Ctrl-Alt-Space"
+Super-q = "Ctrl-Alt-x"
+
+[[keymap]]
+condition = "settings.DesktopIcewm and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_icewm_gui"
+
+[keymap.mappings]
+Super-Space = "LEFT_META"
+
+[[keymap]]
+condition = "settings.DesktopTrinity and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_trinity_gui"
+
+[keymap.mappings]
+Super-Space = "LEFT_META"
+
+[[keymap]]
+condition = "settings.DesktopUnity and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_unity_gui"
+
+[keymap.mappings]
+Super-Space = "LEFT_META"
+
+[[keymap]]
+condition = "settings.DistroManjaro and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_manjaro_gui"
+
+[keymap.mappings]
+Ctrl-Super-f = "Super-Page_Up"
+
+[[keymap]]
+condition = "settings.DistroManjaroGnome and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_manjaro_gnome_gui"
+
+[keymap.mappings]
+Super-q = "Super-q"
+
+[[keymap]]
+condition = "keyboard_type =~ 'Chromebook, IBM' and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_chromebook_ibm_gui"
+
+[keymap.mappings]
+Alt-Backspace = "Ctrl-Backspace"
+Alt-Grave = [
+    "bind",
+    "Combo(Ctrl-Shift-Tab)",
+]
+Alt-Shift-Tab = [
+    "bind",
+    "Combo(Ctrl-Shift-Tab)",
+]
+Alt-Tab = [
+    "bind",
+    "Combo(Ctrl-Tab)",
+]
+
+[[keymap]]
+condition = "not (keyboard_type =~ 'Chromebook') and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_not_chromebook_gui"
+
+[keymap.mappings]
+Alt-Backspace = "Ctrl-Backspace"
+Shift-Super-Tab = [
+    "bind",
+    "Combo(Shift-Ctrl-Tab)",
+]
+Super-Tab = [
+    "bind",
+    "Combo(Ctrl-Tab)",
+]
+
+[[keymap]]
+condition = "not settings.forced_numpad and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_forced_numpad_toggle_on"
+
+[keymap.mappings]
+Alt-Numlock = ["Set(forced_numpad=true)"]
+
+[[keymap]]
+condition = "settings.forced_numpad and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_forced_numpad_toggle_off"
+
+[keymap.mappings]
+Alt-Numlock = ["Set(forced_numpad=false)"]
+
+[[keymap]]
+condition = "settings.forced_numpad and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "desktop_forced_numpad_numlock_clear"
+
+[keymap.mappings]
+Numlock = "Escape"
+
+[[keymap]]
+condition = "wm_class =~ '(?i)code|code-oss|vscodium|cursor'"
+name = "fallback_vscode_find"
+
+[keymap.mappings]
+Super-f = "Ctrl-f"
+
+[[keymap]]
+condition = "not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "fallback_gui_defaults"
+
+[keymap.mappings]
+Alt-Delete = "Ctrl-Delete"
+Alt-Tab = ["Ignore"]
+Ctrl-Backspace = "Ctrl-Shift-Backspace"
+Ctrl-Down = "Ctrl-End"
+Ctrl-Left = "Home"
+Ctrl-Right = "End"
+Ctrl-Super-F1 = "Ctrl-Alt-F1"
+Ctrl-Super-F2 = "Ctrl-Alt-F2"
+Ctrl-Super-F3 = "Ctrl-Alt-F3"
+Ctrl-Super-F4 = "Ctrl-Alt-F4"
+Ctrl-Super-F5 = "Ctrl-Alt-F5"
+Ctrl-Super-F6 = "Ctrl-Alt-F6"
+Ctrl-Super-F7 = "Ctrl-Alt-F7"
+Ctrl-Super-f = "Alt-F10"
+Ctrl-Up = "Ctrl-Home"
+RAlt-Enter = "Insert"
+Shift-Alt-Backspace = "Ctrl-Backspace"
+Shift-Alt-Delete = "Ctrl-Delete"
+Shift-Ctrl-Down = "Ctrl-Shift-End"
+Shift-Ctrl-Left = "Shift-Home"
+Shift-Ctrl-Right = "Shift-End"
+Shift-Ctrl-Up = "Ctrl-Shift-Home"
+Shift-Super-Grave = [
+    "bind",
+    "Combo(Shift-Alt-Grave)",
+]
+Shift-Super-Left_Brace = "Ctrl-Page_Up"
+Shift-Super-Right_Brace = "Ctrl-Page_Down"
+Shift-Super-Tab = [
+    "bind",
+    "Combo(Shift-Alt-Tab)",
+]
+Super-Backspace = "Ctrl-Backspace"
+Super-Delete = "Ctrl-Delete"
+Super-F3 = "Super-d"
+Super-Grave = [
+    "bind",
+    "Combo(Alt-Grave)",
+]
+Super-Space = "Alt-F1"
+Super-Tab = [
+    "bind",
+    "Combo(Alt-Tab)",
+]
+Super-a = "Home"
+Super-b = "Left"
+Super-d = "Delete"
+Super-e = "End"
+Super-f = "Right"
+Super-k = [
+    "Shift-End",
+    "Backspace",
+]
+Super-n = "Down"
+Super-p = "Up"
+Super-q = "Alt-F4"
+
+[[keymap]]
+condition = "not (wm_class =~ '(?i)jetbrains')"
+name = "fallback_core_shortcuts"
+
+[keymap.mappings]
+Shift-Alt-Backspace = "Ctrl-Backspace"
+Shift-Alt-Delete = "Ctrl-Delete"
+Shift-Super-left = "Ctrl-Shift-left"
+Shift-Super-right = "Ctrl-Shift-right"
+Super-a = "Ctrl-a"
+Super-b = "Ctrl-b"
+Super-backspace = "Ctrl-Backspace"
+Super-c = "Ctrl-c"
+Super-d = "Ctrl-d"
+Super-delete = "Ctrl-Delete"
+Super-e = "Ctrl-e"
+Super-f = "Ctrl-f"
+Super-g = "Ctrl-g"
+Super-h = "Ctrl-h"
+Super-i = "Ctrl-i"
+Super-j = "Ctrl-j"
+Super-k = "Ctrl-k"
+Super-l = "Ctrl-l"
+Super-left = "Ctrl-left"
+Super-m = "Ctrl-m"
+Super-n = "Ctrl-n"
+Super-o = "Ctrl-o"
+Super-p = "Ctrl-p"
+Super-q = "Ctrl-q"
+Super-r = "Ctrl-r"
+Super-right = "Ctrl-right"
+Super-s = "Ctrl-s"
+Super-t = "Ctrl-t"
+Super-u = "Ctrl-u"
+Super-v = "Ctrl-v"
+Super-w = "Ctrl-w"
+Super-x = "Ctrl-x"
+Super-y = "Ctrl-y"
+Super-z = "Ctrl-z"
+
+[[modmap.conditionals]]
+condition = "settings.forced_numpad"
+name = "numpad_forced_numbers"
+
+[modmap.conditionals.mappings]
+KP0 = "KEY_0"
+KP1 = "KEY_1"
+KP2 = "KEY_2"
+KP3 = "KEY_3"
+KP4 = "KEY_4"
+KP5 = "KEY_5"
+KP6 = "KEY_6"
+KP7 = "KEY_7"
+KP8 = "KEY_8"
+KP9 = "KEY_9"
+KPDOT = "DOT"
+KPENTER = "ENTER"
+
+[[modmap.conditionals]]
+condition = "settings.media_arrows_fix"
+name = "numpad_media_arrows_fix"
+
+[modmap.conditionals.mappings]
+NEXTSONG = "END"
+PLAYPAUSE = "PAGE_UP"
+PREVIOUSSONG = "HOME"
+STOPCD = "PAGE_DOWN"
+
+[[modmap.conditionals]]
+condition = "not settings.forced_numpad and not numlk and not (devn =~ 'Razer Razer Naga X')"
+name = "numpad_gtk3_navigation"
+
+[modmap.conditionals.mappings]
+KP0 = "INSERT"
+KP1 = "END"
+KP2 = "DOWN"
+KP3 = "PAGE_DOWN"
+KP4 = "LEFT"
+KP6 = "RIGHT"
+KP7 = "HOME"
+KP8 = "UP"
+KP9 = "PAGE_UP"
+KPDOT = "DELETE"
+KPENTER = "ENTER"
+
+[[modmap.conditionals]]
+condition = "wm_class == '' and wm_name == ''"
+name = "synergy_empty_class_and_name"
+
+[modmap.conditionals.mappings]
+
+[[modmap.conditionals]]
+condition = "wm_class == '' and wm_name == 'SYNERGY_WM_NAME'"
+name = "synergy_empty_class_synergy_name"
+
+[modmap.conditionals.mappings]
+
+[[modmap.conditionals]]
+condition = "wm_class == '' and not (wm_name == 'gnome-shell')"
+name = "synergy_empty_class_not_gnome_shell"
+
+[modmap.conditionals.mappings]
+
+[[modmap.conditionals]]
+condition = "settings.Caps2Cmd and not (keyboard_type =~ 'Chromebook') and not (wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal|anydesk|gnome-boxes|gnome-connections|org.gnome.boxes|org.remmina.remmina|nxplayer.bin|remmina|qemu-system-.*|qemu|spicy|virt-manager|virtualbox|virtualbox machine|xfreerdp|wfica')"
+name = "gui_caps2cmd_not_chromebook"
+
+[modmap.conditionals.mappings]
+CAPSLOCK = "RIGHT_CTRL"
+
+[[modmap.conditionals]]
+condition = "settings.Caps2Cmd and (keyboard_type =~ 'Chromebook') and not (wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal|anydesk|gnome-boxes|gnome-connections|org.gnome.boxes|org.remmina.remmina|nxplayer.bin|remmina|qemu-system-.*|qemu|spicy|virt-manager|virtualbox|virtualbox machine|xfreerdp|wfica')"
+name = "gui_caps2cmd_chromebook"
+
+[modmap.conditionals.mappings]
+LEFT_META = "RIGHT_CTRL"
+
+[[modmap.conditionals]]
+condition = "not settings.multi_lang and keyboard_type =~ 'IBM' and not (wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal|anydesk|gnome-boxes|gnome-connections|org.gnome.boxes|org.remmina.remmina|nxplayer.bin|remmina|qemu-system-.*|qemu|spicy|virt-manager|virtualbox|virtualbox machine|xfreerdp|wfica')"
+name = "gui_ibm_multi_lang_off"
+
+[modmap.conditionals.mappings]
+RIGHT_ALT = "RIGHT_CTRL"
+RIGHT_CTRL = "RIGHT_ALT"
+
+[[modmap.conditionals]]
+condition = "keyboard_type =~ 'IBM' and not (wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal|anydesk|gnome-boxes|gnome-connections|org.gnome.boxes|org.remmina.remmina|nxplayer.bin|remmina|qemu-system-.*|qemu|spicy|virt-manager|virtualbox|virtualbox machine|xfreerdp|wfica')"
+name = "gui_ibm"
+
+[modmap.conditionals.mappings]
+CAPSLOCK = "LEFT_META"
+LEFT_ALT = "RIGHT_CTRL"
+LEFT_CTRL = "LEFT_ALT"
+
+[[modmap.conditionals]]
+condition = "not settings.multi_lang and keyboard_type =~ 'Chromebook' and not (wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal|anydesk|gnome-boxes|gnome-connections|org.gnome.boxes|org.remmina.remmina|nxplayer.bin|remmina|qemu-system-.*|qemu|spicy|virt-manager|virtualbox|virtualbox machine|xfreerdp|wfica')"
+name = "gui_chromebook_multi_lang_off"
+
+[modmap.conditionals.mappings]
+RIGHT_ALT = "RIGHT_CTRL"
+RIGHT_CTRL = "RIGHT_ALT"
+
+[[modmap.conditionals]]
+condition = "keyboard_type =~ 'Chromebook' and not (wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal|anydesk|gnome-boxes|gnome-connections|org.gnome.boxes|org.remmina.remmina|nxplayer.bin|remmina|qemu-system-.*|qemu|spicy|virt-manager|virtualbox|virtualbox machine|xfreerdp|wfica')"
+name = "gui_chromebook"
+
+[modmap.conditionals.mappings]
+LEFT_ALT = "RIGHT_CTRL"
+LEFT_CTRL = "LEFT_ALT"
+
+[[modmap.conditionals]]
+condition = "not settings.multi_lang and keyboard_type =~ 'Windows' and not (wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal|anydesk|gnome-boxes|gnome-connections|org.gnome.boxes|org.remmina.remmina|nxplayer.bin|remmina|qemu-system-.*|qemu|spicy|virt-manager|virtualbox|virtualbox machine|xfreerdp|wfica')"
+name = "gui_windows_multi_lang_off"
+
+[modmap.conditionals.mappings]
+RIGHT_ALT = "RIGHT_CTRL"
+RIGHT_CTRL = "RIGHT_META"
+RIGHT_META = "RIGHT_ALT"
+
+[[modmap.conditionals]]
+condition = "keyboard_type =~ 'Windows' and not (wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal|anydesk|gnome-boxes|gnome-connections|org.gnome.boxes|org.remmina.remmina|nxplayer.bin|remmina|qemu-system-.*|qemu|spicy|virt-manager|virtualbox|virtualbox machine|xfreerdp|wfica')"
+name = "gui_windows"
+
+[modmap.conditionals.mappings]
+LEFT_ALT = "RIGHT_CTRL"
+LEFT_CTRL = "LEFT_META"
+LEFT_META = "LEFT_ALT"
+
+[[modmap.conditionals]]
+condition = "not settings.multi_lang and keyboard_type =~ 'Mac' and not (wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal|anydesk|gnome-boxes|gnome-connections|org.gnome.boxes|org.remmina.remmina|nxplayer.bin|remmina|qemu-system-.*|qemu|spicy|virt-manager|virtualbox|virtualbox machine|xfreerdp|wfica')"
+name = "gui_mac_multi_lang_off"
+
+[modmap.conditionals.mappings]
+RIGHT_CTRL = "RIGHT_META"
+RIGHT_META = "RIGHT_CTRL"
+
+[[modmap.conditionals]]
+condition = "keyboard_type =~ 'Mac' and not (wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal|anydesk|gnome-boxes|gnome-connections|org.gnome.boxes|org.remmina.remmina|nxplayer.bin|remmina|qemu-system-.*|qemu|spicy|virt-manager|virtualbox|virtualbox machine|xfreerdp|wfica')"
+name = "gui_mac"
+
+[modmap.conditionals.mappings]
+LEFT_CTRL = "LEFT_META"
+LEFT_META = "RIGHT_CTRL"
+
+[[modmap.conditionals]]
+condition = "not settings.multi_lang and keyboard_type =~ 'IBM' and wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal'"
+name = "terminals_ibm_multi_lang_off"
+
+[modmap.conditionals.mappings]
+RIGHT_ALT = "RIGHT_CTRL"
+
+[[modmap.conditionals]]
+condition = "keyboard_type =~ 'IBM' and wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal'"
+name = "terminals_ibm"
+
+[modmap.conditionals.mappings]
+CAPSLOCK = "LEFT_ALT"
+LEFT_ALT = "RIGHT_CTRL"
+RIGHT_CTRL = "RIGHT_ALT"
+
+[[modmap.conditionals]]
+condition = "not settings.multi_lang and keyboard_type =~ 'Chromebook' and wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal'"
+name = "terminals_chromebook_multi_lang_off"
+
+[modmap.conditionals.mappings]
+RIGHT_ALT = "RIGHT_CTRL"
+
+[[modmap.conditionals]]
+condition = "keyboard_type =~ 'Chromebook' and wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal'"
+name = "terminals_chromebook"
+
+[modmap.conditionals.mappings]
+LEFT_ALT = "RIGHT_CTRL"
+LEFT_META = "LEFT_ALT"
+RIGHT_CTRL = "RIGHT_ALT"
+
+[[modmap.conditionals]]
+condition = "not settings.multi_lang and keyboard_type =~ 'Windows' and wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal'"
+name = "terminals_windows_multi_lang_off"
+
+[modmap.conditionals.mappings]
+RIGHT_ALT = "RIGHT_CTRL"
+RIGHT_CTRL = "LEFT_CTRL"
+RIGHT_META = "RIGHT_ALT"
+
+[[modmap.conditionals]]
+condition = "keyboard_type =~ 'Windows' and wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal'"
+name = "terminals_windows"
+
+[modmap.conditionals.mappings]
+LEFT_ALT = "RIGHT_CTRL"
+LEFT_CTRL = "LEFT_CTRL"
+LEFT_META = "LEFT_ALT"
+
+[[modmap.conditionals]]
+condition = "not settings.multi_lang and keyboard_type =~ 'Mac' and wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal'"
+name = "terminals_mac_multi_lang_off"
+
+[modmap.conditionals.mappings]
+LEFT_META = "RIGHT_CTRL"
+RIGHT_CTRL = "LEFT_CTRL"
+RIGHT_META = "RIGHT_CTRL"
+
+[[modmap.conditionals]]
+condition = "keyboard_type =~ 'Mac' and wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal'"
+name = "terminals_mac"
+
+[modmap.conditionals.mappings]
+LEFT_ALT = "LEFT_ALT"
+LEFT_CTRL = "LEFT_CTRL"
+LEFT_META = "RIGHT_CTRL"
+RIGHT_ALT = "RIGHT_ALT"
+RIGHT_META = "RIGHT_CTRL"
+
+[modmap.default]
+CAPSLOCK = "CAPSLOCK"
+
+[[multipurpose]]
+condition = "settings.Enter2Ent_Cmd"
+hold = "RIGHT_CTRL"
+name = "enter_to_ctrl"
+tap = "ENTER"
+trigger = "ENTER"
+
+[[multipurpose]]
+condition = "settings.Caps2Esc_Cmd and not (keyboard_type =~ 'Chromebook')"
+hold = "RIGHT_CTRL"
+name = "caps_to_esc_not_chromebook"
+tap = "ESCAPE"
+trigger = "CAPSLOCK"
+
+[[multipurpose]]
+condition = "settings.Caps2Esc_Cmd and (keyboard_type =~ 'Chromebook')"
+hold = "RIGHT_CTRL"
+name = "caps_to_esc_chromebook"
+tap = "ESCAPE"
+trigger = "LEFT_META"
+
+[timeouts]
+multipurpose = 200
+suspend = 1000

@@ -1,0 +1,30 @@
+[general]
+suspend_key = "F11"
+
+[[keymap]]
+name = "windows_alt_tab"
+
+[keymap.mappings]
+Alt-Tab = [
+    "bind",
+    "Combo(Alt-Tab)",
+]
+Shift-Alt-Tab = [
+    "bind",
+    "Combo(Shift-Alt-Tab)",
+]
+
+[[modmap.conditionals]]
+condition = "keyboard_type =~ 'Windows' and not (wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal')"
+name = "gui_windows"
+
+[modmap.conditionals.mappings]
+LEFT_ALT = "LEFT_ALT"
+LEFT_CTRL = "LEFT_CTRL"
+
+[modmap.default]
+CAPSLOCK = "CAPSLOCK"
+
+[timeouts]
+multipurpose = 200
+suspend = 1000

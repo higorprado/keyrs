@@ -1,0 +1,92 @@
+[general]
+suspend_key = "F11"
+
+[[keymap]]
+condition = "not (wm_class =~ '(?i)jetbrains')"
+name = "mac_core_shortcuts"
+
+[keymap.mappings]
+Super-a = "Ctrl-a"
+Super-b = "Ctrl-b"
+Super-c = "Ctrl-c"
+Super-d = "Ctrl-d"
+Super-e = "Ctrl-e"
+Super-f = "Ctrl-f"
+Super-g = "Ctrl-g"
+Super-h = "Ctrl-h"
+Super-i = "Ctrl-i"
+Super-j = "Ctrl-j"
+Super-k = "Ctrl-k"
+Super-l = "Ctrl-l"
+Super-m = "Ctrl-m"
+Super-n = "Ctrl-n"
+Super-o = "Ctrl-o"
+Super-p = "Ctrl-p"
+Super-q = "Ctrl-q"
+Super-r = "Ctrl-r"
+Super-s = "Ctrl-s"
+Super-t = "Ctrl-t"
+Super-u = "Ctrl-u"
+Super-v = "Ctrl-v"
+Super-w = "Ctrl-w"
+Super-x = "Ctrl-x"
+Super-y = "Ctrl-y"
+Super-z = "Ctrl-z"
+
+[[keymap]]
+condition = "not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+name = "mac_navigation"
+
+[keymap.mappings]
+Shift-Super-Left = "Shift-Home"
+Shift-Super-Right = "Shift-End"
+Super-Backspace = "Ctrl-Backspace"
+Super-Delete = "Ctrl-Delete"
+Super-Down = "Ctrl-End"
+Super-Left = "Home"
+Super-Right = "End"
+Super-Up = "Ctrl-Home"
+
+[[modmap.conditionals]]
+condition = "keyboard_type =~ 'IBM' and not (wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal|anydesk|gnome-boxes|gnome-connections|org.gnome.boxes|org.remmina.remmina|nxplayer.bin|remmina|qemu-system-.*|qemu|spicy|virt-manager|virtualbox|virtualbox machine|xfreerdp|wfica')"
+name = "gui_ibm"
+
+[modmap.conditionals.mappings]
+CAPSLOCK = "LEFT_META"
+LEFT_ALT = "RIGHT_CTRL"
+LEFT_CTRL = "LEFT_ALT"
+
+[[modmap.conditionals]]
+condition = "keyboard_type =~ 'Mac' and not (wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal|anydesk|gnome-boxes|gnome-connections|org.gnome.boxes|org.remmina.remmina|nxplayer.bin|remmina|qemu-system-.*|qemu|spicy|virt-manager|virtualbox|virtualbox machine|xfreerdp|wfica')"
+name = "gui_mac"
+
+[modmap.conditionals.mappings]
+LEFT_CTRL = "LEFT_META"
+LEFT_META = "RIGHT_CTRL"
+
+[[modmap.conditionals]]
+condition = "keyboard_type =~ 'IBM' and wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal'"
+name = "terminals_ibm"
+
+[modmap.conditionals.mappings]
+CAPSLOCK = "LEFT_ALT"
+LEFT_ALT = "RIGHT_CTRL"
+RIGHT_CTRL = "RIGHT_ALT"
+
+[[modmap.conditionals]]
+condition = "keyboard_type =~ 'Mac' and wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal'"
+name = "terminals_mac"
+
+[modmap.conditionals.mappings]
+LEFT_ALT = "LEFT_ALT"
+LEFT_CTRL = "LEFT_CTRL"
+LEFT_META = "RIGHT_CTRL"
+RIGHT_ALT = "RIGHT_ALT"
+RIGHT_META = "RIGHT_CTRL"
+
+[modmap.default]
+CAPSLOCK = "CAPSLOCK"
+
+[timeouts]
+multipurpose = 200
+suspend = 1000

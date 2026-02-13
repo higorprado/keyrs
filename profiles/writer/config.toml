@@ -1,0 +1,30 @@
+[general]
+suspend_key = "F11"
+
+[[keymap]]
+name = "writer_clipboard"
+
+[keymap.mappings]
+Super-a = "Ctrl-a"
+Super-c = "Ctrl-c"
+Super-s = "Ctrl-s"
+Super-v = "Ctrl-v"
+Super-x = "Ctrl-x"
+Super-y = "Ctrl-y"
+Super-z = "Ctrl-z"
+
+[[keymap]]
+name = "writer_navigation"
+
+[keymap.mappings]
+Super-Down = "Ctrl-End"
+Super-Left = "Home"
+Super-Right = "End"
+Super-Up = "Ctrl-Home"
+Super-b = "Ctrl-b"
+Super-i = "Ctrl-i"
+Super-u = "Ctrl-u"
+
+[timeouts]
+multipurpose = 200
+suspend = 1000

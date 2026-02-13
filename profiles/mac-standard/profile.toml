@@ -1,0 +1,5 @@
+name = "mac-standard"
+description = "macOS migrants - Super key behaves like Cmd with standard shortcuts"
+version = "1.0.0"
+author = "keyrs"
+tags = ["macos", "migration", "cmd"]

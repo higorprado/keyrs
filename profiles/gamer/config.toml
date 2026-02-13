@@ -1,0 +1,5 @@
+[general]
+suspend_key = "F11"
+
+[timeouts]
+suspend = 1000

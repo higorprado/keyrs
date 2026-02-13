@@ -1,0 +1,8 @@
+# Gamer Profile - Minimal Interference
+# Only suspend key, native keyboard behavior for gaming
+
+[general]
+suspend_key = "F11"
+
+[timeouts]
+suspend = 1000

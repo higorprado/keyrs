@@ -1,0 +1,5 @@
+# None Profile - Empty Slate
+# Only suspend key functionality, no remapping
+
+[general]
+suspend_key = "F11"

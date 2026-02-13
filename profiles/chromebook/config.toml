@@ -1,0 +1,34 @@
+[general]
+suspend_key = "F11"
+
+[[keymap]]
+condition = "not (wm_class =~ '(?i)terminal')"
+name = "chromebook_navigation"
+
+[keymap.mappings]
+Ctrl-Alt-Down = "Super-Down"
+Ctrl-Alt-Left = "Super-Left"
+Ctrl-Alt-Right = "Super-Right"
+Ctrl-Alt-Up = "Super-Up"
+
+[[modmap.conditionals]]
+condition = "keyboard_type =~ 'Chromebook' and not (wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal')"
+name = "gui_chromebook"
+
+[modmap.conditionals.mappings]
+LEFT_ALT = "RIGHT_CTRL"
+LEFT_CTRL = "LEFT_ALT"
+
+[[modmap.conditionals]]
+condition = "keyboard_type =~ 'Chromebook' and settings.Caps2Esc_Cmd"
+name = "chromebook_left_meta_esc"
+
+[modmap.conditionals.mappings]
+LEFT_META = "ESCAPE"
+
+[modmap.default]
+CAPSLOCK = "CAPSLOCK"
+
+[timeouts]
+multipurpose = 200
+suspend = 1000

@@ -1,0 +1,5 @@
+name = "minimal"
+description = "Essential shortcuts only - clipboard and tab management"
+version = "1.0.0"
+author = "keyrs"
+tags = ["minimal", "clipboard", "tabs"]

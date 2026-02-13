@@ -13,10 +13,12 @@ CONFIG_DIR="${HOME}/.config/keyrs"
 CONFIG_SOURCE_DIR="${REPO_ROOT}/config.d.example"
 CONFIG_COMPOSE_DIR="${CONFIG_DIR}/config.d"
 CONFIG_UDEV_RULES="${CONFIG_DIR}/keyrs-udev.rules"
+PROFILES_DIR="${REPO_ROOT}/profiles"
 BIN_DIR="${HOME}/.local/bin"
 TARGET_BIN="${BIN_DIR}/keyrs"
 TARGET_TUI_BIN="${BIN_DIR}/keyrs-tui"
 RUNTIME_CTL="${BIN_DIR}/keyrs-service"
+PROFILE_CACHE_DIR="${CONFIG_DIR}/profile-cache"
 
 SYSTEMCTL_BIN="${SYSTEMCTL_BIN:-systemctl}"
 UDEVADM_BIN="${UDEVADM_BIN:-udevadm}"
@@ -26,6 +28,8 @@ ASSUME_YES=false
 BIN_SOURCE=""
 TUI_BIN_SOURCE=""
 COMPOSE_SOURCE_DIR=""
+SELECTED_PROFILE=""
+PROFILE_URL=""
 RUNTIME_ONLY=false
 if [[ "${KEYRS_RUNTIME_ONLY:-0}" == "1" || "${SCRIPT_PATH}" == "${RUNTIME_CTL}" ]]; then
   RUNTIME_ONLY=true
@@ -63,6 +67,9 @@ Commands:
   status        Show service status
   install-udev Install keyrs udev rules (root/sudo required)
   uninstall-udev Remove keyrs udev rules (root/sudo required)
+  list-profiles List available configuration profiles
+  show-profile  Show profile details
+  switch-profile Switch to a different profile
 USAGE
 
   if ! ${RUNTIME_ONLY}; then
@@ -76,6 +83,8 @@ USAGE
 Options:
   --bin <path>     Binary source path (default: ./target/release/keyrs)
   --source-dir <path> Source dir to compose from for apply-config (default: ~/.config/keyrs/config.d)
+  --profile <name> Use profile during install or switch-profile
+  --profile-url <url> Download profile from URL
   --force          Overwrite existing config files during install
   --yes            Skip confirmation prompt
   --dry-run        Print actions without executing system changes
@@ -131,6 +140,14 @@ parse_args() {
         ;;
       --source-dir)
         COMPOSE_SOURCE_DIR="${2:-}"
+        shift 2
+        ;;
+      --profile)
+        SELECTED_PROFILE="${2:-}"
+        shift 2
+        ;;
+      --profile-url)
+        PROFILE_URL="${2:-}"
         shift 2
         ;;
       --yes)
@@ -298,6 +315,70 @@ UNIT
   mv "${tmp}" "${SERVICE_PATH}"
 }
 
+select_profile_interactive() {
+  if [[ ! -d "${PROFILES_DIR}" ]]; then
+    return 1
+  fi
+
+  local profiles=()
+  local descriptions=()
+
+  for profile_path in "${PROFILES_DIR}"/*/profile.toml; do
+    if [[ -f "${profile_path}" ]]; then
+      local profile_dir
+      profile_dir="$(dirname "${profile_path}")"
+      local profile_name
+      profile_name="$(basename "${profile_dir}")"
+      profiles+=("${profile_name}")
+
+      local description=""
+      if command -v grep >/dev/null 2>&1; then
+        description="$(grep -E '^description[[:space:]]*=' "${profile_path}" 2>/dev/null | head -1 | sed 's/^description[[:space:]]*=[[:space:]]*//; s/"//g' || true)"
+      fi
+      descriptions+=("${description:-No description}")
+    fi
+  done
+
+  if [[ ${#profiles[@]} -eq 0 ]]; then
+    return 1
+  fi
+
+  echo ""
+  echo "Select a configuration profile:"
+  echo ""
+  for i in "${!profiles[@]}"; do
+    printf "  %2d) %-18s %s\n" $((i+1)) "${profiles[$i]}" "${descriptions[$i]}"
+  done
+  echo ""
+
+  local selection=""
+  local selected_name=""
+
+  while true; do
+    if ${ASSUME_YES}; then
+      selection="1"
+    else
+      read -r -p "Enter number (1-${#profiles[@]}) or press Enter for default [mac-standard]: " selection
+    fi
+
+    if [[ -z "${selection}" ]]; then
+      selected_name="mac-standard"
+      break
+    fi
+
+    if [[ "${selection}" =~ ^[0-9]+$ ]] && [[ "${selection}" -ge 1 ]] && [[ "${selection}" -le ${#profiles[@]} ]]; then
+      selected_name="${profiles[$((selection-1))]}"
+      break
+    fi
+
+    echo "Invalid selection. Please enter a number between 1 and ${#profiles[@]}."
+  done
+
+  SELECTED_PROFILE="${selected_name}"
+  log "Selected profile: ${SELECTED_PROFILE}"
+  return 0
+}
+
 install_cmd() {
   ensure_systemctl_user
   if ${RUNTIME_ONLY}; then
@@ -307,12 +388,44 @@ install_cmd() {
   resolve_bin_source
   resolve_tui_bin_source
 
+  local profile_source_dir=""
+
+  if [[ -n "${PROFILE_URL:-}" ]]; then
+    local cache_dir="${PROFILE_CACHE_DIR}/install-$(date +%s)"
+    if ! download_profile "${PROFILE_URL}" "${cache_dir}"; then
+      log "Failed to download profile from URL"
+      exit 1
+    fi
+    profile_source_dir="${cache_dir}"
+    SELECTED_PROFILE="custom URL"
+  elif [[ -n "${SELECTED_PROFILE:-}" ]]; then
+    profile_source_dir="$(get_profile_dir "${SELECTED_PROFILE}")"
+    if [[ ! -f "${profile_source_dir}/profile.toml" ]]; then
+      log "Profile not found: ${SELECTED_PROFILE}"
+      log "Run 'keyrs-service list-profiles' to see available profiles."
+      exit 1
+    fi
+  elif select_profile_interactive; then
+    profile_source_dir="$(get_profile_dir "${SELECTED_PROFILE}")"
+    if [[ ! -f "${profile_source_dir}/profile.toml" ]]; then
+      log "Profile not found: ${SELECTED_PROFILE}"
+      exit 1
+    fi
+  else
+    log "No profiles available; using example config"
+  fi
+
+  local config_source_display="${CONFIG_SOURCE_DIR}"
+  if [[ -n "${profile_source_dir}" ]]; then
+    config_source_display="${profile_source_dir}/config.d (profile: ${SELECTED_PROFILE:-custom URL})"
+  fi
+
   confirm_or_abort \
     "About to install and activate keyrs service:" \
     "  - Binary source: ${BIN_SOURCE}
   - Install binary: ${TARGET_BIN}
   - Install TUI binary: ${TARGET_TUI_BIN}
-  - Config fragments source: ${CONFIG_SOURCE_DIR}
+  - Config fragments source: ${config_source_display}
   - Config fragments target: ${CONFIG_COMPOSE_DIR}
   - Compose output: ${CONFIG_DIR}/config.toml
   - Settings target: ${CONFIG_DIR}/settings.toml
@@ -331,14 +444,25 @@ install_cmd() {
   fi
   run install -m 755 "${SCRIPT_PATH}" "${RUNTIME_CTL}"
 
-  if [[ ! -d "${CONFIG_SOURCE_DIR}" ]]; then
-    log "Missing config examples at ${CONFIG_SOURCE_DIR}"
+  local effective_config_source="${CONFIG_SOURCE_DIR}"
+  if [[ -n "${profile_source_dir}" ]]; then
+    effective_config_source="${profile_source_dir}/config.d"
+  fi
+
+  if [[ ! -d "${effective_config_source}" ]]; then
+    log "Missing config source at ${effective_config_source}"
     exit 1
   fi
 
-  if [[ ! -d "${CONFIG_COMPOSE_DIR}" || "${FORCE}" == true ]]; then
+  if [[ -d "${CONFIG_COMPOSE_DIR}" && "${FORCE}" != true && -n "${profile_source_dir}" ]]; then
+    local backup_dir="${CONFIG_DIR}/config.d.bak.$(date +%Y%m%d%H%M%S)"
+    run mv "${CONFIG_COMPOSE_DIR}" "${backup_dir}"
+    log "Backed up existing config to ${backup_dir}"
+  fi
+
+  if [[ ! -d "${CONFIG_COMPOSE_DIR}" || "${FORCE}" == true || -n "${profile_source_dir}" ]]; then
     run mkdir -p "${CONFIG_COMPOSE_DIR}"
-    run cp -a "${CONFIG_SOURCE_DIR}/." "${CONFIG_COMPOSE_DIR}/"
+    run cp -a "${effective_config_source}/." "${CONFIG_COMPOSE_DIR}/"
     log "Installed config fragments into ${CONFIG_COMPOSE_DIR}"
   else
     log "Keeping existing ${CONFIG_COMPOSE_DIR}"
@@ -356,7 +480,6 @@ install_cmd() {
     log "Installed ${CONFIG_UDEV_RULES}"
   fi
 
-  # Compose and validate final config before service activation.
   run "${TARGET_BIN}" --compose-config "${CONFIG_COMPOSE_DIR}" --compose-output "${CONFIG_DIR}/config.toml"
   run "${TARGET_BIN}" --check-config --config "${CONFIG_DIR}/config.toml"
 
@@ -493,6 +616,240 @@ status_cmd() {
   run "${SYSTEMCTL_BIN}" --user --no-pager --full status "${SERVICE_NAME}"
 }
 
+# ============================================================
+# Profile Functions
+# ============================================================
+
+get_profile_dir() {
+  local profile_name="$1"
+  echo "${PROFILES_DIR}/${profile_name}"
+}
+
+list_profiles_cmd() {
+  if ${RUNTIME_ONLY}; then
+    log "list-profiles is unavailable in runtime mode."
+    exit 1
+  fi
+
+  if [[ ! -d "${PROFILES_DIR}" ]]; then
+    log "Profiles directory not found: ${PROFILES_DIR}"
+    exit 1
+  fi
+
+  log "Available profiles:"
+  echo ""
+
+  local found=0
+  for profile_path in "${PROFILES_DIR}"/*/profile.toml; do
+    if [[ -f "${profile_path}" ]]; then
+      found=1
+      local profile_dir
+      profile_dir="$(dirname "${profile_path}")"
+      local profile_name
+      profile_name="$(basename "${profile_dir}")"
+
+      local name="" description=""
+      if command -v grep >/dev/null 2>&1; then
+        name="$(grep -E '^name[[:space:]]*=' "${profile_path}" 2>/dev/null | head -1 | sed 's/^name[[:space:]]*=[[:space:]]*//; s/"//g' || true)"
+        description="$(grep -E '^description[[:space:]]*=' "${profile_path}" 2>/dev/null | head -1 | sed 's/^description[[:space:]]*=[[:space:]]*//; s/"//g' || true)"
+      fi
+
+      printf "  %-20s %s\n" "${profile_name}" "${description:-No description}"
+    fi
+  done
+
+  if [[ "${found}" -eq 0 ]]; then
+    log "No profiles found in ${PROFILES_DIR}"
+    exit 1
+  fi
+
+  echo ""
+  echo "Use 'keyrs-service show-profile <name>' for details."
+}
+
+show_profile_cmd() {
+  if ${RUNTIME_ONLY}; then
+    log "show-profile is unavailable in runtime mode."
+    exit 1
+  fi
+
+  if [[ -z "${SELECTED_PROFILE:-}" ]]; then
+    log "Usage: keyrs-service show-profile <profile-name>"
+    log "Run 'keyrs-service list-profiles' to see available profiles."
+    exit 1
+  fi
+
+  local profile_dir
+  profile_dir="$(get_profile_dir "${SELECTED_PROFILE}")"
+  local profile_toml="${profile_dir}/profile.toml"
+
+  if [[ ! -f "${profile_toml}" ]]; then
+    log "Profile not found: ${SELECTED_PROFILE}"
+    log "Run 'keyrs-service list-profiles' to see available profiles."
+    exit 1
+  fi
+
+  echo "Profile: ${SELECTED_PROFILE}"
+  echo ""
+  cat "${profile_toml}"
+  echo ""
+  echo "Config files:"
+  if [[ -d "${profile_dir}/config.d" ]]; then
+    for f in "${profile_dir}/config.d"/*.toml; do
+      [[ -f "$f" ]] && echo "  - $(basename "$f")"
+    done
+  else
+    echo "  (none)"
+  fi
+}
+
+download_profile() {
+  local url="$1"
+  local target_dir="$2"
+
+  log "Downloading profile from ${url}"
+
+  run mkdir -p "${target_dir}"
+
+  local tmp_archive
+  tmp_archive="$(mktemp "/tmp/keyrs-profile.XXXXXX.tar.gz")"
+
+  if command -v curl >/dev/null 2>&1; then
+    if ! curl -fsSL "${url}" -o "${tmp_archive}"; then
+      log "Failed to download profile from ${url}"
+      rm -f "${tmp_archive}"
+      return 1
+    fi
+  elif command -v wget >/dev/null 2>&1; then
+    if ! wget -q "${url}" -O "${tmp_archive}"; then
+      log "Failed to download profile from ${url}"
+      rm -f "${tmp_archive}"
+      return 1
+    fi
+  else
+    log "Neither curl nor wget available for downloading profiles"
+    rm -f "${tmp_archive}"
+    return 1
+  fi
+
+  run tar -xzf "${tmp_archive}" -C "${target_dir}" --strip-components=1 2>/dev/null || \
+    run tar -xzf "${tmp_archive}" -C "${target_dir}" 2>/dev/null || {
+    log "Failed to extract profile archive"
+    rm -f "${tmp_archive}"
+    return 1
+  }
+
+  rm -f "${tmp_archive}"
+
+  local profile_toml="${target_dir}/profile.toml"
+  if [[ ! -f "${profile_toml}" ]]; then
+    for subdir in "${target_dir}"/*/; do
+      if [[ -f "${subdir}profile.toml" ]]; then
+        mv "${subdir}"* "${target_dir}/"
+        break
+      fi
+    done
+  fi
+
+  if [[ ! -f "${profile_toml}" ]]; then
+    log "Downloaded archive does not contain a valid profile (missing profile.toml)"
+    return 1
+  fi
+
+  if [[ ! -d "${target_dir}/config.d" ]]; then
+    log "Downloaded profile does not contain config.d directory"
+    return 1
+  fi
+
+  log "Profile downloaded successfully"
+  return 0
+}
+
+apply_profile() {
+  local profile_source_dir="$1"
+  local profile_toml="${profile_source_dir}/profile.toml"
+  local profile_config_d="${profile_source_dir}/config.d"
+
+  if [[ ! -f "${profile_toml}" ]]; then
+    log "Invalid profile: missing profile.toml in ${profile_source_dir}"
+    return 1
+  fi
+
+  if [[ ! -d "${profile_config_d}" ]]; then
+    log "Invalid profile: missing config.d directory in ${profile_source_dir}"
+    return 1
+  fi
+
+  run rm -rf "${CONFIG_COMPOSE_DIR}"
+  run mkdir -p "${CONFIG_COMPOSE_DIR}"
+  run cp -a "${profile_config_d}/." "${CONFIG_COMPOSE_DIR}/"
+
+  log "Applied profile to ${CONFIG_COMPOSE_DIR}"
+  return 0
+}
+
+switch_profile_cmd() {
+  ensure_systemctl_user
+  resolve_runtime_bin
+
+  if [[ -n "${PROFILE_URL:-}" ]]; then
+    local cache_dir="${PROFILE_CACHE_DIR}/url-$(date +%s)"
+    if ! download_profile "${PROFILE_URL}" "${cache_dir}"; then
+      log "Failed to download profile from URL"
+      exit 1
+    fi
+
+    confirm_or_abort \
+      "About to switch to profile from URL:" \
+      "  - URL: ${PROFILE_URL}
+  - Profile source: ${cache_dir}
+  - Target: ${CONFIG_COMPOSE_DIR}
+  - Will validate and restart service"
+
+    if ! apply_profile "${cache_dir}"; then
+      log "Failed to apply profile"
+      exit 1
+    fi
+  elif [[ -n "${SELECTED_PROFILE:-}" ]]; then
+    if ${RUNTIME_ONLY}; then
+      log "switch-profile with built-in profiles is unavailable in runtime mode."
+      exit 1
+    fi
+
+    local profile_dir
+    profile_dir="$(get_profile_dir "${SELECTED_PROFILE}")"
+
+    if [[ ! -f "${profile_dir}/profile.toml" ]]; then
+      log "Profile not found: ${SELECTED_PROFILE}"
+      log "Run 'keyrs-service list-profiles' to see available profiles."
+      exit 1
+    fi
+
+    confirm_or_abort \
+      "About to switch to profile '${SELECTED_PROFILE}':" \
+      "  - Profile source: ${profile_dir}
+  - Target: ${CONFIG_COMPOSE_DIR}
+  - Will validate and restart service"
+
+    if ! apply_profile "${profile_dir}"; then
+      log "Failed to apply profile"
+      exit 1
+    fi
+  else
+    log "Usage: keyrs-service switch-profile --profile <name>"
+    log "       keyrs-service switch-profile --profile-url <url>"
+    log "Run 'keyrs-service list-profiles' to see available profiles."
+    exit 1
+  fi
+
+  run "${TARGET_BIN}" --compose-config "${CONFIG_COMPOSE_DIR}" --compose-output "${CONFIG_DIR}/config.toml"
+  run "${TARGET_BIN}" --check-config --config "${CONFIG_DIR}/config.toml"
+  run "${SYSTEMCTL_BIN}" --user restart "${SERVICE_NAME}"
+  run "${SYSTEMCTL_BIN}" --user --no-pager --full status "${SERVICE_NAME}"
+
+  log "Profile switched successfully"
+}
+
 main() {
   parse_args "$@"
   case "${COMMAND}" in
@@ -505,6 +862,9 @@ main() {
     stop) stop_cmd ;;
     restart) restart_cmd ;;
     status) status_cmd ;;
+    list-profiles) list_profiles_cmd ;;
+    show-profile) show_profile_cmd ;;
+    switch-profile) switch_profile_cmd ;;
     *)
       log "Unknown command: ${COMMAND}"
       usage

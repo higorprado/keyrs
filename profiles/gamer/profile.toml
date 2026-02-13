@@ -1,0 +1,5 @@
+name = "gamer"
+description = "Minimal remapping to avoid game conflicts - native keyboard behavior"
+version = "1.0.0"
+author = "keyrs"
+tags = ["gamer", "gaming", "minimal"]

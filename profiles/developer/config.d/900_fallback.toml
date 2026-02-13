@@ -1,0 +1,29 @@
+# Developer Profile - Core Shortcuts
+# Standard Super-to-Ctrl mappings for development
+
+[[keymap]]
+name = "dev_core_shortcuts"
+condition = "not (wm_class =~ '(?i)jetbrains')"
+[keymap.mappings]
+"Super-a" = "Ctrl-a"
+"Super-c" = "Ctrl-c"
+"Super-d" = "Ctrl-d"
+"Super-f" = "Ctrl-f"
+"Super-g" = "Ctrl-g"
+"Super-h" = "Ctrl-h"
+"Super-k" = "Ctrl-k"
+"Super-n" = "Ctrl-n"
+"Super-o" = "Ctrl-o"
+"Super-p" = "Ctrl-p"
+"Super-r" = "Ctrl-r"
+"Super-s" = "Ctrl-s"
+"Super-t" = "Ctrl-t"
+"Super-v" = "Ctrl-v"
+"Super-w" = "Ctrl-w"
+"Super-x" = "Ctrl-x"
+"Super-y" = "Ctrl-y"
+"Super-z" = "Ctrl-z"
+"Super-Left" = "Home"
+"Super-Right" = "End"
+"Super-Backspace" = "Ctrl-Backspace"
+"Super-Delete" = "Ctrl-Delete"
