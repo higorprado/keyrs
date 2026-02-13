@@ -14,6 +14,7 @@ Supported root sections:
 - `[timeouts]`
 - `[devices]`
 - `[delays]`
+- `[window]`
 
 Unknown fields are rejected by parser (`deny_unknown_fields`).
 
@@ -171,7 +172,47 @@ key_post_delay_ms = 0
 
 Allowed range (current parser): `0..150 ms` each.
 
-## 10. Validation
+## 10. Window Polling
+
+`[window]` controls how often keyrs polls input events and refreshes active window context.
+
+```toml
+[window]
+poll_timeout_ms = 100
+update_interval_ms = 500
+idle_sleep_ms = 10
+```
+
+Fields:
+
+- `poll_timeout_ms`
+Purpose: timeout passed to evdev poll loop.
+Lower values reduce latency but can increase wakeups/CPU.
+Range: `1..5000 ms`.
+Default: `100`.
+
+- `update_interval_ms`
+Purpose: interval between `update_from_window_manager()` calls.
+Lower values detect app/window switches faster.
+Range: `10..10000 ms`.
+Default: `500`.
+
+- `idle_sleep_ms`
+Purpose: sleep time in no-event fallback path.
+Lower values can improve responsiveness during idle/error paths but may increase CPU.
+Range: `0..1000 ms`.
+Default: `10`.
+
+Recommended baseline:
+
+```toml
+[window]
+poll_timeout_ms = 60
+update_interval_ms = 150
+idle_sleep_ms = 5
+```
+
+## 11. Validation
 
 Always validate before runtime:
 
