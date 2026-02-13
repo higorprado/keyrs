@@ -1,0 +1,84 @@
+# Fallback Keymaps
+#
+# These are "catch-all" keymaps that apply when no app-specific
+# keymap matches. They provide macOS-like Super key behavior.
+#
+# The condition excludes terminals since they have different shortcuts.
+# This file is numbered 900_ to load last (lowest precedence).
+
+[[keymap]]
+name = "gui_navigation"
+condition = "not (wm_class =~ '(?i)alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty')"
+
+[keymap.mappings]
+# Emacs-style navigation (like macOS)
+"Super-a" = "Home"           # Beginning of line
+"Super-e" = "End"            # End of line
+"Super-b" = "Left"           # Back one char
+"Super-f" = "Right"          # Forward one char
+"Super-n" = "Down"           # Next line
+"Super-p" = "Up"             # Previous line
+"Super-k" = ["Shift-End", "Backspace"]  # Kill to end of line
+
+# Word navigation
+"Super-Left" = "Home"
+"Super-Right" = "End"
+"Ctrl-Left" = "Home"
+"Ctrl-Right" = "End"
+
+# Document navigation
+"Ctrl-Up" = "Ctrl-Home"      # Start of document
+"Ctrl-Down" = "Ctrl-End"     # End of document
+
+# Selection extensions
+"Shift-Ctrl-Left" = "Shift-Home"
+"Shift-Ctrl-Right" = "Shift-End"
+"Shift-Ctrl-Up" = "Ctrl-Shift-Home"
+"Shift-Ctrl-Down" = "Ctrl-Shift-End"
+
+# Deletion
+"Super-d" = "Delete"         # Delete forward
+"Super-Backspace" = "Ctrl-Backspace"  # Delete word backward
+"Super-Delete" = "Ctrl-Delete"        # Delete word forward
+"Ctrl-Backspace" = "Ctrl-Shift-Backspace"
+
+# Window management (DE-specific, may need adjustment)
+"Super-q" = "Alt-F4"         # Close window
+"Super-Space" = "Alt-F1"     # Application menu
+
+# Tab switching (binds to DE's native switcher)
+"Super-Tab" = ["bind", "Combo(Alt-Tab)"]
+"Shift-Super-Tab" = ["bind", "Combo(Shift-Alt-Tab)"]
+
+[[keymap]]
+name = "gui_clipboard"
+condition = "not (wm_class =~ '(?i)alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|jetbrains')"
+
+[keymap.mappings]
+# Standard clipboard operations (Super = Ctrl mapping)
+"Super-a" = "Ctrl-a"         # Select all
+"Super-c" = "Ctrl-c"         # Copy
+"Super-d" = "Ctrl-d"         # Duplicate
+"Super-f" = "Ctrl-f"         # Find
+"Super-h" = "Ctrl-h"         # Replace
+"Super-l" = "Ctrl-l"         # Focus address bar
+"Super-n" = "Ctrl-n"         # New window
+"Super-o" = "Ctrl-o"         # Open
+"Super-p" = "Ctrl-p"         # Print
+"Super-q" = "Ctrl-q"         # Quit
+"Super-r" = "Ctrl-r"         # Refresh
+"Super-s" = "Ctrl-s"         # Save
+"Super-t" = "Ctrl-t"         # New tab
+"Super-v" = "Ctrl-v"         # Paste
+"Super-w" = "Ctrl-w"         # Close tab
+"Super-x" = "Ctrl-x"         # Cut
+"Super-y" = "Ctrl-y"         # Redo
+"Super-z" = "Ctrl-z"         # Undo
+
+# Editing shortcuts
+"Super-backspace" = "Ctrl-Backspace"
+"Super-delete" = "Ctrl-Delete"
+"Super-left" = "Ctrl-left"
+"Super-right" = "Ctrl-right"
+"Shift-Super-left" = "Ctrl-Shift-left"
+"Shift-Super-right" = "Ctrl-Shift-right"

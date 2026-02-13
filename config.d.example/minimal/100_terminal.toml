@@ -1,0 +1,43 @@
+# Terminal Application Shortcuts
+#
+# Terminal apps use Ctrl+Shift for clipboard operations instead of Ctrl.
+# This maps Cmd (Super) keys to the terminal equivalents.
+#
+# Condition matches common terminal emulators:
+# - alacritty, kitty, wezterm, gnome-terminal, konsole, xfce4-terminal
+# - ghostty, wave, terminology, deepin-terminal, contour, hyper
+
+[[keymap]]
+name = "terminal_shortcuts"
+condition = "wm_class =~ '(?i)alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty'"
+
+[keymap.mappings]
+# Clipboard - terminals use Ctrl+Shift
+"Super-c" = "Ctrl-Shift-c"  # Copy
+"Super-v" = "Ctrl-Shift-v"  # Paste
+
+# Tab management
+"Super-w" = "Ctrl-Shift-w"  # Close tab
+"Super-t" = "Ctrl-Shift-t"  # New tab / Reopen closed tab
+
+# Window/session
+"Super-n" = "Ctrl-Shift-n"  # New window
+
+# Find/search
+"Super-f" = "Ctrl-Shift-f"  # Find
+
+# Font size
+"Super-minus" = "Ctrl-minus"      # Zoom out
+"Super-equal" = "Ctrl-Shift-equal" # Zoom in
+
+# Terminal-specific editing
+"Super-l" = "Ctrl-Shift-l"  # Clear scrollback
+"Super-d" = "Ctrl-Shift-d"  # Split pane (where supported)
+
+# Cancel/interrupt
+"Super-dot" = "Ctrl-c"      # Send interrupt
+
+# Word navigation ( readline-style )
+"Alt-Backspace" = "Ctrl-w"  # Delete word backward
+"Super-Backspace" = "Ctrl-u"  # Clear line
+"Super-Delete" = "Ctrl-k"     # Delete to end of line

@@ -1,0 +1,44 @@
+# File Manager Shortcuts
+#
+# Common shortcuts for Linux file managers:
+# - nautilus (GNOME), dolphin (KDE), thunar (XFCE), nemo (Cinnamon)
+# - pcmanfm, krusader, spacefm, caja
+
+[[keymap]]
+name = "file_manager_navigation"
+condition = "wm_class =~ '(?i)nautilus|dolphin|thunar|nemo|pcmanfm|krusader|spacefm|caja'"
+
+[keymap.mappings]
+# Navigation
+"Super-Left" = "Alt-Left"    # Back
+"Super-Right" = "Alt-Right"  # Forward
+"Super-Up" = "Alt-Up"        # Go to parent folder
+
+# Location bar
+"Super-l" = "Ctrl-l"         # Focus location bar
+
+# File operations
+"Super-c" = "Ctrl-c"         # Copy
+"Super-v" = "Ctrl-v"         # Paste
+"Super-x" = "Ctrl-x"         # Cut
+"Super-a" = "Ctrl-a"         # Select all
+
+# New folder/window
+"Super-Shift-N" = "Ctrl-Shift-n"  # New folder
+
+# Find
+"Super-f" = "Ctrl-f"         # Search
+
+# Delete
+"Super-Backspace" = "Delete"  # Move to trash
+
+# Preferences
+"Super-comma" = "Ctrl-comma"  # Open preferences (where supported)
+
+# Nautilus-specific: Enter to rename when Enter2Ent_Cmd is enabled
+[[keymap]]
+name = "nautilus_rename_mode"
+condition = "wm_class =~ '(?i)nautilus|org.gnome.nautilus' and settings.Enter2Ent_Cmd"
+
+[keymap.mappings]
+"Enter" = "F2"  # Rename file (instead of open)
