@@ -1,4 +1,4 @@
-// Xwaykeyz Input Layer - Keyboard Type Detection
+// Keyrs Input Layer - Keyboard Type Detection
 // Detects keyboard variants: IBM, Chromebook, Windows, Mac
 
 use std::collections::HashMap;

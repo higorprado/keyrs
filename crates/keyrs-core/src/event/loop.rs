@@ -1,5 +1,5 @@
-// Xwaykeyz Pure Rust Event Loop
-// Direct evdev event handling without Python overhead
+// Keyrs Pure Rust Event Loop
+// Direct evdev event handling for low-latency input processing
 
 #[cfg(feature = "pure-rust")]
 use evdev::{Device, EventType, InputEvent, Key};
@@ -7,6 +7,9 @@ use evdev::{Device, EventType, InputEvent, Key};
 use std::os::unix::io::AsRawFd;
 #[cfg(feature = "pure-rust")]
 use crate::input::{is_virtual_device, matches_device_filter};
+
+#[cfg(feature = "pure-rust")]
+use udev::MonitorSocket;
 
 /// Result type for event loop operations
 pub type EventLoopResult<T> = Result<T, EventLoopError>;
@@ -46,13 +49,18 @@ pub struct PolledEvent {
 
 /// Pure Rust event loop for direct device access
 ///
-/// This bypasses Python asyncio and reads directly from evdev devices.
+/// This provides direct access to evdev devices without intermediate layers.
 /// Supports device grabbing, polling, and automatic cleanup on drop.
 #[cfg(feature = "pure-rust")]
 pub struct EventLoop {
     devices: Vec<Device>,
+    device_paths: Vec<String>,
     poll_fds: Vec<libc::pollfd>,
     grabbed: bool,
+    /// udev monitor for hotplug detection (fd is at poll_fds[0])
+    udev_monitor: Option<MonitorSocket>,
+    /// Device filter for hotplug matching
+    device_filter: Vec<String>,
 }
 
 #[cfg(feature = "pure-rust")]
@@ -60,14 +68,45 @@ impl EventLoop {
     /// Virtual device prefix to filter out
     const VIRT_DEVICE_PREFIX: &str = "Keyrs (virtual)";
 
+    /// Poll flags indicating device disconnection
+    const DISCONNECT_FLAGS: libc::c_short =
+        libc::POLLHUP | libc::POLLERR | libc::POLLNVAL;
+
     /// Create a new event loop by finding keyboard devices
     pub fn new() -> EventLoopResult<Self> {
-        let devices = Self::find_keyboards()?;
-        let poll_fds = Self::create_poll_fds(&devices);
+        Self::new_filtered(&[])
+    }
+
+    /// Create a new event loop with device filtering (no grab)
+    fn new_filtered(filter_names: &[String]) -> EventLoopResult<Self> {
+        let keyboards_with_paths = Self::find_keyboards_with_paths(filter_names)?;
+        let udev_monitor = Self::create_udev_monitor()?;
+        let mut poll_fds = Vec::new();
+        
+        // udev fd at index 0 if available
+        if let Some(ref monitor) = udev_monitor {
+            poll_fds.push(libc::pollfd {
+                fd: monitor.as_raw_fd(),
+                events: libc::POLLIN,
+                revents: 0,
+            });
+        }
+        
+        // Extract devices and paths
+        let (device_paths, devices): (Vec<String>, Vec<Device>) = keyboards_with_paths
+            .into_iter()
+            .unzip();
+        
+        // Device fds follow
+        poll_fds.extend(Self::create_poll_fds(&devices));
+        
         Ok(Self {
             devices,
+            device_paths,
             poll_fds,
             grabbed: false,
+            udev_monitor,
+            device_filter: filter_names.to_vec(),
         })
     }
 
@@ -81,7 +120,12 @@ impl EventLoop {
 
     /// Create a new event loop and grab filtered keyboard devices.
     pub fn new_with_grab_filtered(filter_names: &[String]) -> EventLoopResult<Self> {
-        let mut devices = Self::find_keyboards_filtered(filter_names)?;
+        let keyboards_with_paths = Self::find_keyboards_with_paths(filter_names)?;
+        
+        // Extract devices and paths
+        let (device_paths, mut devices): (Vec<String>, Vec<Device>) = keyboards_with_paths
+            .into_iter()
+            .unzip();
 
         // Defensive: First try to ungrab all devices to handle the case where
         // a previous instance crashed. This ensures we start with a clean state.
@@ -95,12 +139,41 @@ impl EventLoop {
             device.grab()?;
         }
 
-        let poll_fds = Self::create_poll_fds(&devices);
+        let udev_monitor = Self::create_udev_monitor()?;
+        let mut poll_fds = Vec::new();
+        
+        // udev fd at index 0 if available
+        if let Some(ref monitor) = udev_monitor {
+            poll_fds.push(libc::pollfd {
+                fd: monitor.as_raw_fd(),
+                events: libc::POLLIN,
+                revents: 0,
+            });
+        }
+        
+        // Device fds follow
+        poll_fds.extend(Self::create_poll_fds(&devices));
+        
         Ok(Self {
             devices,
+            device_paths,
             poll_fds,
             grabbed: true,
+            udev_monitor,
+            device_filter: filter_names.to_vec(),
         })
+    }
+
+    /// Create udev monitor for hotplug detection
+    fn create_udev_monitor() -> EventLoopResult<Option<MonitorSocket>> {
+        let socket = udev::MonitorBuilder::new()
+            .and_then(|b| b.match_subsystem("input"))
+            .and_then(|b| b.listen())
+            .map_err(|e| EventLoopError::Io(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                format!("Failed to create udev monitor: {}", e)
+            )))?;
+        Ok(Some(socket))
     }
 
     /// Create poll file descriptors from devices
@@ -154,13 +227,9 @@ impl EventLoop {
         Ok(devices_info)
     }
 
-    /// Find all keyboard devices
-    fn find_keyboards() -> EventLoopResult<Vec<Device>> {
-        Self::find_keyboards_filtered(&[])
-    }
-
     /// Find keyboard devices honoring explicit filter names/paths.
-    fn find_keyboards_filtered(filter_names: &[String]) -> EventLoopResult<Vec<Device>> {
+    /// Returns (device_node_path, device) pairs.
+    fn find_keyboards_with_paths(filter_names: &[String]) -> EventLoopResult<Vec<(String, Device)>> {
         let mut keyboards = Vec::new();
         let autodetect = filter_names.is_empty();
 
@@ -178,7 +247,7 @@ impl EventLoop {
                 is_keyboard,
                 is_virtual,
             ) {
-                keyboards.push(device);
+                keyboards.push((device_path.to_string(), device));
             }
         }
 
@@ -280,9 +349,30 @@ impl EventLoop {
             return Ok(events);
         }
 
+        // Check udev events first (index 0 if present)
+        let udev_offset = if self.udev_monitor.is_some() { 1 } else { 0 };
+        if udev_offset > 0 && self.poll_fds[0].revents & libc::POLLIN != 0 {
+            self.handle_udev_events();
+        }
+
         // Read events from devices that have data available
+        // Track disconnected devices for removal
+        let mut disconnected_indices: Vec<usize> = Vec::new();
+
         for (i, device) in self.devices.iter_mut().enumerate() {
-            if self.poll_fds[i].revents & libc::POLLIN != 0 {
+            let poll_idx = i + udev_offset;
+            let revents = self.poll_fds[poll_idx].revents;
+
+            // Check for device disconnection first
+            if revents & Self::DISCONNECT_FLAGS != 0 {
+                let device_name = device.name().unwrap_or("Unknown");
+                log::warn!("Device disconnected: {}", device_name);
+                disconnected_indices.push(i);
+                continue;
+            }
+
+            // Normal event processing
+            if revents & libc::POLLIN != 0 {
                 let device_name = device.name().unwrap_or("Unknown").to_string();
                 if let Ok(device_events) = device.fetch_events() {
                     for event in device_events {
@@ -295,7 +385,92 @@ impl EventLoop {
             }
         }
 
+        // Remove disconnected devices (reverse order to maintain valid indices)
+        for i in disconnected_indices.into_iter().rev() {
+            let poll_idx = i + udev_offset;
+            self.devices.remove(i);
+            self.device_paths.remove(i);
+            self.poll_fds.remove(poll_idx);
+        }
+
         Ok(events)
+    }
+
+    /// Handle udev hotplug events
+    fn handle_udev_events(&mut self) {
+        let Some(ref monitor) = self.udev_monitor else { return };
+        
+        // Collect paths first to avoid borrow conflict
+        let new_device_paths: Vec<String> = monitor
+            .iter()
+            .filter_map(|event| {
+                if event.event_type() == udev::EventType::Add {
+                    event.devnode().and_then(|p| p.to_str().map(|s| s.to_string()))
+                } else {
+                    None
+                }
+            })
+            .filter(|p| p.starts_with("/dev/input/event"))
+            .collect();
+        
+        for path in new_device_paths {
+            self.try_add_device(&path);
+        }
+    }
+
+    /// Try to add a device by path if it matches our keyboard criteria
+    fn try_add_device(&mut self, path: &str) {
+        // Check if device is already in our list by path
+        if self.device_paths.iter().any(|p| path == p) {
+            return;
+        }
+        
+        // Try to open the device
+        let mut device = match Device::open(path) {
+            Ok(d) => d,
+            Err(e) => {
+                log::debug!("Could not open device {}: {}", path, e);
+                return;
+            }
+        };
+        
+        // Check if it's a keyboard device we want
+        let device_name = device.name().unwrap_or("Unknown").to_string();
+        let device_path = path;
+        let is_keyboard = Self::is_keyboard_device(&device);
+        let is_virtual = is_virtual_device(&device_name, Self::VIRT_DEVICE_PREFIX);
+        
+        if !matches_device_filter(
+            &device_name,
+            device_path,
+            &self.device_filter,
+            self.device_filter.is_empty(),
+            is_keyboard,
+            is_virtual,
+        ) {
+            return;
+        }
+        
+        // Grab if needed
+        if self.grabbed {
+            if let Err(e) = device.grab() {
+                log::warn!("Could not grab new device {}: {}", device_name, e);
+                return;
+            }
+        }
+        
+        log::info!("Device connected: {} ({})", device_name, path);
+        
+        // Track the device path
+        self.device_paths.push(path.to_string());
+        
+        // Add to poll_fds (at the end)
+        self.poll_fds.push(libc::pollfd {
+            fd: device.as_raw_fd(),
+            events: libc::POLLIN,
+            revents: 0,
+        });
+        self.devices.push(device);
     }
 
     /// Fetch a single event from any device (blocking)

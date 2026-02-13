@@ -1,4 +1,4 @@
-// Xwaykeyz Mapping Structures
+// Keyrs Mapping Structures
 // Modmap, MultiModmap, Keymap, Keystate
 
 use std::collections::HashMap;
@@ -540,6 +540,18 @@ impl MultipurposeManager {
     /// Clear any active state (e.g., on suspend)
     pub fn clear(&mut self) {
         self.active = None;
+    }
+
+    /// Clear active state and return the hold key if in hold state.
+    /// This should be used when clearing state to ensure the hold key
+    /// is properly released (e.g., on window change).
+    pub fn clear_and_get_hold_key(&mut self) -> Option<Key> {
+        if let Some(active) = self.active.take() {
+            if active.state == MultipurposeSubState::Hold {
+                return Some(active.hold_output);
+            }
+        }
+        None
     }
 }
 

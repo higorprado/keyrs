@@ -1,8 +1,5 @@
-// Xwaykeyz Pure Rust Transform Engine - Complete Implementation
-// Complete event transformation pipeline without Python dependencies
-//
-// This module implements pure Rust transform engine that eliminates
-// dual state storage problem present in Python runtime.
+// Keyrs Transform Engine - Complete Implementation
+// Event transformation pipeline for keyboard remapping
 //
 // Features:
 // - Complete modmap lookup with conditional evaluation
@@ -23,6 +20,9 @@ use std::collections::HashSet;
 
 #[cfg(feature = "pure-rust")]
 use parking_lot::RwLock;
+
+#[cfg(feature = "pure-rust")]
+use smallvec::SmallVec;
 
 use crate::mapping::{ActionStep, Keymap, KeymapValue, Modmap, MultiModmap, MultipurposeManager, MultipurposeResult};
 use crate::transform::deadkeys::DeadKeyState;
@@ -516,76 +516,6 @@ impl WindowContext {
     }
 }
 
-/// Multi-modmap state (tap/hold detection)
-#[derive(Debug, Clone)]
-struct MultiModmapState {
-    /// The key being processed
-    key: Key,
-    /// Tap action output
-    tap_key: Key,
-    /// Hold action output (usually a modifier)
-    hold_key: Key,
-    /// When the key was pressed
-    press_time: Option<Instant>,
-    /// Whether this is currently in hold mode
-    is_hold_mode: bool,
-}
-
-impl MultiModmapState {
-    /// Create a new multi-modmap state
-    fn new(key: Key, tap_key: Key, hold_key: Key) -> Self {
-        Self {
-            key,
-            tap_key,
-            hold_key,
-            press_time: None,
-            is_hold_mode: false,
-        }
-    }
-
-    /// Check if hold timeout has elapsed
-    fn should_hold(&self, timeout: Duration) -> bool {
-        self.press_time
-            .map(|t| t.elapsed() >= timeout)
-            .unwrap_or(false)
-    }
-
-    /// Get the output for this state
-    fn get_output(&self) -> Key {
-        if self.is_hold_mode {
-            self.hold_key
-        } else {
-            self.tap_key
-        }
-    }
-
-    /// Process multi-modmap state (tap/hold logic)
-    /// This is used by tests to directly test the state machine
-    fn process_multi_modmap(&mut self, action: Action, timeout: Duration) -> TransformResult {
-        match action {
-            Action::Press => {
-                self.press_time = Some(Instant::now());
-                TransformResult::Suppress
-            }
-            Action::Repeat => {
-                // Still in hold decision period, suppress
-                TransformResult::Suppress
-            }
-            Action::Release => {
-                if self.should_hold(timeout) {
-                    // Timeout elapsed, emit hold action
-                    self.is_hold_mode = true;
-                    TransformResult::Remapped(self.hold_key)
-                } else {
-                    // Released before timeout, emit tap action
-                    self.is_hold_mode = false;
-                    TransformResult::Remapped(self.tap_key)
-                }
-            }
-        }
-    }
-}
-
 /// Keymap stack for nested keymap support
 #[derive(Debug, Clone, Default)]
 pub struct KeymapStack {
@@ -606,11 +536,6 @@ impl KeymapStack {
     /// Pop the current keymap
     fn pop(&mut self) -> Option<String> {
         self.stack.pop()
-    }
-
-    /// Get the current (top) keymap
-    fn current(&self) -> Option<&String> {
-        self.stack.last()
     }
 
     /// Clear all keymaps
@@ -634,7 +559,6 @@ struct RepeatCache {
     key: Key,
     result: TransformResult,
     modifier_snapshot: Vec<Key>,
-    timestamp: Instant,
 }
 
 impl RepeatCache {
@@ -644,7 +568,6 @@ impl RepeatCache {
             key,
             result,
             modifier_snapshot,
-            timestamp: Instant::now(),
         }
     }
 
@@ -656,8 +579,7 @@ impl RepeatCache {
 
 /// Pure Rust transform engine
 ///
-/// This contains all the logic from the Python transform layer
-/// but implemented in pure Rust for maximum performance.
+/// This contains all the transform logic implemented in pure Rust for maximum performance.
 #[cfg(feature = "pure-rust")]
 pub struct TransformEngine {
     config: TransformConfig,
@@ -667,9 +589,7 @@ pub struct TransformEngine {
     window_context: Arc<RwLock<WindowContext>>,
     /// Optional window context provider for tracking active window
     window_manager: Option<Box<dyn WindowContextProvider>>,
-    /// Multi-modmap state for tap/hold logic (legacy)
-    multi_state: Option<MultiModmapState>,
-    /// Multipurpose manager for tap/hold keys (new implementation)
+    /// Multipurpose manager for tap/hold keys
     multipurpose_manager: MultipurposeManager,
     /// Keymap stack for nested keymaps
     keymap_stack: KeymapStack,
@@ -713,7 +633,6 @@ impl TransformEngine {
             repeat_cache: None,
             window_context: Arc::new(RwLock::new(window_context)),
             window_manager: None,
-            multi_state: None,
             multipurpose_manager,
             keymap_stack: KeymapStack::default(),
             escape_next: false,
@@ -751,7 +670,6 @@ impl TransformEngine {
             repeat_cache: None,
             window_context: Arc::new(RwLock::new(window_context)),
             window_manager,
-            multi_state: None,
             multipurpose_manager,
             keymap_stack: KeymapStack::default(),
             escape_next: false,
@@ -928,9 +846,6 @@ impl TransformEngine {
             // Condition is false, fall through to normal processing
             }
         }
-
-        // Legacy multi-modmap handling (for backward compatibility)
-        self.handle_legacy_multimodmap(key, action);
 
         // Get current modifier state BEFORE processing this key
         let modifier_snapshot = self.keystore.read().get_modifier_snapshot();
@@ -1156,20 +1071,6 @@ impl TransformEngine {
         self.process_event(key, action)
     }
 
-    /// Handle legacy multi-modmap entries for backward compatibility
-    fn handle_legacy_multimodmap(&mut self, key: Key, action: Action) {
-        // Check for multi-modmap entry
-        for multimodmap in &self.config.multimodmaps {
-            if let Some((tap_key, hold_key)) = multimodmap.get(key) {
-                if action.is_pressed() {
-                    let _timeout =
-                        Duration::from_millis(self.config.multipurpose_timeout.unwrap_or(500));
-                    self.multi_state = Some(MultiModmapState::new(key, tap_key, hold_key));
-                }
-            }
-        }
-    }
-
     /// Check if any multipurpose keys have timed out and should transition to hold
     /// This should be called periodically (e.g., in the event loop)
     pub fn check_multipurpose_timeouts(&mut self) -> Option<(Key, Action)> {
@@ -1186,38 +1087,6 @@ impl TransformEngine {
     /// Check if a key is currently an active multipurpose hold key
     pub fn is_multipurpose_hold_active(&self) -> bool {
         self.multipurpose_manager.is_hold_state()
-    }
-
-    /// Process multi-modmap state (tap/hold logic) - legacy implementation
-    fn process_multi_modmap(
-        &mut self,
-        multi: &mut MultiModmapState,
-        action: Action,
-    ) -> TransformResult {
-        match action {
-            Action::Press => {
-                multi.press_time = Some(Instant::now());
-                TransformResult::Suppress
-            }
-            Action::Repeat => {
-                // Still in hold decision period, suppress
-                TransformResult::Suppress
-            }
-            Action::Release => {
-                let timeout =
-                    Duration::from_millis(self.config.multipurpose_timeout.unwrap_or(500));
-
-                if multi.should_hold(timeout) {
-                    // Timeout elapsed, emit hold action
-                    multi.is_hold_mode = true;
-                    TransformResult::Remapped(multi.hold_key)
-                } else {
-                    // Released before timeout, emit tap action
-                    multi.is_hold_mode = false;
-                    TransformResult::Remapped(multi.tap_key)
-                }
-            }
-        }
     }
 
     /// Look up a key through modmaps with conditional evaluation
@@ -1327,8 +1196,8 @@ impl TransformEngine {
     ///
     /// For example: [Ctrl, A] becomes:
     /// - [LCtrl, A], [RCtrl, A]
-    fn expand_modifiers(&self, combo: &Combo) -> Vec<Combo> {
-        let mut expansions = Vec::new();
+    fn expand_modifiers(&self, combo: &Combo) -> SmallVec<[Combo; 4]> {
+        let mut expansions = SmallVec::new();
 
         // For each modifier in the combo that could be non-specific...
         for (i, modifier) in combo.modifiers().iter().enumerate() {
@@ -1424,12 +1293,21 @@ impl TransformEngine {
     }
 
     /// Update window context
-    pub fn update_window_context(&mut self, wm_class: Option<String>, wm_name: Option<String>) {
+    /// Returns Some(hold_key) if a multipurpose hold was active and should be released.
+    pub fn update_window_context(&mut self, wm_class: Option<String>, wm_name: Option<String>) -> Option<Key> {
         let mut context = self.window_context.write();
         context.update(wm_class, wm_name);
 
         // Clear keymap stack when window changes
         self.keymap_stack.clear();
+
+        // Clear multipurpose state and get hold key to release
+        if let Some(hold_key) = self.multipurpose_manager.clear_and_get_hold_key() {
+            // Update keystore to release the hold key
+            self.keystore.write().update(hold_key, Action::Release, None);
+            return Some(hold_key);
+        }
+        None
     }
 
     /// Set the window context provider
@@ -1466,8 +1344,10 @@ impl TransformEngine {
     ///
     /// This should be called periodically (e.g., every 100ms) to
     /// update window context for conditional modmap evaluation.
-    /// Returns true if window context changed (keymap stack cleared).
-    pub fn update_from_window_manager(&mut self) -> bool {
+    /// Returns (changed, hold_key_to_release) where:
+    /// - changed: true if window context changed
+    /// - hold_key_to_release: Some(hold_key) if a multipurpose hold was active and should be released
+    pub fn update_from_window_manager(&mut self) -> (bool, Option<Key>) {
         if let Some(ref manager) = self.window_manager {
             match manager.get_active_window() {
                 Ok(info) => {
@@ -1487,7 +1367,7 @@ impl TransformEngine {
                     // Keep the last stable window context when the provider returns no active
                     // window details (common transient state during focus switches).
                     if new_wm_class.is_none() && new_wm_name.is_none() {
-                        return false;
+                        return (false, None);
                     }
 
                     let mut context = self.window_context.write();
@@ -1503,24 +1383,31 @@ impl TransformEngine {
                     // Clear keymap stack when window changes
                     if changed {
                         self.keymap_stack.clear();
+                        
+                        // Clear multipurpose state and get hold key to release
+                        if let Some(hold_key) = self.multipurpose_manager.clear_and_get_hold_key() {
+                            // Update keystore to release the hold key
+                            self.keystore.write().update(hold_key, Action::Release, None);
+                            return (true, Some(hold_key));
+                        }
                     }
 
-                    changed
+                    (changed, None)
                 }
                 Err(_) => {
                     // Window query failed, keep current context
-                    false
+                    (false, None)
                 }
             }
         } else {
-            false
+            (false, None)
         }
     }
 
     /// Print current window context for debugging
     pub fn print_window_context(&self) {
         let context = self.window_context.read();
-        eprintln!(
+        log::debug!(
             "WINDOW: wm_class={:?} wm_name={:?} device_name={:?} keyboard_type={:?} numlock={} capslock={}",
             context.wm_class.as_deref().unwrap_or("(none)"),
             context.wm_name.as_deref().unwrap_or("(none)"),
@@ -1545,7 +1432,6 @@ impl TransformEngine {
     pub fn clear(&mut self) {
         self.keystore.write().clear();
         self.repeat_cache = None;
-        self.multi_state = None;
         self.keymap_stack.clear();
         self.escape_next = false;
         self.mark = None;
@@ -1656,14 +1542,14 @@ mod tests {
         ]))));
 
         // First update is transient empty context and must be ignored.
-        let changed = engine.update_from_window_manager();
+        let (changed, _) = engine.update_from_window_manager();
         assert!(!changed);
         let ctx = engine.window_context.read().clone();
         assert_eq!(ctx.wm_class.as_deref(), Some("kitty"));
         assert_eq!(ctx.wm_name.as_deref(), Some("terminal"));
 
         // Second update contains real data and should apply.
-        let changed = engine.update_from_window_manager();
+        let (changed, _) = engine.update_from_window_manager();
         assert!(changed);
         let ctx = engine.window_context.read().clone();
         assert_eq!(ctx.wm_class.as_deref(), Some("firefox"));
@@ -1766,45 +1652,6 @@ mod tests {
         // Test without keyboard type set
         ctx.clear_keyboard_type();
         assert!(!ctx.matches_condition("keyboard_type =~ 'IBM'"));
-    }
-
-    #[test]
-    #[cfg(feature = "pure-rust")]
-    fn test_multi_modmap_tap() {
-        let mut state = MultiModmapState::new(
-            Key::from(30), // A
-            Key::from(30), // Tap A
-            Key::from(29), // Hold Ctrl
-        );
-
-        // First press the key
-        let _ = state.process_multi_modmap(Action::Press, Duration::from_millis(200));
-
-        // Release immediately (tap)
-        let result = state.process_multi_modmap(Action::Release, Duration::from_millis(200));
-
-        assert_eq!(result, TransformResult::Remapped(Key::from(30)));
-    }
-
-    #[test]
-    #[cfg(feature = "pure-rust")]
-    fn test_multi_modmap_hold() {
-        let mut state = MultiModmapState::new(
-            Key::from(30), // A
-            Key::from(30), // Tap A
-            Key::from(29), // Hold Ctrl
-        );
-
-        // Simulate press
-        let _ = state.process_multi_modmap(Action::Press, Duration::from_millis(200));
-
-        // Wait for timeout
-        std::thread::sleep(std::time::Duration::from_millis(250));
-
-        // Release after timeout (should hold)
-        let result = state.process_multi_modmap(Action::Release, Duration::from_millis(200));
-
-        assert_eq!(result, TransformResult::Remapped(Key::from(29)));
     }
 
     #[test]
@@ -2417,5 +2264,71 @@ mod tests {
 
         let after_false = engine.process_event(Key::from(66), Action::Press);
         assert_eq!(after_false, TransformResult::Text("FALSE".to_string()));
+    }
+
+    #[test]
+    #[cfg(feature = "pure-rust")]
+    fn test_multipurpose_cleared_on_window_change() {
+        let config = TransformConfig::default();
+        let mut engine = TransformEngine::new(config);
+        engine.add_multipurpose(Key::from(58), Key::from(1), Key::from(97)); // Caps -> Esc/Ctrl
+
+        // Press the multipurpose key
+        let _ = engine.process_event(Key::from(58), Action::Press);
+        assert!(
+            engine.is_multipurpose_hold_active() || engine.multipurpose_manager.has_active(),
+            "Multipurpose should be active after press"
+        );
+
+        // Window changes
+        engine.update_window_context(Some("new-app".to_string()), Some("New Window".to_string()));
+
+        // Multipurpose state should be cleared
+        assert!(
+            !engine.multipurpose_manager.has_active(),
+            "Multipurpose state should be cleared on window change"
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "pure-rust")]
+    fn test_multipurpose_hold_key_released_on_window_change() {
+        let config = TransformConfig::default();
+        let mut engine = TransformEngine::new(config);
+        let hold_key = Key::from(97); // Ctrl
+        engine.add_multipurpose(Key::from(58), Key::from(1), hold_key); // Caps -> Esc/Ctrl
+
+        // Press the multipurpose key (enters Pending state)
+        let _ = engine.process_event(Key::from(58), Action::Press);
+        
+        // Press another key to trigger interrupt and enter Hold state
+        let _ = engine.process_event(Key::from(30), Action::Press);
+        
+        assert!(
+            engine.is_multipurpose_hold_active(),
+            "Should be in hold state before window change"
+        );
+
+        // Window changes - should return hold key to release
+        let hold_key_to_release = engine.update_window_context(Some("new-app".to_string()), Some("New Window".to_string()));
+        
+        assert_eq!(
+            hold_key_to_release,
+            Some(hold_key),
+            "Hold key should be returned when window changes during hold state"
+        );
+        
+        // Multipurpose state should be cleared
+        assert!(
+            !engine.multipurpose_manager.has_active(),
+            "Multipurpose state should be cleared on window change"
+        );
+        
+        // Keystore should have released the hold key
+        let pressed_keys = engine.keystore.read().get_pressed_mods_keys();
+        assert!(
+            !pressed_keys.contains(&hold_key),
+            "Hold key should be released in keystore after window change"
+        );
     }
 }

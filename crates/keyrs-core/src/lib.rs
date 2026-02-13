@@ -1,4 +1,4 @@
-// Xwaykeyz Core Library
+// Keyrs Core Library
 // Core data models for keyboard remapping
 
 pub mod action;

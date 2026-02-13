@@ -1,4 +1,4 @@
-// Xwaykeyz Modifier System
+// Keyrs Modifier System
 // Represents keyboard combo modifiers (Shift, Ctrl, Alt, Meta)
 
 use parking_lot::RwLock;

@@ -1,4 +1,4 @@
-// Xwaykeyz Input Layer
+// Keyrs Input Layer
 // Device detection and filtering logic
 
 mod device;

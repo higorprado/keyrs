@@ -61,7 +61,7 @@ impl fmt::Display for Action {
     }
 }
 
-// Module-level constants for Python compatibility
+// Module-level constants for convenience
 pub const PRESS: Action = Action::Press;
 pub const RELEASE: Action = Action::Release;
 pub const REPEAT: Action = Action::Repeat;

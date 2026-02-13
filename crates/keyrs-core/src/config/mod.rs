@@ -1,4 +1,4 @@
-// Xwaykeyz Config API - Rust implementation
+// Keyrs Config API - Rust implementation
 // High-performance combo parsing and keymap expansion
 
 pub mod combo_parser;

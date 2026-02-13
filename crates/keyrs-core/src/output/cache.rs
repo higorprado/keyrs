@@ -1,4 +1,4 @@
-// Xwaykeyz Output Cache Tracking
+// Keyrs Output Cache Tracking
 // First-write-wins cache for repeat optimization
 
 use crate::Combo;

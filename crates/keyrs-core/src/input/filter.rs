@@ -1,4 +1,4 @@
-// Xwaykeyz Input Layer - Device Filtering
+// Keyrs Input Layer - Device Filtering
 // Device matching logic for autodetection and manual filtering
 
 /// Check if a device matches the given filter criteria.

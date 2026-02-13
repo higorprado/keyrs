@@ -1,4 +1,4 @@
-// Xwaykeyz Hybrid Event Loop
+// Keyrs Hybrid Event Loop
 // Rust event I/O with Python transform logic
 //
 // This module implements a hybrid architecture where:

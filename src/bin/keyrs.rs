@@ -1,5 +1,5 @@
-// Xwaykeyz Pure Rust CLI
-// Standalone binary for Wayland key remapping without Python dependencies
+// Keyrs CLI
+// Standalone binary for Wayland keyboard remapping
 
 #![cfg_attr(feature = "pure-rust", allow(dead_code))]
 
@@ -254,7 +254,7 @@ impl Application {
                 Ok(())
             }
             Err(e) => {
-                eprintln!("Error finding keyboard devices: {}", e);
+                log::error!("Error finding keyboard devices: {}", e);
                 Err(e.into())
             }
         }
@@ -265,11 +265,9 @@ impl Application {
     fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
         use keyrs_core::event::EventLoop;
 
-        if self.args.verbose {
-            println!("Starting keyrs pure-rust binary");
-            if let Some(ref config_path) = self.args.config {
-                println!("Config: {}", config_path.display());
-            }
+        log::info!("Starting keyrs pure-rust binary");
+        if let Some(ref config_path) = self.args.config {
+            log::info!("Config: {}", config_path.display());
         }
 
         // Get config
@@ -282,11 +280,10 @@ impl Application {
         let transform_config = config.to_transform_config();
         
         // DEBUG: Print loaded keymaps
-        println!("\n=== KEYMAP LOADING SUMMARY ===");
-        println!("Loaded {} keymaps total", transform_config.keymaps.len());
+        log::info!("Loaded {} keymaps total", transform_config.keymaps.len());
         for keymap in &transform_config.keymaps {
-            println!(
-                "  - Keymap '{}': {} mappings, conditional={:?}",
+            log::info!(
+                "Keymap '{}': {} mappings, conditional={:?}",
                 keymap.name(),
                 keymap.mappings().len(),
                 keymap.conditional()
@@ -295,26 +292,25 @@ impl Application {
             // Show first few mappings for verification
             let sample_size = keymap.mappings().len().min(3);
             if sample_size > 0 {
-                println!("    Sample mappings:");
+                log::debug!("Sample mappings for '{}':", keymap.name());
                 for (combo, _) in keymap.mappings().iter().take(sample_size) {
-                    println!("      - {:?}", combo);
+                    log::debug!("  - {:?}", combo);
                 }
                 if keymap.mappings().len() > sample_size {
-                    println!("      ... and {} more", keymap.mappings().len() - sample_size);
+                    log::debug!("  ... and {} more", keymap.mappings().len() - sample_size);
                 }
             }
         }
-        println!("=============================\n");
         
         let mut engine = TransformEngine::new(transform_config);
 
         // Load settings from ~/.config/keyrs/settings.toml
         match Settings::load_default() {
             Ok(settings) => {
-                println!("Loaded settings from {:?}", Settings::default_path());
-                println!("  Enter2Ent_Cmd = {}", settings.get_bool("Enter2Ent_Cmd"));
-                println!("  Caps2Esc_Cmd = {}", settings.get_bool("Caps2Esc_Cmd"));
-                println!("  forced_numpad = {}", settings.get_bool("forced_numpad"));
+                log::info!("Loaded settings from {:?}", Settings::default_path());
+                log::debug!("Enter2Ent_Cmd = {}", settings.get_bool("Enter2Ent_Cmd"));
+                log::debug!("Caps2Esc_Cmd = {}", settings.get_bool("Caps2Esc_Cmd"));
+                log::debug!("forced_numpad = {}", settings.get_bool("forced_numpad"));
                 // Print GenTerms migration flags so runtime condition gating is visible.
                 for key in [
                     "DistroFedoraGnome",
@@ -328,23 +324,21 @@ impl Application {
                     "DesktopSway",
                     "DesktopXfce",
                 ] {
-                    println!("  {} = {}", key, settings.get_bool(key));
+                    log::debug!("{} = {}", key, settings.get_bool(key));
                 }
                 engine.set_settings(settings);
             }
             Err(e) => {
-                println!("Warning: Could not load settings: {}", e);
+                log::warn!("Could not load settings: {}", e);
             }
         }
 
         // Set up window context provider for conditional keymaps
         let mut window_provider = WaylandContextProvider::new();
         if let Err(e) = window_provider.connect() {
-            if self.args.verbose {
-                println!("Warning: Could not connect to window manager: {}", e);
-            }
-        } else if self.args.verbose {
-            println!("Connected to window manager");
+            log::warn!("Could not connect to window manager: {}", e);
+        } else {
+            log::info!("Connected to window manager");
         }
         engine.set_window_manager(Some(Box::new(window_provider)));
 
@@ -362,7 +356,7 @@ impl Application {
                     for signal in &mut signals {
                         match signal {
                             signal_hook::consts::SIGINT | signal_hook::consts::SIGTERM => {
-                                println!("\nReceived signal, shutting down gracefully...");
+                                log::warn!("Received signal, shutting down gracefully...");
                                 running.store(false, Ordering::SeqCst);
                                 break;
                             }
@@ -373,9 +367,7 @@ impl Application {
             });
         }
 
-        if self.args.verbose {
-            println!("Transform engine created");
-        }
+        log::info!("Transform engine created");
 
         // Resolve device filter precedence:
         // CLI --devices > config [devices].only > autodetect.
@@ -388,14 +380,12 @@ impl Application {
         // Create event loop with grab (prevents original events from reaching system)
         let mut event_loop = EventLoop::new_with_grab_filtered(&active_device_filter)?;
 
-        if self.args.verbose {
-            println!(
-                "Event loop created with {} device(s)",
-                event_loop.device_count()
-            );
-            if !active_device_filter.is_empty() {
-                println!("Device filter active: {:?}", active_device_filter);
-            }
+        log::info!(
+            "Event loop created with {} device(s)",
+            event_loop.device_count()
+        );
+        if !active_device_filter.is_empty() {
+            log::debug!("Device filter active: {:?}", active_device_filter);
         }
 
         // Resolve keyboard type with precedence:
@@ -408,15 +398,13 @@ impl Application {
         } else {
             engine.set_keyboard_type(keyboard_type);
         }
-        if self.args.verbose {
-            println!("Keyboard type resolved: {}", keyboard_type.as_str());
-            if keyboard_type == KeyboardType::Unknown {
-                for info in &detection_infos {
-                    println!(
-                        "  - detect candidate: name='{}' vendor={:?} product={:?} phys={:?}",
-                        info.name, info.vendor_id, info.product_id, info.phys
-                    );
-                }
+        log::info!("Keyboard type resolved: {}", keyboard_type.as_str());
+        if keyboard_type == KeyboardType::Unknown {
+            for info in &detection_infos {
+                log::debug!(
+                    "detect candidate: name='{}' vendor={:?} product={:?} phys={:?}",
+                    info.name, info.vendor_id, info.product_id, info.phys
+                );
             }
         }
 
@@ -427,14 +415,12 @@ impl Application {
             config.key_post_delay_ms.unwrap_or(0),
         );
 
-        if self.args.verbose {
-            println!("Virtual uinput device created");
-            println!(
-                "Throttle delays: pre={}ms post={}ms",
-                config.key_pre_delay_ms.unwrap_or(0),
-                config.key_post_delay_ms.unwrap_or(0)
-            );
-        }
+        log::info!("Virtual uinput device created");
+        log::debug!(
+            "Throttle delays: pre={}ms post={}ms",
+            config.key_pre_delay_ms.unwrap_or(0),
+            config.key_post_delay_ms.unwrap_or(0)
+        );
 
         // Run main loop
         let result = self.run_main_loop(
@@ -472,7 +458,7 @@ impl Application {
         use evdev::EventType;
         use keyrs_core::Action;
 
-        println!("keyrs is running. Press Ctrl+C to exit.");
+        log::warn!("keyrs is running. Press Ctrl+C to exit.");
 
         // Timestamp for periodic window context updates
         let mut last_window_update = Instant::now();
@@ -502,14 +488,14 @@ impl Application {
 
                             // Emergency eject key: immediate stop for recovery.
                             if Some(key) == emergency_eject_key && action == Action::Press {
-                                eprintln!("Emergency eject key pressed. Stopping keyrs.");
+                                log::error!("Emergency eject key pressed. Stopping keyrs.");
                                 self.running.store(false, Ordering::SeqCst);
                                 continue;
                             }
 
                             // Diagnostics key: print current context and continue.
                             if Some(key) == diagnostics_key && action == Action::Press {
-                                eprintln!("Diagnostics key pressed:");
+                                log::warn!("Diagnostics key pressed:");
                                 engine.print_window_context();
                                 continue;
                             }
@@ -517,14 +503,12 @@ impl Application {
                             let result = engine.process_event(key, action);
 
                             // Log the result if verbose
-                            if self.args.verbose {
-                                println!("Event: {:?} {:?} -> {:?}", key, action, result);
-                            }
+                            log::debug!("Event: {:?} {:?} -> {:?}", key, action, result);
 
                             // Convert to output format and send to uinput device
                             let output = TransformResultOutput::from_transform_result(&result);
                             if let Err(e) = output_device.process_transform_result(&output, action) {
-                                eprintln!("Error sending output: {}", e);
+                                log::error!("Error sending output: {}", e);
                             }
                         }
                     }
@@ -532,49 +516,63 @@ impl Application {
                     // Check for multipurpose timeouts after processing events
                     // This handles the case where a key is held longer than the timeout
                     if let Some((hold_key, action)) = engine.check_multipurpose_timeouts() {
-                        if self.args.verbose {
-                            println!("Multipurpose timeout: {:?} {:?}", hold_key, action);
-                        }
+                        log::debug!("Multipurpose timeout: {:?} {:?}", hold_key, action);
                         let result = TransformResult::Remapped(hold_key);
                         let output = TransformResultOutput::from_transform_result(&result);
                         if let Err(e) = output_device.process_transform_result(&output, action) {
-                            eprintln!("Error sending output: {}", e);
+                            log::error!("Error sending output: {}", e);
                         }
                     }
                     
                     // Update window context periodically.
                     if last_window_update.elapsed() >= Duration::from_millis(window_update_interval_ms) {
                         last_window_update = Instant::now();
-                        if engine.update_from_window_manager() {
-                            if self.args.verbose {
-                                println!("Window context updated");
-                            }
+                        let (changed, hold_key_to_release) = engine.update_from_window_manager();
+                        if changed {
+                            log::debug!("Window context updated");
                             // Always print window info for debugging
                             engine.print_window_context();
+                            
+                            // Release any hold key that was active when window changed
+                            if let Some(hold_key) = hold_key_to_release {
+                                log::debug!("Releasing multipurpose hold key on window change: {:?}", hold_key);
+                                let result = TransformResult::Remapped(hold_key);
+                                let output = TransformResultOutput::from_transform_result(&result);
+                                if let Err(e) = output_device.process_transform_result(&output, Action::Release) {
+                                    log::error!("Error releasing hold key: {}", e);
+                                }
+                            }
                         }
                     }
                 }
                 Err(_e) => {
                     // No events available, check timeouts anyway (for held keys)
                     if let Some((hold_key, action)) = engine.check_multipurpose_timeouts() {
-                        if self.args.verbose {
-                            println!("Multipurpose timeout (no events): {:?} {:?}", hold_key, action);
-                        }
+                        log::debug!("Multipurpose timeout (no events): {:?} {:?}", hold_key, action);
                         let result = TransformResult::Remapped(hold_key);
                         let output = TransformResultOutput::from_transform_result(&result);
                         if let Err(e) = output_device.process_transform_result(&output, action) {
-                            eprintln!("Error sending output: {}", e);
+                            log::error!("Error sending output: {}", e);
                         }
                     }
                     
                     // Update window context periodically even when no events.
                     if last_window_update.elapsed() >= Duration::from_millis(window_update_interval_ms) {
                         last_window_update = Instant::now();
-                        if engine.update_from_window_manager() {
-                            if self.args.verbose {
-                                println!("Window context updated (no events)");
-                            }
+                        let (changed, hold_key_to_release) = engine.update_from_window_manager();
+                        if changed {
+                            log::debug!("Window context updated (no events)");
                             engine.print_window_context();
+                            
+                            // Release any hold key that was active when window changed
+                            if let Some(hold_key) = hold_key_to_release {
+                                log::debug!("Releasing multipurpose hold key on window change: {:?}", hold_key);
+                                let result = TransformResult::Remapped(hold_key);
+                                let output = TransformResultOutput::from_transform_result(&result);
+                                if let Err(e) = output_device.process_transform_result(&output, Action::Release) {
+                                    log::error!("Error releasing hold key: {}", e);
+                                }
+                            }
                         }
                     }
                     
@@ -589,6 +587,24 @@ impl Application {
 #[cfg(feature = "pure-rust")]
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
+
+    // Initialize logger
+    // Default: WARN level (quiet daemon)
+    // --verbose: INFO level
+    // KEYRS_LOG env var overrides everything
+    #[cfg(feature = "pure-rust")]
+    {
+        let mut builder = env_logger::Builder::new();
+        builder.filter_level(if args.verbose {
+            log::LevelFilter::Info
+        } else {
+            log::LevelFilter::Warn
+        });
+        if std::env::var("KEYRS_LOG").is_ok() {
+            builder.parse_filters(&std::env::var("KEYRS_LOG").unwrap());
+        }
+        builder.init();
+    }
 
     // Handle list-devices flag (does not require config)
     if args.list_devices {

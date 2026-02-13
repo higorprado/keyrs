@@ -1,4 +1,4 @@
-// Xwaykeyz Key Type
+// Keyrs Key Type
 // Represents a single key code from Linux input-event-codes.h
 
 use std::fmt;

@@ -1,4 +1,4 @@
-// Xwaykeyz Settings Module
+// Keyrs Settings Module
 // Handles user-configurable settings that can toggle features on/off
 
 #![cfg(feature = "pure-rust")]
@@ -220,7 +220,7 @@ fn parse_bool_value(value: &toml::Value) -> Result<bool, SettingsError> {
 
 /// Create default settings content for a new installation
 pub fn default_settings_content() -> &'static str {
-    r#"# Xwaykeyz Settings
+    r#"# Keyrs Settings
 # This file controls feature toggles for keyrs
 # Place this file at: ~/.config/keyrs/settings.toml
 

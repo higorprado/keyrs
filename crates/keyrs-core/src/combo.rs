@@ -1,4 +1,4 @@
-// Xwaykeyz Combo Type
+// Keyrs Combo Type
 // Represents a key combination with modifiers
 
 use std::collections::HashSet;
