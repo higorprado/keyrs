@@ -1,0 +1,323 @@
+## ============================================================
+## FILE MANAGER SHORTCUTS
+## ============================================================
+## Keymaps for file manager applications.
+## Maps Super (Cmd) to Alt for navigation, provides macOS-like shortcuts.
+##
+## File Manager Classes: nautilus, dolphin, thunar, nemo, pcmanfm,
+##   pcmanfm-qt, krusader, spacefm, caja, cosmic, peony
+
+## ------------------------------------------------------------
+## Core File Manager Shortcuts
+## Common shortcuts for all file managers
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanagers_core"
+condition = "wm_class =~ 'nautilus|dolphin|thunar|nemo|pcmanfm|krusader|spacefm|caja|cosmic|peony'"
+[keymap.mappings]
+# Get Info / Properties: Super+I → Alt+Enter
+"Super-i" = "Alt-Enter"
+# Toggle hidden files: Shift+Super+. → Ctrl+H
+"Shift-Super-dot" = "Ctrl-h"
+# Delete file: Super+Backspace → Delete
+"Super-Backspace" = "Delete"
+# Navigation: Super+Arrow keys → Alt+Arrow (back/forward/up/down)
+"Super-Left" = "Alt-Left"
+"Super-Right" = "Alt-Right"
+"Super-Up" = "Alt-Up"
+"Super-Down" = "Enter"
+
+[[keymap]]
+name = "filemanagers_preferences"
+condition = "wm_class =~ '(?i)nautilus|dolphin|thunar|nemo|pcmanfm|krusader|spacefm|caja|cosmic|peony'"
+[keymap.mappings]
+# Preferences menu sequence
+"Super-comma" = ["Alt-e", "n"]
+# Delete file (repeated for priority)
+"Super-Backspace" = "Delete"
+
+## ------------------------------------------------------------
+## Nautilus (GNOME Files)
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanager_nautilus"
+condition = "wm_class =~ '(?i)^org.gnome.nautilus$|^nautilus$'"
+[keymap.mappings]
+# View modes: Super+1 = List, Super+2 = Icons
+"Super-1" = "Ctrl-2"
+"Super-2" = "Ctrl-1"
+# Open in terminal
+"Ctrl-Super-o" = "Ctrl-Enter"
+# Preferences
+"Super-Comma" = "Ctrl-Comma"
+# Search
+"Super-f" = "Ctrl-f"
+
+[[keymap]]
+name = "filemanager_nautilus_create_archive_dialog"
+condition = "wm_class =~ '(?i)^org.gnome.nautilus$|^nautilus$' and wm_name =~ '(?i)^create archive$'"
+[keymap.mappings]
+# Allow Enter to confirm in create archive dialog
+"Enter" = "Enter"
+
+## ------------------------------------------------------------
+## Dolphin (KDE)
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanager_dolphin"
+condition = "wm_class =~ '(?i)^dolphin$|^org.kde.dolphin$'"
+[keymap.mappings]
+# Refresh view
+"Super-r" = "F5"
+# View modes: Super+2 = Details, Super+3 = Icons
+"Super-2" = "Ctrl-3"
+"Super-3" = "Ctrl-2"
+# Open in terminal
+"Ctrl-Super-o" = "Shift-Ctrl-o"
+# New folder
+"Shift-Super-n" = ["SetSetting(Enter2Ent_Cmd=false)", "Shift-Ctrl-n"]
+# Preferences
+"Super-Comma" = "Shift-Ctrl-Comma"
+
+[[keymap]]
+name = "filemanager_dolphin_dialogs"
+condition = "wm_class =~ '(?i)^dolphin$|^org.kde.dolphin$' and wm_name =~ '(?i)edit places entry|create new file|folder already exists|file already exists'"
+[keymap.mappings]
+# Allow Enter to confirm in dialogs
+"Enter" = "Enter"
+
+[[keymap]]
+name = "filemanager_dolphin_pre_kf6"
+condition = "wm_class =~ '(?i)^dolphin$|^org.kde.dolphin$' and settings.DesktopKde and settings.KdeVersionPre6"
+[keymap.mappings]
+# New folder (pre-KF6 uses F10)
+"Shift-Super-n" = ["SetSetting(Enter2Ent_Cmd=false)", "F10"]
+
+## ------------------------------------------------------------
+## Krusader (KDE)
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanager_krusader"
+condition = "wm_class =~ '(?i)^org.kde.krusader$|^krusader$'"
+[keymap.mappings]
+# Toggle hidden files
+"Shift-Super-dot" = "Alt-dot"
+# New folder
+"Shift-Super-n" = ["SetSetting(Enter2Ent_Cmd=false)", "F7"]
+# View modes (1-4 are panel-specific, ignore conflicting ones)
+"Super-1" = ["Ignore"]
+"Super-2" = "Alt-Shift-d"
+"Super-3" = "Alt-Shift-b"
+"Super-4" = ["Ignore"]
+# Delete with confirmation sequence
+"Super-Backspace" = ["Delete", "Delay(500)", "Tab", "Delay(500)", "Enter"]
+
+
+
+## ------------------------------------------------------------
+## Thunar (XFCE)
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanager_thunar"
+condition = "wm_class =~ '(?i)^thunar$'"
+[keymap.mappings]
+# Preferences via menu sequence
+"Super-comma" = ["Alt-e", "e"]
+
+[[keymap]]
+name = "filemanager_thunar_partial"
+condition = "wm_class =~ '^thunar$'"
+[keymap.mappings]
+# Open in terminal
+"Super-o" = "Ctrl-Shift-p"
+# Search
+"Super-f" = "Ctrl-f"
+
+## ------------------------------------------------------------
+## PCManFM
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanager_pcmanfm"
+condition = "wm_class =~ '(?i)^pcmanfm$|^pcmanfm-qt$'"
+[keymap.mappings]
+# View mode: Super+2 = Detailed list
+"Super-2" = "Ctrl-4"
+# Delete with confirmation
+"Super-Backspace" = ["Delete", "Space"]
+# Search
+"Super-f" = "Ctrl-f"
+
+[[keymap]]
+name = "filemanager_pcmanfmqt"
+condition = "wm_class =~ '(?i)^pcmanfm-qt$'"
+[keymap.mappings]
+# Delete file without confirmation
+"Super-Backspace" = "Delete"
+# View modes (Super+1/2/3/4 for different views)
+# Icon view
+"Super-1" = ["Alt-v", "Delay(100)", "v", "Delay(100)", "i"]
+# View mode: Detailed list view
+"Super-2" = ["Alt-v", "Delay(100)", "v", "Delay(100)", "d"]
+# View mode: Compact view
+"Super-3" = ["Alt-v", "Delay(100)", "v", "Delay(100)", "c"]
+# View mode: Thumbnail view
+"Super-4" = ["Alt-v", "Delay(100)", "v", "Delay(100)", "t"]
+
+[[keymap]]
+name = "filemanager_pcmanfmqt_desktop"
+condition = "wm_class =~ '(?i)^pcmanfm-qt$' and wm_name =~ '(?i)^pcmanfm-desktop.*$'"
+[keymap.mappings]
+# Allow Enter key to work on desktop icons
+"Enter" = "Enter"
+
+## ------------------------------------------------------------
+## SpaceFM
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanager_spacefm"
+condition = "wm_class =~ '(?i)^spacefm$'"
+[keymap.mappings]
+# Previous tab
+"Super-Page_Up" = ["bind", "Ctrl-Shift-Tab"]
+# Next tab
+"Super-Page_Down" = ["bind", "Ctrl-Tab"]
+# Previous tab (bracket key)
+"Shift-Super-Left_Brace" = ["bind", "Ctrl-Shift-Tab"]
+# Next tab (bracket key)
+"Shift-Super-Right_Brace" = ["bind", "Ctrl-Tab"]
+# Previous tab (arrow key)
+"Shift-Super-Left" = ["bind", "Ctrl-Shift-Tab"]
+# Next tab (arrow key)
+"Shift-Super-Right" = ["bind", "Ctrl-Tab"]
+# Find files in current directory
+"Shift-Super-n" = ["SetSetting(Enter2Ent_Cmd=false)", "Ctrl-f"]
+# Disable global find shortcut in favor of SpaceFM native
+"Super-f" = ["Ignore"]
+# Delete with confirmation
+"Super-Backspace" = ["Delete", "Space"]
+# Toggle show hidden files
+"Super-comma" = ["Alt-v", "p"]
+
+[[keymap]]
+name = "filemanager_spacefm_find_dialog"
+condition = "wm_class =~ '(?i)^spacefm$' and wm_name =~ '(?i)find files'"
+[keymap.mappings]
+# Allow Enter to work in find dialog
+"Enter" = "Enter"
+# Close find dialog
+"Esc" = "Alt-F4"
+# Close find dialog (macOS style)
+"Super-w" = "Alt-F4"
+
+## ------------------------------------------------------------
+## Caja (MATE)
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanager_caja"
+condition = "wm_class =~ '(?i)^caja$'"
+[keymap.mappings]
+# Open in terminal (for selected folder)
+"Ctrl-Super-o" = "Shift-Ctrl-Enter"
+
+## ------------------------------------------------------------
+## COSMIC Files
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanager_cosmic_files"
+condition = "wm_class =~ '(?i)^com.system76.cosmicfiles$'"
+[keymap.mappings]
+# Previous tab (bracket key)
+"Shift-Super-Left_Brace" = ["bind", "Shift-Ctrl-Tab"]
+# Next tab (bracket key)
+"Shift-Super-Right_Brace" = ["bind", "Ctrl-Tab"]
+# Previous tab (arrow key)
+"Shift-Super-Left" = ["bind", "Shift-Ctrl-Tab"]
+# Next tab (arrow key)
+"Shift-Super-Right" = ["bind", "Ctrl-Tab"]
+# Toggle file info panel
+"Super-i" = "Space"
+# Toggle file info panel (alternative)
+"Alt-Enter" = "Space"
+
+## ------------------------------------------------------------
+## DDE File Manager (Deepin)
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanager_dde"
+condition = "wm_class =~ '(?i)^dde-file-manager$'"
+[keymap.mappings]
+# Toggle file info panel
+"Super-i" = "Ctrl-i"
+# Disable preferences shortcut (not available)
+"Super-Comma" = ["Ignore"]
+# Go to parent directory
+"Super-Up" = "Ctrl-Up"
+# Previous tab (bracket key)
+"Shift-Super-Left_Brace" = ["bind", "Ctrl-Shift-Tab"]
+# Next tab (bracket key)
+"Shift-Super-Right_Brace" = ["bind", "Ctrl-Tab"]
+# Previous tab (arrow key)
+"Shift-Super-Left" = ["bind", "Ctrl-Shift-Tab"]
+# Next tab (arrow key)
+"Shift-Super-Right" = ["bind", "Ctrl-Tab"]
+
+## ------------------------------------------------------------
+## Pantheon Files (Elementary)
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanager_pantheon"
+condition = "wm_class =~ '(?i)^io.elementary.files$'"
+[keymap.mappings]
+# Open in terminal (for selected folder)
+"Ctrl-Super-o" = "Shift-Enter"
+# Disable preferences shortcut (not available)
+"Super-Comma" = ["Ignore"]
+
+## ------------------------------------------------------------
+## Peony (UKUI)
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filemanager_peony"
+condition = "wm_class =~ '(?i)^peony-qt$'"
+[keymap.mappings]
+# Disable preferences shortcut (not available)
+"Super-Comma" = ["Ignore"]
+# Zoom in
+"Super-Equal" = "Shift-Ctrl-Equal"
+# Previous tab (bracket key)
+"Shift-Super-Left_Brace" = ["bind", "Ctrl-Shift-Tab"]
+# Next tab (bracket key)
+"Shift-Super-Right_Brace" = ["bind", "Ctrl-Tab"]
+# Previous tab (arrow key)
+"Shift-Super-Left" = ["bind", "Ctrl-Shift-Tab"]
+# Next tab (arrow key)
+"Shift-Super-Right" = ["bind", "Ctrl-Tab"]
+
+## ------------------------------------------------------------
+## XDG File Dialogs
+## ------------------------------------------------------------
+
+[[keymap]]
+name = "filedialogs_xdg"
+condition = "wm_class =~ 'xdg-desktop-portal-gnome|firefox|librewolf|waterfox|zen' and wm_name =~ 'Open File|Save As'"
+[keymap.mappings]
+# Navigate back
+"Super-Left" = "Alt-Left"
+# Navigate forward
+"Super-Right" = "Alt-Right"
+# Go to parent directory
+"Super-Up" = "Alt-Up"
+# Open selected item
+"Super-Down" = "Enter"

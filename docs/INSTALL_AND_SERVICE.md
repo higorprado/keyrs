@@ -98,3 +98,15 @@ This removes/disable the service unit. Config and binaries are typically kept un
 - `--yes`: non-interactive confirmation
 - `--dry-run`: preview actions without changing system
 - `--force`: overwrite default copied files during install
+
+## Troubleshooting
+
+- If `systemctl --user` is unavailable, ensure systemd user session is enabled.
+- If service does not start, run:
+
+```bash
+systemctl --user status keyrs.service --no-pager --full
+journalctl --user -u keyrs.service -n 100 --no-pager
+```
+
+For more diagnostic guidance, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md).

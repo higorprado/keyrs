@@ -150,3 +150,12 @@ Keep specific rules earlier and generic fallback rules later, or vice versa base
 ## Final advice
 
 Prefer small focused keymaps over giant mixed blocks. It is easier to debug one intent per keymap than many unrelated mappings in one table.
+
+---
+
+## See Also
+
+- [CONFIG_SYNTAX_REFERENCE.md](CONFIG_SYNTAX_REFERENCE.md) - Full syntax reference for all config sections
+- [CONDITION_PATTERNS.md](CONDITION_PATTERNS.md) - Copy-paste ready condition patterns
+- [CONFIG_EXAMPLES.md](CONFIG_EXAMPLES.md) - Real-world configuration examples
+- [CONFIG_COMPOSE_WORKFLOW.md](CONFIG_COMPOSE_WORKFLOW.md) - Modular config workflow

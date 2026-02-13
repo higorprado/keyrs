@@ -1,0 +1,67 @@
+# Base Configuration
+#
+# This file contains core settings and modifier remappings.
+# It should be loaded first (000_ prefix ensures this).
+
+[general]
+# F11 suspends all key remapping (emergency stop)
+suspend_key = "F11"
+
+[timeouts]
+# How long to hold a key before triggering "hold" action (milliseconds)
+multipurpose = 200
+# How long to hold suspend_key before suspending
+suspend = 1000
+
+# ============================================================
+# MULTI-PURPOSE KEYS
+# ============================================================
+# Keys that do one thing on tap, another on hold.
+# Great for turning Enter into Cmd/Ctrl when held.
+
+# Enter key: tap = Enter, hold = Right Ctrl (for Cmd key simulation)
+# Only active when Enter2Ent_Cmd setting is enabled
+[[multipurpose]]
+name = "enter_to_ctrl"
+trigger = "ENTER"
+tap = "ENTER"
+hold = "RIGHT_CTRL"
+condition = "settings.Enter2Ent_Cmd"
+
+# Caps Lock: tap = Escape, hold = Right Ctrl
+# Only active when Caps2Esc_Cmd setting is enabled
+# Excludes Chromebook keyboards (they use Left Meta as Caps)
+[[multipurpose]]
+name = "caps_to_esc"
+trigger = "CAPSLOCK"
+tap = "ESCAPE"
+hold = "RIGHT_CTRL"
+condition = "settings.Caps2Esc_Cmd and not (keyboard_type =~ 'Chromebook')"
+
+# ============================================================
+# DEFAULT MODMAP
+# ============================================================
+# Key-to-key remapping applied globally before any keymaps.
+# These are unconditional transformations.
+
+[modmap.default]
+# Keep Caps Lock as-is (conditional remaps handle the Esc/Ctrl mapping)
+CAPSLOCK = "CAPSLOCK"
+
+# ============================================================
+# CONDITIONAL MODMAPS
+# ============================================================
+# Key remapping that only applies under certain conditions.
+# Earlier modmaps take precedence over later ones.
+
+# Numpad keys as regular numbers (for compact keyboards without numpad layer)
+[[modmap.conditionals]]
+name = "forced_numpad"
+condition = "settings.forced_numpad"
+mappings = { KP1 = "KEY_1", KP2 = "KEY_2", KP3 = "KEY_3", KP4 = "KEY_4", KP5 = "KEY_5", KP6 = "KEY_6", KP7 = "KEY_7", KP8 = "KEY_8", KP9 = "KEY_9", KP0 = "KEY_0", KPDOT = "DOT", KPENTER = "ENTER" }
+
+# Numpad navigation when NumLock is off (standard Linux behavior)
+[[modmap.conditionals]]
+name = "numpad_navigation"
+condition = "not settings.forced_numpad and not numlk"
+mappings = { KP9 = "PAGE_UP", KP3 = "PAGE_DOWN", KP7 = "HOME", KP1 = "END", KP8 = "UP", KP2 = "DOWN", KP4 = "LEFT", KP6 = "RIGHT", KP0 = "INSERT", KPDOT = "DELETE", KPENTER = "ENTER" }
