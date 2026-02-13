@@ -538,11 +538,6 @@ impl KeymapStack {
         self.stack.pop()
     }
 
-    /// Get the current (top) keymap
-    fn current(&self) -> Option<&String> {
-        self.stack.last()
-    }
-
     /// Clear all keymaps
     fn clear(&mut self) {
         self.stack.clear();
@@ -564,7 +559,6 @@ struct RepeatCache {
     key: Key,
     result: TransformResult,
     modifier_snapshot: Vec<Key>,
-    timestamp: Instant,
 }
 
 impl RepeatCache {
@@ -574,7 +568,6 @@ impl RepeatCache {
             key,
             result,
             modifier_snapshot,
-            timestamp: Instant::now(),
         }
     }
 

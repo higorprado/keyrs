@@ -3,33 +3,6 @@
 
 use crate::{Key, Modifier};
 
-/// A single key action (press or release)
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum KeyAction {
-    Press(Key),
-    Release(Key),
-}
-
-impl KeyAction {
-    /// Get the key associated with this action
-    pub fn key(&self) -> Key {
-        match self {
-            KeyAction::Press(k) => *k,
-            KeyAction::Release(k) => *k,
-        }
-    }
-
-    /// Check if this is a press action
-    pub fn is_press(&self) -> bool {
-        matches!(self, KeyAction::Press(_))
-    }
-
-    /// Check if this is a release action
-    pub fn is_release(&self) -> bool {
-        matches!(self, KeyAction::Release(_))
-    }
-}
-
 /// Sequence of actions to send for a combo
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ComboActionSequence {
@@ -293,20 +266,6 @@ mod tests {
         let result = calculate_combo_actions(&combo_modifiers, combo_key, &pressed_mods);
         assert_eq!(result.modifiers_to_release, vec![left_shift]);
         assert_eq!(result.modifiers_to_restore, vec![left_shift]);
-    }
-
-    #[test]
-    fn test_key_action_accessors() {
-        let key = Key::from(30);
-        let press = KeyAction::Press(key);
-        let release = KeyAction::Release(key);
-
-        assert_eq!(press.key(), key);
-        assert_eq!(release.key(), key);
-        assert!(press.is_press());
-        assert!(release.is_release());
-        assert!(!press.is_release());
-        assert!(!release.is_press());
     }
 
     #[test]

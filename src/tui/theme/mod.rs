@@ -117,11 +117,6 @@ impl Theme {
         Style::default().fg(self.palette.accent_warning)
     }
 
-    // Setting key style
-    pub fn setting_key(&self) -> Style {
-        Style::default().fg(self.palette.text_secondary)
-    }
-
     // Setting value style
     pub fn setting_value(&self, enabled: bool) -> Style {
         if enabled {
