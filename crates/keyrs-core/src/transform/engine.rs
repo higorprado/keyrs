@@ -1300,15 +1300,21 @@ impl TransformEngine {
     }
 
     /// Update window context
-    pub fn update_window_context(&mut self, wm_class: Option<String>, wm_name: Option<String>) {
+    /// Returns Some(hold_key) if a multipurpose hold was active and should be released.
+    pub fn update_window_context(&mut self, wm_class: Option<String>, wm_name: Option<String>) -> Option<Key> {
         let mut context = self.window_context.write();
         context.update(wm_class, wm_name);
 
         // Clear keymap stack when window changes
         self.keymap_stack.clear();
 
-        // Clear multipurpose state on window change
-        self.multipurpose_manager.clear();
+        // Clear multipurpose state and get hold key to release
+        if let Some(hold_key) = self.multipurpose_manager.clear_and_get_hold_key() {
+            // Update keystore to release the hold key
+            self.keystore.write().update(hold_key, Action::Release, None);
+            return Some(hold_key);
+        }
+        None
     }
 
     /// Set the window context provider
@@ -1345,8 +1351,10 @@ impl TransformEngine {
     ///
     /// This should be called periodically (e.g., every 100ms) to
     /// update window context for conditional modmap evaluation.
-    /// Returns true if window context changed (keymap stack cleared).
-    pub fn update_from_window_manager(&mut self) -> bool {
+    /// Returns (changed, hold_key_to_release) where:
+    /// - changed: true if window context changed
+    /// - hold_key_to_release: Some(hold_key) if a multipurpose hold was active and should be released
+    pub fn update_from_window_manager(&mut self) -> (bool, Option<Key>) {
         if let Some(ref manager) = self.window_manager {
             match manager.get_active_window() {
                 Ok(info) => {
@@ -1366,7 +1374,7 @@ impl TransformEngine {
                     // Keep the last stable window context when the provider returns no active
                     // window details (common transient state during focus switches).
                     if new_wm_class.is_none() && new_wm_name.is_none() {
-                        return false;
+                        return (false, None);
                     }
 
                     let mut context = self.window_context.write();
@@ -1382,17 +1390,24 @@ impl TransformEngine {
                     // Clear keymap stack when window changes
                     if changed {
                         self.keymap_stack.clear();
+                        
+                        // Clear multipurpose state and get hold key to release
+                        if let Some(hold_key) = self.multipurpose_manager.clear_and_get_hold_key() {
+                            // Update keystore to release the hold key
+                            self.keystore.write().update(hold_key, Action::Release, None);
+                            return (true, Some(hold_key));
+                        }
                     }
 
-                    changed
+                    (changed, None)
                 }
                 Err(_) => {
                     // Window query failed, keep current context
-                    false
+                    (false, None)
                 }
             }
         } else {
-            false
+            (false, None)
         }
     }
 
@@ -1534,14 +1549,14 @@ mod tests {
         ]))));
 
         // First update is transient empty context and must be ignored.
-        let changed = engine.update_from_window_manager();
+        let (changed, _) = engine.update_from_window_manager();
         assert!(!changed);
         let ctx = engine.window_context.read().clone();
         assert_eq!(ctx.wm_class.as_deref(), Some("kitty"));
         assert_eq!(ctx.wm_name.as_deref(), Some("terminal"));
 
         // Second update contains real data and should apply.
-        let changed = engine.update_from_window_manager();
+        let (changed, _) = engine.update_from_window_manager();
         assert!(changed);
         let ctx = engine.window_context.read().clone();
         assert_eq!(ctx.wm_class.as_deref(), Some("firefox"));
@@ -2279,6 +2294,48 @@ mod tests {
         assert!(
             !engine.multipurpose_manager.has_active(),
             "Multipurpose state should be cleared on window change"
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "pure-rust")]
+    fn test_multipurpose_hold_key_released_on_window_change() {
+        let config = TransformConfig::default();
+        let mut engine = TransformEngine::new(config);
+        let hold_key = Key::from(97); // Ctrl
+        engine.add_multipurpose(Key::from(58), Key::from(1), hold_key); // Caps -> Esc/Ctrl
+
+        // Press the multipurpose key (enters Pending state)
+        let _ = engine.process_event(Key::from(58), Action::Press);
+        
+        // Press another key to trigger interrupt and enter Hold state
+        let _ = engine.process_event(Key::from(30), Action::Press);
+        
+        assert!(
+            engine.is_multipurpose_hold_active(),
+            "Should be in hold state before window change"
+        );
+
+        // Window changes - should return hold key to release
+        let hold_key_to_release = engine.update_window_context(Some("new-app".to_string()), Some("New Window".to_string()));
+        
+        assert_eq!(
+            hold_key_to_release,
+            Some(hold_key),
+            "Hold key should be returned when window changes during hold state"
+        );
+        
+        // Multipurpose state should be cleared
+        assert!(
+            !engine.multipurpose_manager.has_active(),
+            "Multipurpose state should be cleared on window change"
+        );
+        
+        // Keystore should have released the hold key
+        let pressed_keys = engine.keystore.read().get_pressed_mods_keys();
+        assert!(
+            !pressed_keys.contains(&hold_key),
+            "Hold key should be released in keystore after window change"
         );
     }
 }

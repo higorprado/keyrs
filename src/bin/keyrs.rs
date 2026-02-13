@@ -545,12 +545,25 @@ impl Application {
                     // Update window context periodically.
                     if last_window_update.elapsed() >= Duration::from_millis(window_update_interval_ms) {
                         last_window_update = Instant::now();
-                        if engine.update_from_window_manager() {
+                        let (changed, hold_key_to_release) = engine.update_from_window_manager();
+                        if changed {
                             if self.args.verbose {
                                 println!("Window context updated");
                             }
                             // Always print window info for debugging
                             engine.print_window_context();
+                            
+                            // Release any hold key that was active when window changed
+                            if let Some(hold_key) = hold_key_to_release {
+                                if self.args.verbose {
+                                    println!("Releasing multipurpose hold key on window change: {:?}", hold_key);
+                                }
+                                let result = TransformResult::Remapped(hold_key);
+                                let output = TransformResultOutput::from_transform_result(&result);
+                                if let Err(e) = output_device.process_transform_result(&output, Action::Release) {
+                                    eprintln!("Error releasing hold key: {}", e);
+                                }
+                            }
                         }
                     }
                 }
@@ -570,11 +583,24 @@ impl Application {
                     // Update window context periodically even when no events.
                     if last_window_update.elapsed() >= Duration::from_millis(window_update_interval_ms) {
                         last_window_update = Instant::now();
-                        if engine.update_from_window_manager() {
+                        let (changed, hold_key_to_release) = engine.update_from_window_manager();
+                        if changed {
                             if self.args.verbose {
                                 println!("Window context updated (no events)");
                             }
                             engine.print_window_context();
+                            
+                            // Release any hold key that was active when window changed
+                            if let Some(hold_key) = hold_key_to_release {
+                                if self.args.verbose {
+                                    println!("Releasing multipurpose hold key on window change: {:?}", hold_key);
+                                }
+                                let result = TransformResult::Remapped(hold_key);
+                                let output = TransformResultOutput::from_transform_result(&result);
+                                if let Err(e) = output_device.process_transform_result(&output, Action::Release) {
+                                    eprintln!("Error releasing hold key: {}", e);
+                                }
+                            }
                         }
                     }
                     
