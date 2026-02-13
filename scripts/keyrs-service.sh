@@ -18,6 +18,7 @@ CONFIG_SOURCE_DIR="${REPO_ROOT}/config.d.example"
 CONFIG_COMPOSE_DIR="${CONFIG_DIR}/config.d"
 CONFIG_UDEV_RULES="${CONFIG_DIR}/keyrs-udev.rules"
 PROFILES_DIR="${REPO_ROOT}/profiles"
+BUILTIN_PROFILES_DIR="${CONFIG_DIR}/profiles"  # Installed profiles for runtime mode
 BIN_DIR="${HOME}/.local/bin"
 TARGET_BIN="${BIN_DIR}/keyrs"
 TARGET_TUI_BIN="${BIN_DIR}/keyrs-tui"
@@ -33,6 +34,7 @@ DRY_RUN=false
 FORCE=false
 ASSUME_YES=false
 QUIET=false
+COLOR_MODE="auto"  # auto, always, never
 
 # Arguments
 BIN_SOURCE=""
@@ -50,24 +52,54 @@ if [[ "${KEYRS_RUNTIME_ONLY:-0}" == "1" || "${SCRIPT_PATH}" == "${RUNTIME_CTL}" 
 fi
 
 # ============================================================
-# Colors (auto-detect terminal support)
+# Colors (--color=always/never/auto, respects NO_COLOR)
 # ============================================================
 
-if [[ -t 1 ]] && command -v tput >/dev/null 2>&1; then
-  COLOR_RESET="$(tput sgr0 2>/dev/null || echo '')"
-  COLOR_RED="$(tput setaf 1 2>/dev/null || echo '')"
-  COLOR_GREEN="$(tput setaf 2 2>/dev/null || echo '')"
-  COLOR_YELLOW="$(tput setaf 3 2>/dev/null || echo '')"
-  COLOR_BLUE="$(tput setaf 4 2>/dev/null || echo '')"
-  COLOR_BOLD="$(tput bold 2>/dev/null || echo '')"
-else
-  COLOR_RESET=""
-  COLOR_RED=""
-  COLOR_GREEN=""
-  COLOR_YELLOW=""
-  COLOR_BLUE=""
-  COLOR_BOLD=""
-fi
+setup_colors() {
+  case "${COLOR_MODE}" in
+    never)
+      COLOR_RESET=""
+      COLOR_RED=""
+      COLOR_GREEN=""
+      COLOR_YELLOW=""
+      COLOR_BLUE=""
+      COLOR_BOLD=""
+      return
+      ;;
+    always)
+      # Force colors on
+      ;;
+    auto|"")
+      # Auto-detect: check if EITHER stdout or stderr is a terminal
+      # Also respect NO_COLOR environment variable
+      if [[ -n "${NO_COLOR:-}" ]] || ! { [[ -t 1 ]] || [[ -t 2 ]]; }; then
+        COLOR_RESET=""
+        COLOR_RED=""
+        COLOR_GREEN=""
+        COLOR_YELLOW=""
+        COLOR_BLUE=""
+        COLOR_BOLD=""
+        return
+      fi
+      ;;
+  esac
+
+  # Get colors via tput
+  COLOR_RESET="$(tput sgr0 2>/dev/null || printf '\033[0m')"
+  COLOR_RED="$(tput setaf 1 2>/dev/null || printf '\033[31m')"
+  COLOR_GREEN="$(tput setaf 2 2>/dev/null || printf '\033[32m')"
+  COLOR_YELLOW="$(tput setaf 3 2>/dev/null || printf '\033[33m')"
+  COLOR_BLUE="$(tput setaf 4 2>/dev/null || printf '\033[34m')"
+  COLOR_BOLD="$(tput bold 2>/dev/null || printf '\033[1m')"
+}
+
+# Initialize colors (will be set after parsing --color option)
+COLOR_RESET=""
+COLOR_RED=""
+COLOR_GREEN=""
+COLOR_YELLOW=""
+COLOR_BLUE=""
+COLOR_BOLD=""
 
 # ============================================================
 # Cleanup and Signal Handling
@@ -123,54 +155,65 @@ usage() {
   keyrs-service <command> [options]"
     examples="Examples:
   keyrs-service apply-config
-  keyrs-service apply-config --source-dir ~/.config/keyrs/config.d --yes
+  keyrs-service profile-set developer
   keyrs-service restart"
   else
     header="Usage:
   scripts/keyrs-service.sh <command> [options]"
     examples="Examples:
   scripts/keyrs-service.sh install
-  scripts/keyrs-service.sh install --bin ./target/release/keyrs --force
-  scripts/keyrs-service.sh install --yes
-  scripts/keyrs-service.sh install-udev
-  scripts/keyrs-service.sh restart"
+  scripts/keyrs-service.sh install --profile developer
+  scripts/keyrs-service.sh install-udev"
   fi
 
   cat <<USAGE
 ${header}
 
 Commands:
-  apply-config  Compose+validate config.toml and restart service safely
-  start         Start service
-  stop          Stop service
-  restart       Restart service
-  status        Show service status
-  install-udev Install keyrs udev rules (root/sudo required)
-  uninstall-udev Remove keyrs udev rules (root/sudo required)
-  list-profiles List available configuration profiles
-  show-profile  Show profile details (usage: show-profile <name>)
-  profile-set   Set active profile (usage: profile-set <name>)
-  profile-select Interactively select a profile
 USAGE
 
   if ! ${RUNTIME_ONLY}; then
     cat <<USAGE
-  install      Install binary/config and enable/start user service
-  uninstall    Stop/disable service and remove service file
+  install          Install keyrs binary, profiles, and service
+  uninstall        Remove service and installed files
 USAGE
   fi
 
   cat <<USAGE
+
+Service:
+  start            Start the keyrs service
+  stop             Stop the keyrs service
+  restart          Restart the keyrs service
+  status           Show service status
+
+Configuration:
+  apply-config     Compose and validate config, restart service
+
+Profiles:
+  list-profiles    List available profiles
+  show-profile     Show profile details: show-profile <name>
+  profile-set      Set active profile: profile-set <name> [--url <url>]
+  profile-select   Interactively select a profile
+USAGE
+
+  cat <<USAGE
+
+Advanced:
+  install-udev     Install udev rules (requires sudo)
+  uninstall-udev   Remove udev rules (requires sudo)
+
 Options:
-  --bin <path>     Binary source path (default: ./target/release/keyrs)
-  --source-dir <path> Source dir to compose from for apply-config (default: ~/.config/keyrs/config.d)
-  --profile <name> Use profile during install or switch-profile
-  --profile-url <url> Download profile from URL
-  --force          Overwrite existing config files during install
-  --yes            Skip confirmation prompt
-  --quiet          Suppress output (only errors)
-  --dry-run        Print actions without executing system changes
-  -h, --help       Show this help
+  --bin <path>         Binary source path (default: ./target/release/keyrs)
+  --source-dir <path>  Source dir for apply-config (default: ~/.config/keyrs/config.d)
+  --profile <name>     Profile name to use
+  --url <url>          Profile URL for profile-set
+  --force              Overwrite existing config files
+  --yes                Skip confirmation prompt
+  --quiet, -q          Suppress output (only errors)
+  --color <mode>       Color output: auto, always, never (default: auto)
+  --dry-run            Print actions without executing
+  -h, --help           Show this help
 
 ${examples}
 USAGE
@@ -198,6 +241,10 @@ parse_args() {
         QUIET=true
         shift
         ;;
+      --color)
+        COLOR_MODE="${2:-auto}"
+        shift 2
+        ;;
       -h|--help)
         usage
         exit 0
@@ -218,7 +265,7 @@ parse_args() {
   # Handle positional argument for profile commands
   if [[ -n "${1:-}" ]] && [[ ! "${1}" =~ ^- ]]; then
     case "${COMMAND}" in
-      show-profile|profile-set|switch-profile)
+      show-profile|profile-set)
         SELECTED_PROFILE="${1}"
         shift
         ;;
@@ -243,7 +290,7 @@ parse_args() {
         SELECTED_PROFILE="${2:-}"
         shift 2
         ;;
-      --profile-url)
+      --url|--profile-url)
         PROFILE_URL="${2:-}"
         shift 2
         ;;
@@ -254,6 +301,10 @@ parse_args() {
       --quiet|-q)
         QUIET=true
         shift
+        ;;
+      --color)
+        COLOR_MODE="${2:-auto}"
+        shift 2
         ;;
       --dry-run)
         DRY_RUN=true
@@ -469,27 +520,40 @@ UNIT
 }
 
 select_profile_interactive() {
-  if [[ ! -d "${PROFILES_DIR}" ]]; then
+  local search_dirs
+  search_dirs="$(get_profiles_search_dirs)"
+
+  if [[ -z "${search_dirs}" ]]; then
     return 1
   fi
 
   local profiles=()
   local descriptions=()
+  local seen_names=""
 
-  for profile_path in "${PROFILES_DIR}"/*/profile.toml; do
-    if [[ -f "${profile_path}" ]]; then
-      local profile_dir
-      profile_dir="$(dirname "${profile_path}")"
-      local profile_name
-      profile_name="$(basename "${profile_dir}")"
-      profiles+=("${profile_name}")
+  for dir in ${search_dirs}; do
+    for profile_path in "${dir}"/*/profile.toml; do
+      if [[ -f "${profile_path}" ]]; then
+        local profile_dir
+        profile_dir="$(dirname "${profile_path}")"
+        local profile_name
+        profile_name="$(basename "${profile_dir}")"
 
-      local description=""
-      if command -v grep >/dev/null 2>&1; then
-        description="$(grep -E '^description[[:space:]]*=' "${profile_path}" 2>/dev/null | head -1 | sed 's/^description[[:space:]]*=[[:space:]]*//; s/"//g' || true)"
+        # Skip duplicates
+        if [[ "${seen_names}" == *":${profile_name}:"* ]]; then
+          continue
+        fi
+        seen_names="${seen_names}:${profile_name}:"
+
+        profiles+=("${profile_name}")
+
+        local description=""
+        if command -v grep >/dev/null 2>&1; then
+          description="$(grep -E '^description[[:space:]]*=' "${profile_path}" 2>/dev/null | head -1 | sed 's/^description[[:space:]]*=[[:space:]]*//; s/"//g' || true)"
+        fi
+        descriptions+=("${description:-No description}")
       fi
-      descriptions+=("${description:-No description}")
-    fi
+    done
   done
 
   if [[ ${#profiles[@]} -eq 0 ]]; then
@@ -633,6 +697,13 @@ install_cmd() {
     log "Installed ${CONFIG_UDEV_RULES}"
   fi
 
+  # Install built-in profiles for runtime use
+  if [[ -d "${PROFILES_DIR}" ]]; then
+    run mkdir -p "${BUILTIN_PROFILES_DIR}"
+    run cp -a "${PROFILES_DIR}/." "${BUILTIN_PROFILES_DIR}/"
+    log "Installed profiles to ${BUILTIN_PROFILES_DIR}"
+  fi
+
   run "${TARGET_BIN}" --compose-config "${CONFIG_COMPOSE_DIR}" --compose-output "${CONFIG_DIR}/config.toml"
   run "${TARGET_BIN}" --check-config --config "${CONFIG_DIR}/config.toml"
 
@@ -641,17 +712,13 @@ install_cmd() {
   run "${SYSTEMCTL_BIN}" --user enable --now "${SERVICE_NAME}"
   run "${SYSTEMCTL_BIN}" --user --no-pager --full status "${SERVICE_NAME}"
 
-  log "Install complete"
+  log_success "Install complete"
 
   prompt_udev_install
 }
 
 uninstall_cmd() {
   ensure_systemctl_user
-  if ${RUNTIME_ONLY}; then
-    log "uninstall is unavailable in runtime mode."
-    exit 1
-  fi
   confirm_or_abort \
     "About to uninstall keyrs service integration:" \
     "  - Will stop and disable: ${SERVICE_NAME}
@@ -666,7 +733,7 @@ uninstall_cmd() {
     log "Removed ${SERVICE_PATH}"
   fi
   run "${SYSTEMCTL_BIN}" --user daemon-reload
-  log "Uninstall complete (config and binary kept)"
+  log_success "Uninstall complete (config and binary kept)"
 }
 
 apply_config_cmd() {
@@ -777,17 +844,32 @@ status_cmd() {
 
 get_profile_dir() {
   local profile_name="$1"
-  echo "${PROFILES_DIR}/${profile_name}"
+  # Check source profiles first (dev mode), then installed profiles (runtime mode)
+  if [[ -d "${PROFILES_DIR}/${profile_name}" ]]; then
+    echo "${PROFILES_DIR}/${profile_name}"
+  elif [[ -d "${BUILTIN_PROFILES_DIR}/${profile_name}" ]]; then
+    echo "${BUILTIN_PROFILES_DIR}/${profile_name}"
+  else
+    # Return default for error handling
+    echo "${PROFILES_DIR}/${profile_name}"
+  fi
+}
+
+get_profiles_search_dirs() {
+  # Return profile directories in search order
+  local dirs=""
+  [[ -d "${PROFILES_DIR}" ]] && dirs="${PROFILES_DIR}"
+  [[ -d "${BUILTIN_PROFILES_DIR}" ]] && dirs="${dirs} ${BUILTIN_PROFILES_DIR}"
+  echo "${dirs}"
 }
 
 list_profiles_cmd() {
-  if ${RUNTIME_ONLY}; then
-    log "list-profiles is unavailable in runtime mode."
-    exit 1
-  fi
+  local search_dirs
+  search_dirs="$(get_profiles_search_dirs)"
 
-  if [[ ! -d "${PROFILES_DIR}" ]]; then
-    log "Profiles directory not found: ${PROFILES_DIR}"
+  if [[ -z "${search_dirs}" ]]; then
+    log_error "No profiles directory found"
+    log "Run 'keyrs-service install' to install built-in profiles."
     exit 1
   fi
 
@@ -795,26 +877,36 @@ list_profiles_cmd() {
   echo ""
 
   local found=0
-  for profile_path in "${PROFILES_DIR}"/*/profile.toml; do
-    if [[ -f "${profile_path}" ]]; then
-      found=1
-      local profile_dir
-      profile_dir="$(dirname "${profile_path}")"
-      local profile_name
-      profile_name="$(basename "${profile_dir}")"
+  local seen_names=""
+  for dir in ${search_dirs}; do
+    for profile_path in "${dir}"/*/profile.toml; do
+      if [[ -f "${profile_path}" ]]; then
+        local profile_dir
+        profile_dir="$(dirname "${profile_path}")"
+        local profile_name
+        profile_name="$(basename "${profile_dir}")"
 
-      local name="" description=""
-      if command -v grep >/dev/null 2>&1; then
-        name="$(grep -E '^name[[:space:]]*=' "${profile_path}" 2>/dev/null | head -1 | sed 's/^name[[:space:]]*=[[:space:]]*//; s/"//g' || true)"
-        description="$(grep -E '^description[[:space:]]*=' "${profile_path}" 2>/dev/null | head -1 | sed 's/^description[[:space:]]*=[[:space:]]*//; s/"//g' || true)"
+        # Skip duplicates (prefer source profiles over installed)
+        if [[ "${seen_names}" == *":${profile_name}:"* ]]; then
+          continue
+        fi
+        seen_names="${seen_names}:${profile_name}:"
+
+        found=1
+        local name="" description=""
+        if command -v grep >/dev/null 2>&1; then
+          name="$(grep -E '^name[[:space:]]*=' "${profile_path}" 2>/dev/null | head -1 | sed 's/^name[[:space:]]*=[[:space:]]*//; s/"//g' || true)"
+          description="$(grep -E '^description[[:space:]]*=' "${profile_path}" 2>/dev/null | head -1 | sed 's/^description[[:space:]]*=[[:space:]]*//; s/"//g' || true)"
+        fi
+
+        printf "  %-20s %s\n" "${profile_name}" "${description:-No description}"
       fi
-
-      printf "  %-20s %s\n" "${profile_name}" "${description:-No description}"
-    fi
+    done
   done
 
   if [[ "${found}" -eq 0 ]]; then
-    log "No profiles found in ${PROFILES_DIR}"
+    log "No profiles found."
+    log "Run 'keyrs-service install' to install built-in profiles."
     exit 1
   fi
 
@@ -823,11 +915,6 @@ list_profiles_cmd() {
 }
 
 show_profile_cmd() {
-  if ${RUNTIME_ONLY}; then
-    log "show-profile is unavailable in runtime mode."
-    exit 1
-  fi
-
   if [[ -z "${SELECTED_PROFILE:-}" ]]; then
     log "Usage: keyrs-service show-profile <profile-name>"
     log "Run 'keyrs-service list-profiles' to see available profiles."
@@ -839,7 +926,7 @@ show_profile_cmd() {
   local profile_toml="${profile_dir}/profile.toml"
 
   if [[ ! -f "${profile_toml}" ]]; then
-    log "Profile not found: ${SELECTED_PROFILE}"
+    log_error "Profile not found: ${SELECTED_PROFILE}"
     log "Run 'keyrs-service list-profiles' to see available profiles."
     exit 1
   fi
@@ -974,15 +1061,34 @@ profile_set_cmd() {
   ensure_systemctl_user
   resolve_runtime_bin
 
-  if [[ -z "${SELECTED_PROFILE:-}" ]]; then
-    log "Usage: keyrs-service profile-set <profile-name>"
-    log "Run 'keyrs-service list-profiles' to see available profiles."
-    exit 1
+  # URL mode
+  if [[ -n "${PROFILE_URL:-}" ]]; then
+    local cache_dir="${PROFILE_CACHE_DIR}/url-$(date +%s)"
+    if ! download_profile "${PROFILE_URL}" "${cache_dir}"; then
+      exit 1
+    fi
+
+    confirm_or_abort \
+      "About to set profile from URL:" \
+      "  - URL: ${PROFILE_URL}
+  - Profile source: ${cache_dir}
+  - Target: ${CONFIG_COMPOSE_DIR}
+  - Will validate and restart service"
+
+    if ! apply_profile "${cache_dir}"; then
+      exit 1
+    fi
+
+    validate_and_restart
+    log_success "Profile set from URL"
+    return
   fi
 
-  if ${RUNTIME_ONLY}; then
-    log "profile-set with built-in profiles is unavailable in runtime mode."
-    log "Use: keyrs-service profile-set --profile-url <url>"
+  # Built-in profile mode
+  if [[ -z "${SELECTED_PROFILE:-}" ]]; then
+    log "Usage: keyrs-service profile-set <profile-name>"
+    log "       keyrs-service profile-set --url <url>"
+    log "Run 'keyrs-service list-profiles' to see available profiles."
     exit 1
   fi
 
@@ -991,7 +1097,11 @@ profile_set_cmd() {
     exit 1
   fi
 
-  log "Setting profile: ${SELECTED_PROFILE}"
+  confirm_or_abort \
+    "About to set profile '${SELECTED_PROFILE}':" \
+    "  - Profile source: ${profile_dir}
+  - Target: ${CONFIG_COMPOSE_DIR}
+  - Will validate and restart service"
 
   if ! apply_profile "${profile_dir}"; then
     exit 1
@@ -1023,76 +1133,35 @@ profile_select_cmd() {
   log_success "Profile set: ${SELECTED_PROFILE}"
 }
 
-switch_profile_cmd() {
-  ensure_systemctl_user
-  resolve_runtime_bin
-
-  if [[ -n "${PROFILE_URL:-}" ]]; then
-    local cache_dir="${PROFILE_CACHE_DIR}/url-$(date +%s)"
-    if ! download_profile "${PROFILE_URL}" "${cache_dir}"; then
-      exit 1
-    fi
-
-    confirm_or_abort \
-      "About to switch to profile from URL:" \
-      "  - URL: ${PROFILE_URL}
-  - Profile source: ${cache_dir}
-  - Target: ${CONFIG_COMPOSE_DIR}
-  - Will validate and restart service"
-
-    if ! apply_profile "${cache_dir}"; then
-      exit 1
-    fi
-  elif [[ -n "${SELECTED_PROFILE:-}" ]]; then
-    if ${RUNTIME_ONLY}; then
-      log "switch-profile with built-in profiles is unavailable in runtime mode."
-      exit 1
-    fi
-
-    local profile_dir
-    if ! profile_dir="$(resolve_profile_dir "${SELECTED_PROFILE}")"; then
-      exit 1
-    fi
-
-    confirm_or_abort \
-      "About to switch to profile '${SELECTED_PROFILE}':" \
-      "  - Profile source: ${profile_dir}
-  - Target: ${CONFIG_COMPOSE_DIR}
-  - Will validate and restart service"
-
-    if ! apply_profile "${profile_dir}"; then
-      exit 1
-    fi
-  else
-    log "Usage: keyrs-service switch-profile --profile <name>"
-    log "       keyrs-service switch-profile --profile-url <url>"
-    log "Run 'keyrs-service list-profiles' to see available profiles."
-    exit 1
-  fi
-
-  validate_and_restart
-  log_success "Profile switched"
-}
-
 main() {
   parse_args "$@"
+  setup_colors
   case "${COMMAND}" in
-    apply-config) apply_config_cmd ;;
+    # Installation
     install) install_cmd ;;
     uninstall) uninstall_cmd ;;
-    install-udev) install_udev_cmd ;;
-    uninstall-udev) uninstall_udev_cmd ;;
+
+    # Service
     start) start_cmd ;;
     stop) stop_cmd ;;
     restart) restart_cmd ;;
     status) status_cmd ;;
+
+    # Configuration
+    apply-config) apply_config_cmd ;;
+
+    # Profiles
     list-profiles) list_profiles_cmd ;;
     show-profile) show_profile_cmd ;;
     profile-set) profile_set_cmd ;;
     profile-select) profile_select_cmd ;;
-    switch-profile) switch_profile_cmd ;;
+
+    # Advanced
+    install-udev) install_udev_cmd ;;
+    uninstall-udev) uninstall_udev_cmd ;;
+
     *)
-      log "Unknown command: ${COMMAND}"
+      log_error "Unknown command: ${COMMAND}"
       usage
       exit 1
       ;;
