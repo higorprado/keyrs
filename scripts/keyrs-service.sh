@@ -68,8 +68,9 @@ Commands:
   install-udev Install keyrs udev rules (root/sudo required)
   uninstall-udev Remove keyrs udev rules (root/sudo required)
   list-profiles List available configuration profiles
-  show-profile  Show profile details
-  switch-profile Switch to a different profile
+  show-profile  Show profile details (usage: show-profile <name>)
+  profile-set   Set active profile (usage: profile-set <name>)
+  profile-select Interactively select a profile
 USAGE
 
   if ! ${RUNTIME_ONLY}; then
@@ -127,6 +128,16 @@ parse_args() {
     exit 1
   fi
   shift || true
+
+  # Handle positional argument for profile commands
+  if [[ -n "${1:-}" ]] && [[ ! "${1}" =~ ^- ]]; then
+    case "${COMMAND}" in
+      show-profile|profile-set|switch-profile)
+        SELECTED_PROFILE="${1}"
+        shift
+        ;;
+    esac
+  fi
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -230,6 +241,57 @@ resolve_udev_rules_source() {
   fi
   log "Missing udev rules source (checked ${CONFIG_UDEV_RULES} and ${REPO_ROOT}/dist/keyrs-udev.rules)"
   exit 1
+}
+
+udev_rules_installed() {
+  [[ -f "${UDEV_RULES_TARGET}" ]]
+}
+
+prompt_udev_install() {
+  if ${DRY_RUN}; then
+    log "Dry-run: would prompt for udev installation"
+    return
+  fi
+
+  if udev_rules_installed; then
+    log "udev rules already installed at ${UDEV_RULES_TARGET}"
+    return
+  fi
+
+  echo ""
+  echo "Install udev rules for keyboard device access?"
+  echo ""
+  echo "  This allows keyrs to access keyboard devices without sudo."
+  echo "  Requires root password for installation."
+  echo "  Recommended once per machine."
+  echo ""
+
+  local response=""
+  if ${ASSUME_YES}; then
+    response="y"
+  else
+    read -r -p "Install udev rules? [y/N] " response
+  fi
+
+  if [[ "${response}" =~ ^[Yy]$ ]]; then
+    log "Installing udev rules..."
+    local udev_rules_source
+    udev_rules_source="$(resolve_udev_rules_source)"
+
+    if ! run_privileged install -D -m 0644 "${udev_rules_source}" "${UDEV_RULES_TARGET}"; then
+      log "Failed to install udev rules (password incorrect or insufficient privileges)"
+      log "You can install manually later with: keyrs-service install-udev"
+      return
+    fi
+
+    run_privileged "${UDEVADM_BIN}" control --reload-rules
+    run_privileged "${UDEVADM_BIN}" trigger --subsystem-match=input
+    log "udev rules installed successfully"
+    log "Re-login if keyboard permissions are still denied."
+  else
+    log "Skipping udev installation"
+    log "Install manually later with: keyrs-service install-udev"
+  fi
 }
 
 confirm_or_abort() {
@@ -489,7 +551,8 @@ install_cmd() {
   run "${SYSTEMCTL_BIN}" --user --no-pager --full status "${SERVICE_NAME}"
 
   log "Install complete"
-  log "Recommended once per machine: scripts/keyrs-service.sh install-udev"
+
+  prompt_udev_install
 }
 
 uninstall_cmd() {
@@ -780,12 +843,89 @@ apply_profile() {
     return 1
   fi
 
-  run rm -rf "${CONFIG_COMPOSE_DIR}"
+  # Backup existing config
+  if [[ -d "${CONFIG_COMPOSE_DIR}" ]]; then
+    local backup_dir="${CONFIG_DIR}/backups/config.d.$(date +%Y%m%d%H%M%S)"
+    run mkdir -p "${CONFIG_DIR}/backups"
+    run mv "${CONFIG_COMPOSE_DIR}" "${backup_dir}"
+    log "Previous config backed up to: ${backup_dir}"
+  fi
+
   run mkdir -p "${CONFIG_COMPOSE_DIR}"
   run cp -a "${profile_config_d}/." "${CONFIG_COMPOSE_DIR}/"
 
   log "Applied profile to ${CONFIG_COMPOSE_DIR}"
   return 0
+}
+
+profile_set_cmd() {
+  ensure_systemctl_user
+  resolve_runtime_bin
+
+  if [[ -z "${SELECTED_PROFILE:-}" ]]; then
+    log "Usage: keyrs-service profile-set <profile-name>"
+    log "Run 'keyrs-service list-profiles' to see available profiles."
+    exit 1
+  fi
+
+  if ${RUNTIME_ONLY}; then
+    log "profile-set with built-in profiles is unavailable in runtime mode."
+    log "Use: keyrs-service profile-set --profile-url <url>"
+    exit 1
+  fi
+
+  local profile_dir
+  profile_dir="$(get_profile_dir "${SELECTED_PROFILE}")"
+
+  if [[ ! -f "${profile_dir}/profile.toml" ]]; then
+    log "Profile not found: ${SELECTED_PROFILE}"
+    log "Run 'keyrs-service list-profiles' to see available profiles."
+    exit 1
+  fi
+
+  log "Setting profile: ${SELECTED_PROFILE}"
+
+  if ! apply_profile "${profile_dir}"; then
+    log "Failed to apply profile"
+    exit 1
+  fi
+
+  run "${TARGET_BIN}" --compose-config "${CONFIG_COMPOSE_DIR}" --compose-output "${CONFIG_DIR}/config.toml"
+  run "${TARGET_BIN}" --check-config --config "${CONFIG_DIR}/config.toml"
+  run "${SYSTEMCTL_BIN}" --user restart "${SERVICE_NAME}"
+  run "${SYSTEMCTL_BIN}" --user --no-pager --full status "${SERVICE_NAME}"
+
+  log "Profile set successfully: ${SELECTED_PROFILE}"
+}
+
+profile_select_cmd() {
+  ensure_systemctl_user
+  resolve_runtime_bin
+
+  if ! select_profile_interactive; then
+    log "No profiles available"
+    exit 1
+  fi
+
+  local profile_dir
+  profile_dir="$(get_profile_dir "${SELECTED_PROFILE}")"
+
+  if [[ ! -f "${profile_dir}/profile.toml" ]]; then
+    log "Profile not found: ${SELECTED_PROFILE}"
+    exit 1
+  fi
+
+  if ! apply_profile "${profile_dir}"; then
+    log "Failed to apply profile"
+    exit 1
+  fi
+
+  run "${TARGET_BIN}" --compose-config "${CONFIG_COMPOSE_DIR}" --compose-output "${CONFIG_DIR}/config.toml"
+  run "${TARGET_BIN}" --check-config --config "${CONFIG_DIR}/config.toml"
+  run "${SYSTEMCTL_BIN}" --user restart "${SERVICE_NAME}"
+  run "${SYSTEMCTL_BIN}" --user --no-pager --full status "${SERVICE_NAME}"
+
+  log "Profile set successfully: ${SELECTED_PROFILE}"
 }
 
 switch_profile_cmd() {
@@ -864,6 +1004,8 @@ main() {
     status) status_cmd ;;
     list-profiles) list_profiles_cmd ;;
     show-profile) show_profile_cmd ;;
+    profile-set) profile_set_cmd ;;
+    profile-select) profile_select_cmd ;;
     switch-profile) switch_profile_cmd ;;
     *)
       log "Unknown command: ${COMMAND}"
