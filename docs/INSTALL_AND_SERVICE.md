@@ -31,6 +31,26 @@ What install does:
 - validates generated config
 - installs and enables `keyrs.service`
 
+## Profile Commands
+
+Switch between pre-made configurations:
+
+```bash
+# List available profiles
+keyrs-service list-profiles
+
+# Switch to a profile
+keyrs-service profile-set mac-standard
+
+# Interactive selection (with menu)
+keyrs-service profile-select
+
+# Install from URL
+keyrs-service profile-set --url https://example.com/profile.tar.gz
+```
+
+See [PROFILE_GUIDE.md](PROFILE_GUIDE.md) for creating and sharing custom profiles.
+
 ## Udev Rules
 
 For stable keyboard/uinput access:

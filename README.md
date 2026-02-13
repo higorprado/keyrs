@@ -6,22 +6,28 @@ keyrs is a Rust-based keyboard remapper for Wayland. It is designed for people w
 
 This project was heavily inspired by Toshy. Without Toshy, this project would not have been possible.
 
-## Installation
-
-If you just want to install and run:
+## Quick Install
 
 ```bash
-cd ~/Code/keyrs
-cargo build --release --features pure-rust --bin keyrs --bin keyrs-tui
+# Clone and build
+git clone https://github.com/yourusername/keyrs.git
+cd keyrs
+cargo build --release
+
+# Install binaries and service
 scripts/keyrs-service.sh install
 scripts/keyrs-service.sh install-udev
-~/.local/bin/keyrs-service status
+
+# Start using a profile (optional)
+keyrs-service profile-set mac-standard
 ```
 
-For config updates later:
+After initial setup, use the installed helper:
 
 ```bash
-~/.local/bin/keyrs-service apply-config
+keyrs-service status          # Check service status
+keyrs-service apply-config    # Apply config changes
+keyrs-service profile-set <name>  # Switch profiles
 ```
 
 ## What keyrs is useful for
@@ -31,6 +37,25 @@ For config updates later:
 - keep large remap setups maintainable with modular config
 - avoid risky manual deploys with compose+validate+restart workflow
 - toggle environment behavior quickly with `settings.toml` or TUI
+
+## Profiles
+
+keyrs includes 11 pre-made profiles for common use cases. Switch between them quickly:
+
+```bash
+# List available profiles
+keyrs-service list-profiles
+
+# Switch to a profile
+keyrs-service profile-set mac-standard
+
+# Interactive selection
+keyrs-service profile-select
+```
+
+Available profiles: `none`, `minimal`, `ergonomic`, `mac-standard`, `mac-power`, `windows-standard`, `chromebook`, `developer`, `writer`, `gamer`, `accessibility`
+
+See [docs/PROFILE_GUIDE.md](docs/PROFILE_GUIDE.md) for creating and sharing custom profiles.
 
 ## Why keyrs was created
 
@@ -62,28 +87,14 @@ keyrs solves this with context-aware keymaps, conditions, stateful actions, and 
 - Runtime settings file: `~/.config/keyrs/settings.toml`
 - User service unit: `~/.config/systemd/user/keyrs.service`
 
-## Docs index
+## Documentation
 
-- `docs/INSTALL_AND_SERVICE.md`
-  Full install, service lifecycle, udev setup, update flow.
-
-- `docs/SHORTCUT_CONFIGURATION_GUIDE.md`
-  Practical guide to configure shortcuts, precedence, conflict avoidance, and testing patterns.
-
-- `docs/CONFIG_SYNTAX_REFERENCE.md`
-  Full syntax reference for sections, actions, conditions, and validation.
-
-- `docs/CONDITION_PATTERNS.md`
-  Copy-paste ready condition patterns for terminals, browsers, file managers, and more.
-
-- `docs/CONFIG_EXAMPLES.md`
-  Real-world configuration examples for common use cases.
-
-- `docs/SETTINGS_REFERENCE.md`
-  Complete `settings.toml` reference and runtime semantics.
-
-- `docs/CONFIG_COMPOSE_WORKFLOW.md`
-  How modular config composition works and how to apply safely.
-
-- `docs/TROUBLESHOOTING.md`
-  Logs, diagnostics, and common failure fixes.
+- [Profile Guide](docs/PROFILE_GUIDE.md) — List, switch, create, and share profiles
+- [Install & Service](docs/INSTALL_AND_SERVICE.md) — Full install, service lifecycle, udev setup
+- [Shortcut Configuration](docs/SHORTCUT_CONFIGURATION_GUIDE.md) — Configure shortcuts, avoid conflicts
+- [Config Syntax Reference](docs/CONFIG_SYNTAX_REFERENCE.md) — Full TOML syntax reference
+- [Condition Patterns](docs/CONDITION_PATTERNS.md) — Copy-paste patterns for apps
+- [Config Examples](docs/CONFIG_EXAMPLES.md) — Real-world configuration examples
+- [Settings Reference](docs/SETTINGS_REFERENCE.md) — `settings.toml` reference
+- [Config Compose Workflow](docs/CONFIG_COMPOSE_WORKFLOW.md) — Modular config system
+- [Troubleshooting](docs/TROUBLESHOOTING.md) — Logs, diagnostics, common fixes

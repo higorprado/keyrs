@@ -44,7 +44,7 @@ This installs keyrs and applies the selected profile's configuration.
 To switch to a different profile on an existing installation:
 
 ```bash
-keyrs-service switch-profile --profile <name>
+keyrs-service profile-set <name>
 ```
 
 This will:
@@ -56,7 +56,7 @@ This will:
 Use `--dry-run` to preview changes without applying them:
 
 ```bash
-keyrs-service switch-profile --profile <name> --dry-run
+keyrs-service profile-set <name> --dry-run
 ```
 
 ### Installing from URL
@@ -64,7 +64,7 @@ keyrs-service switch-profile --profile <name> --dry-run
 You can install a profile from a URL (ZIP or TAR.GZ archive):
 
 ```bash
-keyrs-service switch-profile --profile-url https://example.com/my-profile.tar.gz
+keyrs-service profile-set --url https://example.com/my-profile.tar.gz
 ```
 
 ## Built-in Profiles
@@ -166,8 +166,8 @@ EOF
 # Validate the profile
 keyrs --validate --config-dir ./my-profile/config.d
 
-# Or switch to it
-keyrs-service switch-profile --profile ./my-profile
+# Or set it
+keyrs-service profile-set ./my-profile
 ```
 
 ### Step 5: Share
@@ -205,7 +205,7 @@ Profiles can be hosted anywhere accessible via HTTP/HTTPS:
 Users can install directly:
 
 ```bash
-keyrs-service switch-profile --profile-url https://example.com/profile.tar.gz
+keyrs-service profile-set --url https://example.com/profile.tar.gz
 ```
 
 ### Profile Repository
@@ -256,7 +256,7 @@ nano profiles/my-developer/profile.toml
 nano profiles/my-developer/config.d/000_base.toml
 
 # Install your derived profile
-keyrs-service switch-profile --profile my-developer
+keyrs-service profile-set my-developer
 ```
 
 ## Profile Management
@@ -275,7 +275,7 @@ cat ~/.config/keyrs/.profile 2>/dev/null || echo "No profile marker found"
 Before switching profiles:
 
 ```bash
-# Automatic backup (done by switch-profile)
+# Automatic backup (done by profile-set)
 ls ~/.config/keyrs/backups/
 
 # Manual backup
