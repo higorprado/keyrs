@@ -1,4 +1,4 @@
-// Xwaykeyz Batch Event Processing
+// Keyrs Batch Event Processing
 // Read and write events in batches to reduce syscall overhead
 
 #[cfg(feature = "pure-rust")]

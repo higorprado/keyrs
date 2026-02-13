@@ -1,4 +1,4 @@
-// Xwaykeyz Combo Cache
+// Keyrs Combo Cache
 // Pre-computed HashMap for O(1) combo lookup instead of O(n) iteration
 
 use std::collections::HashMap;

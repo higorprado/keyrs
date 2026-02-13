@@ -1,8 +1,5 @@
-// Xwaykeyz Pure Rust Transform Engine - Complete Implementation
-// Complete event transformation pipeline without Python dependencies
-//
-// This module implements pure Rust transform engine that eliminates
-// dual state storage problem present in Python runtime.
+// Keyrs Transform Engine - Complete Implementation
+// Event transformation pipeline for keyboard remapping
 //
 // Features:
 // - Complete modmap lookup with conditional evaluation
@@ -589,8 +586,7 @@ impl RepeatCache {
 
 /// Pure Rust transform engine
 ///
-/// This contains all the logic from the Python transform layer
-/// but implemented in pure Rust for maximum performance.
+/// This contains all the transform logic implemented in pure Rust for maximum performance.
 #[cfg(feature = "pure-rust")]
 pub struct TransformEngine {
     config: TransformConfig,

@@ -81,7 +81,7 @@ impl WindowInfo {
 
 /// Condition for matching windows
 ///
-/// These correspond to the condition types supported in the Python configuration:
+/// These correspond to the condition types supported in the configuration:
 /// - `wm_class == "value"` - exact match
 /// - `wm_class =~ "pattern"` - substring match (case-insensitive)
 /// - `wm_name == "value"` - exact match

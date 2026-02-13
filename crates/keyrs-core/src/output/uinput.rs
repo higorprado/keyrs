@@ -1,4 +1,4 @@
-// Xwaykeyz Pure Rust uinput Output Layer
+// Keyrs Pure Rust uinput Output Layer
 // Virtual device creation and key event emission
 
 use super::cache::OutputCache;
@@ -41,7 +41,7 @@ impl VirtualDevice {
     fn debug_output_enabled() -> bool {
         static DEBUG_OUTPUT: OnceLock<bool> = OnceLock::new();
         *DEBUG_OUTPUT.get_or_init(|| {
-            std::env::var("XWAYKEYZ_DEBUG_OUTPUT")
+            std::env::var("KEYRS_DEBUG_OUTPUT")
                 .map(|v| matches!(v.as_str(), "1" | "true" | "TRUE" | "yes" | "on"))
                 .unwrap_or(false)
         })

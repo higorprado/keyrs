@@ -1,4 +1,4 @@
-// Xwaykeyz Output Layer
+// Keyrs Output Layer
 // Virtual keyboard state management and combo calculation
 
 mod cache;

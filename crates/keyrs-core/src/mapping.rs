@@ -1,4 +1,4 @@
-// Xwaykeyz Mapping Structures
+// Keyrs Mapping Structures
 // Modmap, MultiModmap, Keymap, Keystate
 
 use std::collections::HashMap;

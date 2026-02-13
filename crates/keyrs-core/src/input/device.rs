@@ -1,4 +1,4 @@
-// Xwaykeyz Input Layer - Device Detection
+// Keyrs Input Layer - Device Detection
 // Device capability analysis and keyboard detection
 
 use std::collections::HashSet;
@@ -44,17 +44,6 @@ const A_Z_SPACE_CODES: &[u16] = &[57, 30, 44]; // SPACE, A, Z
 /// 1. It supports EV_KEY events
 /// 2. All QWERTY row keys (Q, W, E, R, T, Y) are present
 /// 3. Representative A-Z keys (A, Z) and SPACE are present
-///
-/// This matches the Python implementation in devices.py:
-/// ```python
-/// QWERTY = [Key.Q, Key.W, Key.E, Key.R, Key.T, Key.Y]  # 16, 17, 18, 19, 20, 21
-/// A_Z_SPACE = [Key.SPACE, Key.A, Key.Z]  # 57, 30, 44
-///
-/// qwerty = all(k in supported_keys for k in QWERTY)
-/// az = all(k in supported_keys for k in A_Z_SPACE)
-/// if qwerty and az:
-///     return True
-/// ```
 pub fn is_keyboard(capabilities: &DeviceCapabilities) -> bool {
     // Must have EV_KEY capability
     if !capabilities.has_ev_key {

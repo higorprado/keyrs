@@ -1,4 +1,4 @@
-// Xwaykeyz Event Handling
+// Keyrs Event Handling
 // Pure Rust event loop and processing
 
 pub mod batch;

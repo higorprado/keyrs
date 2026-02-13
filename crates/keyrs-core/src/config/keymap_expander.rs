@@ -1,4 +1,4 @@
-// Xwaykeyz Config API - Keymap Modifier Expander
+// Keyrs Config API - Keymap Modifier Expander
 // Expands non-specific modifiers (Ctrl -> Left_Ctrl + Right_Ctrl)
 
 use crate::{Combo, Modifier};

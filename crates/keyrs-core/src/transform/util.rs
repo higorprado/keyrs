@@ -1,4 +1,4 @@
-// Xwaykeyz Transform Utility Functions
+// Keyrs Transform Utility Functions
 // Pure functions for querying key state
 
 use crate::Key;

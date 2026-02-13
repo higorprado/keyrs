@@ -1,4 +1,4 @@
-// Xwaykeyz Config API - Combo String Parser
+// Keyrs Config API - Combo String Parser
 // Parses combo strings like "Ctrl-Shift-A" into structured components
 
 use crate::{Key, Modifier};

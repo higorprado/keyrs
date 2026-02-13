@@ -1,4 +1,4 @@
-// Xwaykeyz Transform Module
+// Keyrs Transform Module
 // Core transformation logic for keyboard event processing
 
 pub mod cache;

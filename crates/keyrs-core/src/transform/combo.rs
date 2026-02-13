@@ -1,4 +1,4 @@
-// Xwaykeyz Transform Combo Matching
+// Keyrs Transform Combo Matching
 // Core combo matching logic
 
 use crate::{Combo, ComboHint, Key, Keymap, KeymapValue, Modifier};

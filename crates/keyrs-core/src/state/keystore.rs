@@ -1,4 +1,4 @@
-// Xwaykeyz Keystore
+// Keyrs Keystore
 // Rust-side keystate storage with efficient accessor methods
 
 use smallvec::SmallVec;
@@ -11,8 +11,7 @@ use crate::Modifier;
 
 /// Rust-side keystore for efficient keystate management
 ///
-/// This structure stores all keystates in Rust, eliminating the need for
-/// repeated Python-to-Rust conversions. It provides O(1) lookup by key code
+/// This structure stores all keystates in Rust for optimal performance. It provides O(1) lookup by key code
 /// and efficient modifier state queries.
 #[derive(Debug)]
 pub struct Keystore {

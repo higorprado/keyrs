@@ -1,5 +1,5 @@
-// Xwaykeyz Config Parser - TOML with Serde
-// Parses configuration from TOML files for pure Rust implementation
+// Keyrs Config Parser - TOML with Serde
+// Parses configuration from TOML files
 
 #[cfg(feature = "pure-rust")]
 use std::collections::HashMap;
@@ -18,7 +18,7 @@ use serde::Deserialize;
 fn config_debug_enabled() -> bool {
     static DEBUG_CONFIG: OnceLock<bool> = OnceLock::new();
     *DEBUG_CONFIG.get_or_init(|| {
-        std::env::var("XWAYKEYZ_DEBUG_CONFIG")
+        std::env::var("KEYRS_DEBUG_CONFIG")
             .map(|v| matches!(v.as_str(), "1" | "true" | "TRUE" | "yes" | "on"))
             .unwrap_or(false)
     })

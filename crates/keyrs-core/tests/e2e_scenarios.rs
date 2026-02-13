@@ -1,4 +1,4 @@
-// Xwaykeyz End-to-End Test Scenarios
+// Keyrs End-to-End Test Scenarios
 //
 // These tests simulate real-world usage scenarios for validation.
 // They test complete user workflows without requiring actual hardware.

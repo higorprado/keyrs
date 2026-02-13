@@ -1,4 +1,4 @@
-// Xwaykeyz Combo Sending Calculation
+// Keyrs Combo Sending Calculation
 // Modifier arithmetic logic for determining which keys to lift/press
 
 use crate::{Key, Modifier};

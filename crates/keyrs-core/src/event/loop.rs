@@ -1,5 +1,5 @@
-// Xwaykeyz Pure Rust Event Loop
-// Direct evdev event handling without Python overhead
+// Keyrs Pure Rust Event Loop
+// Direct evdev event handling for low-latency input processing
 
 #[cfg(feature = "pure-rust")]
 use evdev::{Device, EventType, InputEvent, Key};
@@ -46,7 +46,7 @@ pub struct PolledEvent {
 
 /// Pure Rust event loop for direct device access
 ///
-/// This bypasses Python asyncio and reads directly from evdev devices.
+/// This provides direct access to evdev devices without intermediate layers.
 /// Supports device grabbing, polling, and automatic cleanup on drop.
 #[cfg(feature = "pure-rust")]
 pub struct EventLoop {

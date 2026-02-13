@@ -1,4 +1,4 @@
-// Xwaykeyz Input Layer - Event Processing Utilities
+// Keyrs Input Layer - Event Processing Utilities
 // Event type checking and emergency key detection
 
 /// EV_KEY event type code from evdev.ecodes
@@ -7,12 +7,6 @@ pub const EV_KEY: u16 = 0x01;
 /// Check if an event is a key event.
 ///
 /// Key events have event.type == ecodes.EV_KEY (0x01)
-///
-/// This matches the Python code:
-/// ```python
-/// if event.type == ecodes.EV_KEY:
-///     # Handle key event
-/// ```
 pub fn is_key_event(event_type: u16) -> bool {
     event_type == EV_KEY
 }

@@ -1,4 +1,4 @@
-// Xwaykeyz Pure Rust Integration Tests
+// Keyrs Pure Rust Integration Tests
 //
 // These tests verify the complete pure Rust pipeline:
 // evdev -> EventLoop -> TransformEngine -> output

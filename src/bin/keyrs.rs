@@ -1,5 +1,5 @@
-// Xwaykeyz Pure Rust CLI
-// Standalone binary for Wayland key remapping without Python dependencies
+// Keyrs CLI
+// Standalone binary for Wayland keyboard remapping
 
 #![cfg_attr(feature = "pure-rust", allow(dead_code))]
 

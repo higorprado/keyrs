@@ -1,4 +1,4 @@
-// Xwaykeyz Pressed Key State Management
+// Keyrs Pressed Key State Management
 // HashSet-based O(1) key lookup for pressed keys
 
 use crate::Key;
