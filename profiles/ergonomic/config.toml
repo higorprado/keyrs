@@ -1,0 +1,30 @@
+[general]
+suspend_key = "F11"
+
+[[keymap]]
+name = "ergonomic_navigation"
+
+[keymap.mappings]
+Super-Backspace = "Ctrl-Backspace"
+Super-Delete = "Ctrl-Delete"
+Super-Left = "Home"
+Super-Right = "End"
+
+[modmap.default]
+CAPSLOCK = "CAPSLOCK"
+
+[[multipurpose]]
+hold = "RIGHT_CTRL"
+name = "caps_to_esc_ctrl"
+tap = "ESCAPE"
+trigger = "CAPSLOCK"
+
+[[multipurpose]]
+hold = "RIGHT_CTRL"
+name = "enter_to_ctrl"
+tap = "ENTER"
+trigger = "ENTER"
+
+[timeouts]
+multipurpose = 200
+suspend = 1000

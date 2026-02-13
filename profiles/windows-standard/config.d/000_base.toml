@@ -1,0 +1,23 @@
+# Windows Standard Profile - Base Configuration
+# Familiar Ctrl key behavior for Windows migrants
+
+[general]
+suspend_key = "F11"
+
+[timeouts]
+multipurpose = 200
+suspend = 1000
+
+[modmap.default]
+CAPSLOCK = "CAPSLOCK"
+
+[[modmap.conditionals]]
+name = "gui_windows"
+condition = "keyboard_type =~ 'Windows' and not (wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal')"
+mappings = { LEFT_CTRL = "LEFT_CTRL", LEFT_ALT = "LEFT_ALT" }
+
+[[keymap]]
+name = "windows_alt_tab"
+[keymap.mappings]
+"Alt-Tab" = ["bind", "Combo(Alt-Tab)"]
+"Shift-Alt-Tab" = ["bind", "Combo(Shift-Alt-Tab)"]

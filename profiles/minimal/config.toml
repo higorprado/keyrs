@@ -1,0 +1,32 @@
+[general]
+suspend_key = "F11"
+
+[[keymap]]
+name = "minimal_clipboard"
+
+[keymap.mappings]
+Super-a = "Ctrl-a"
+Super-c = "Ctrl-c"
+Super-s = "Ctrl-s"
+Super-v = "Ctrl-v"
+Super-x = "Ctrl-x"
+Super-z = "Ctrl-z"
+
+[[keymap]]
+name = "minimal_tabs"
+
+[keymap.mappings]
+Ctrl-Shift-Tab = [
+    "bind",
+    "Combo(Ctrl-Shift-Tab)",
+]
+Ctrl-Tab = [
+    "bind",
+    "Combo(Ctrl-Tab)",
+]
+Super-t = "Ctrl-t"
+Super-w = "Ctrl-w"
+
+[timeouts]
+multipurpose = 200
+suspend = 1000

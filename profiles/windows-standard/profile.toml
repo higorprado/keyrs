@@ -1,0 +1,5 @@
+name = "windows-standard"
+description = "Windows migrants - familiar Ctrl key behavior on Linux"
+version = "1.0.0"
+author = "keyrs"
+tags = ["windows", "migration"]

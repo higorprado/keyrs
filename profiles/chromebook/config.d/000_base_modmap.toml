@@ -1,0 +1,31 @@
+# Chromebook Profile - Chrome OS Style Keyboard
+# Search key as Super, Chrome OS navigation patterns
+
+[general]
+suspend_key = "F11"
+
+[timeouts]
+multipurpose = 200
+suspend = 1000
+
+[modmap.default]
+CAPSLOCK = "CAPSLOCK"
+
+[[modmap.conditionals]]
+name = "gui_chromebook"
+condition = "keyboard_type =~ 'Chromebook' and not (wm_class =~ '(?i)alacritty|blackbox|contour|cosmicterm|deepin-terminal|ghostty|gnome-terminal|hyper|kgx|kitty|konsole|terminology|wave|wezterm|xfce4-terminal')"
+mappings = { LEFT_CTRL = "LEFT_ALT", LEFT_ALT = "RIGHT_CTRL" }
+
+[[modmap.conditionals]]
+name = "chromebook_left_meta_esc"
+condition = "keyboard_type =~ 'Chromebook' and settings.Caps2Esc_Cmd"
+mappings = { LEFT_META = "ESCAPE" }
+
+[[keymap]]
+name = "chromebook_navigation"
+condition = "not (wm_class =~ '(?i)terminal')"
+[keymap.mappings]
+"Ctrl-Alt-Up" = "Super-Up"
+"Ctrl-Alt-Down" = "Super-Down"
+"Ctrl-Alt-Left" = "Super-Left"
+"Ctrl-Alt-Right" = "Super-Right"

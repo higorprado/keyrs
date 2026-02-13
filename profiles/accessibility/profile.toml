@@ -1,0 +1,5 @@
+name = "accessibility"
+description = "Simplified keyboard experience - sticky keys support, reduced complexity"
+version = "1.0.0"
+author = "keyrs"
+tags = ["accessibility", "simple", "a11y"]

@@ -1,0 +1,5 @@
+name = "mac-power"
+description = "Full macOS experience with app-specific optimizations for terminals, browsers, and editors"
+version = "1.0.0"
+author = "keyrs"
+tags = ["macos", "full", "all-apps", "power-user"]

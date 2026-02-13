@@ -1,0 +1,41 @@
+# Accessibility Profile - Simplified Keyboard Experience
+# Reduced complexity, larger modifier targets
+
+[general]
+suspend_key = "F11"
+
+[timeouts]
+multipurpose = 300
+suspend = 1000
+
+[modmap.default]
+CAPSLOCK = "CAPSLOCK"
+
+[[multipurpose]]
+name = "caps_to_esc_ctrl"
+trigger = "CAPSLOCK"
+tap = "ESCAPE"
+hold = "RIGHT_CTRL"
+
+[[multipurpose]]
+name = "enter_to_ctrl"
+trigger = "ENTER"
+tap = "ENTER"
+hold = "RIGHT_CTRL"
+
+[[keymap]]
+name = "accessibility_core"
+[keymap.mappings]
+"Super-c" = "Ctrl-c"
+"Super-v" = "Ctrl-v"
+"Super-x" = "Ctrl-x"
+"Super-a" = "Ctrl-a"
+"Super-z" = "Ctrl-z"
+"Super-s" = "Ctrl-s"
+
+[[keymap]]
+name = "accessibility_navigation"
+[keymap.mappings]
+"Super-Left" = "Home"
+"Super-Right" = "End"
+"Super-Backspace" = "Ctrl-Backspace"

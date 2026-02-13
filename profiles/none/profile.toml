@@ -1,0 +1,5 @@
+name = "none"
+description = "Empty slate - only suspend key functionality, no remapping"
+version = "1.0.0"
+author = "keyrs"
+tags = ["minimal", "empty", "custom"]

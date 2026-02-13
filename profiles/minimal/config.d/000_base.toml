@@ -1,0 +1,27 @@
+# Minimal Profile - Essential Shortcuts Only
+# Clipboard, tab management, and basic navigation
+
+[general]
+suspend_key = "F11"
+
+[timeouts]
+multipurpose = 200
+suspend = 1000
+
+[[keymap]]
+name = "minimal_clipboard"
+[keymap.mappings]
+"Super-c" = "Ctrl-c"
+"Super-v" = "Ctrl-v"
+"Super-x" = "Ctrl-x"
+"Super-a" = "Ctrl-a"
+"Super-z" = "Ctrl-z"
+"Super-s" = "Ctrl-s"
+
+[[keymap]]
+name = "minimal_tabs"
+[keymap.mappings]
+"Super-t" = "Ctrl-t"
+"Super-w" = "Ctrl-w"
+"Ctrl-Tab" = ["bind", "Combo(Ctrl-Tab)"]
+"Ctrl-Shift-Tab" = ["bind", "Combo(Ctrl-Shift-Tab)"]

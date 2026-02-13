@@ -1,0 +1,5 @@
+name = "ergonomic"
+description = "Reduce finger strain - Caps→Esc/Ctrl, Enter→Ctrl multipurpose keys"
+version = "1.0.0"
+author = "keyrs"
+tags = ["ergonomic", "health", "multipurpose"]

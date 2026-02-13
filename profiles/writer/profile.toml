@@ -1,0 +1,5 @@
+name = "writer"
+description = "Content creation focus - text navigation and minimal distraction"
+version = "1.0.0"
+author = "keyrs"
+tags = ["writer", "text", "content"]

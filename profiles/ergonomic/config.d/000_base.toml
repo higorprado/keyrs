@@ -1,0 +1,32 @@
+# Ergonomic Profile - Reduce Finger Strain
+# Multipurpose keys for healthier typing
+
+[general]
+suspend_key = "F11"
+
+[timeouts]
+multipurpose = 200
+suspend = 1000
+
+[modmap.default]
+CAPSLOCK = "CAPSLOCK"
+
+[[multipurpose]]
+name = "caps_to_esc_ctrl"
+trigger = "CAPSLOCK"
+tap = "ESCAPE"
+hold = "RIGHT_CTRL"
+
+[[multipurpose]]
+name = "enter_to_ctrl"
+trigger = "ENTER"
+tap = "ENTER"
+hold = "RIGHT_CTRL"
+
+[[keymap]]
+name = "ergonomic_navigation"
+[keymap.mappings]
+"Super-Left" = "Home"
+"Super-Right" = "End"
+"Super-Backspace" = "Ctrl-Backspace"
+"Super-Delete" = "Ctrl-Delete"

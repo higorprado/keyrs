@@ -1,0 +1,5 @@
+name = "developer"
+description = "Software development workflow - IDE and terminal optimized, vim-friendly"
+version = "1.0.0"
+author = "keyrs"
+tags = ["developer", "ide", "terminal", "vim"]
