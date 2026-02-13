@@ -20,6 +20,7 @@
 name = "desktop_cmd_dot_not_terminals"
 condition = "not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Super+. sends Escape outside terminals (macOS cancel behavior)
 "Super-dot" = "Esc"
 
 ## ------------------------------------------------------------
@@ -30,25 +31,35 @@ condition = "not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-termin
 name = "desktop_gnome_terminals"
 condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox' and settings.DesktopGnome"
 [keymap.mappings]
+# Input source switch
 "Ctrl-Space" = ["bind", "Combo(Super-Space)"]
+# Input source switch reverse
 "Shift-Ctrl-Space" = ["bind", "Combo(Shift-Super-Space)"]
 
 [[keymap]]
 name = "desktop_gnome_gui"
 condition = "settings.DesktopGnome and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Input source switch
 "Super-Space" = "Shift-Ctrl-Space"
+# Show applications (launchpad-like)
 "Super-F3" = "Super-d"
+# Toggle fullscreen
 "Ctrl-Super-f" = "Alt-F10"
+# Minimize window (GNOME default)
 "Super-h" = "Super-h"
+# Screenshot area
 "Shift-Super-3" = "Shift-PRINT"
+# Screenshot window
 "Shift-Super-4" = "Alt-PRINT"
+# Screenshot full screen
 "Shift-Super-5" = "PRINT"
 
 [[keymap]]
 name = "desktop_gnome_pre45_gui"
 condition = "settings.DesktopGnomePre45 and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Open activities overview (pre-GNOME 45)
 "Super-Space" = "Super-s"
 
 ## ------------------------------------------------------------
@@ -59,15 +70,20 @@ condition = "settings.DesktopGnomePre45 and not (wm_class =~ '(?i)terminal|alacr
 name = "desktop_fedora_gnome_terminals"
 condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox' and settings.DistroFedoraGnome"
 [keymap.mappings]
+# Minimize window
 "Ctrl-h" = "Super-h"
 
 [[keymap]]
 name = "desktop_fedora_gnome_gui"
 condition = "settings.DistroFedoraGnome and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Lock screen
 "Ctrl-Super-q" = "Super-l"
+# Minimize window
 "Super-h" = "Super-h"
+# Workspace right
 "Super-Right" = ["bind", "Combo(Super-Page_Up)"]
+# Workspace left
 "Super-Left" = ["bind", "Combo(Super-Page_Down)"]
 
 ## ------------------------------------------------------------
@@ -78,16 +94,22 @@ condition = "settings.DistroFedoraGnome and not (wm_class =~ '(?i)terminal|alacr
 name = "desktop_ubuntu_fedora_gnome_terminals"
 condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox' and settings.DistroUbuntuOrFedoraGnome"
 [keymap.mappings]
+# Lock screen
 "Ctrl-Super-q" = "Super-l"
+# Workspace right
 "Ctrl-Right" = ["bind", "Combo(Super-Page_Up)"]
+# Workspace left
 "Ctrl-Left" = ["bind", "Combo(Super-Page_Down)"]
 
 [[keymap]]
 name = "desktop_ubuntu_gui"
 condition = "settings.DistroUbuntuOrFedoraGnome and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Lock screen
 "Ctrl-Super-q" = "Super-l"
+# Workspace right
 "Super-Right" = ["bind", "Combo(Super-Page_Up)"]
+# Workspace left
 "Super-Left" = ["bind", "Combo(Super-Page_Down)"]
 
 ## ------------------------------------------------------------
@@ -98,31 +120,42 @@ condition = "settings.DistroUbuntuOrFedoraGnome and not (wm_class =~ '(?i)termin
 name = "desktop_pop_os_terminals"
 condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox' and settings.DistroPop"
 [keymap.mappings]
+# Workspace right
 "Ctrl-Right" = ["bind", "Combo(Super-Ctrl-Up)"]
+# Workspace left
 "Ctrl-Left" = ["bind", "Combo(Super-Ctrl-Down)"]
 
 [[keymap]]
 name = "desktop_pop_os_gui"
 condition = "settings.DistroPop and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Input source switch
 "Super-Space" = "Super-slash"
+# Minimize window
 "Super-h" = "Super-h"
+# Workspace right
 "Super-Right" = ["bind", "Combo(Super-Ctrl-Up)"]
+# Workspace left
 "Super-Left" = ["bind", "Combo(Super-Ctrl-Down)"]
+# Close window (Pop!_OS style)
 "Super-q" = "Super-q"
 
 [[keymap]]
 name = "desktop_cosmic_terminals"
 condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox' and settings.DesktopCosmicOrPop"
 [keymap.mappings]
+# Maximize window
 "Ctrl-Super-f" = "Super-m"
 
 [[keymap]]
 name = "desktop_cosmic_gui"
 condition = "settings.DesktopCosmicOrPop and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Open app launcher
 "Super-Space" = "LEFT_META"
+# Close window
 "Super-q" = "Super-q"
+# Maximize window
 "Ctrl-Super-f" = "Super-m"
 
 ## ------------------------------------------------------------
@@ -133,30 +166,45 @@ condition = "settings.DesktopCosmicOrPop and not (wm_class =~ '(?i)terminal|alac
 name = "desktop_kde_terminals"
 condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox' and settings.DesktopKde"
 [keymap.mappings]
+# Next virtual desktop
 "Ctrl-Space" = ["bind", "Combo(Super-Alt-l)"]
+# Previous virtual desktop
 "Shift-Ctrl-Space" = ["bind", "Combo(Super-Alt-k)"]
+# Minimize window
 "Ctrl-h" = "Super-Page_Down"
+# Maximize window
 "Ctrl-Super-f" = "Super-Page_Up"
+# Window to left half
 "Ctrl-Left" = "Ctrl-Super-Left"
+# Window to right half
 "Ctrl-Right" = "Ctrl-Super-Right"
 
 [[keymap]]
 name = "desktop_kde_gui"
 condition = "settings.DesktopKde and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Show desktop
 "Super-F3" = "Super-d"
+# Minimize window
 "Super-h" = "Super-Page_Down"
+# Window to left half
 "Super-Left" = "Ctrl-Super-Left"
+# Window to right half
 "Super-Right" = "Ctrl-Super-Right"
+# Maximize window
 "Ctrl-Super-f" = "Super-Page_Up"
+# Next virtual desktop
 "Super-Space" = ["bind", "Combo(Super-Alt-l)"]
+# Previous virtual desktop
 "Shift-Super-Space" = ["bind", "Combo(Super-Alt-k)"]
 
 [[keymap]]
 name = "desktop_kde_neon_gui"
 condition = "settings.DistroKdeNeon and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Maximize window
 "Super-f" = "Super-Page_Up"
+# Minimize window
 "Super-h" = "Super-Page_Down"
 
 ## ------------------------------------------------------------
@@ -167,52 +215,69 @@ condition = "settings.DistroKdeNeon and not (wm_class =~ '(?i)terminal|alacritty
 name = "desktop_xfce_terminals"
 condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox' and settings.DesktopXfce"
 [keymap.mappings]
+# Cycle windows
 "Ctrl-Grave" = ["bind", "Combo(Super-Tab)"]
+# Cycle windows reverse
 "Shift-Ctrl-Grave" = ["bind", "Combo(Shift-Super-Tab)"]
+# Workspace right
 "Ctrl-Right" = ["bind", "Combo(Ctrl-Alt-Home)"]
+# Workspace left
 "Ctrl-Left" = ["bind", "Combo(Ctrl-Alt-End)"]
 
 [[keymap]]
 name = "desktop_xfce_gui"
 condition = "settings.DesktopXfce and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Cycle windows
 "Super-Grave" = ["bind", "Combo(Super-Tab)"]
+# Cycle windows reverse
 "Shift-Super-Grave" = ["bind", "Combo(Shift-Super-Tab)"]
+# Open app menu
 "Super-Space" = "Ctrl-Esc"
+# Show desktop
 "Super-F3" = "Ctrl-Alt-d"
+# Minimize window
 "Super-h" = "Alt-F9"
+# Screenshot area
 "Shift-Super-3" = "PRINT"
+# Screenshot window
 "Shift-Super-4" = "Alt-PRINT"
+# Screenshot full screen
 "Shift-Super-5" = "Shift-PRINT"
 
 [[keymap]]
 name = "desktop_debian_xfce_gui"
 condition = "settings.DistroDebianXfce and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Open app menu
 "Super-Space" = "Alt-F1"
 
 [[keymap]]
 name = "desktop_alma_rocky_xfce_gui"
 condition = "settings.DistroAlmaRockyXfce and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Open app menu
 "Super-Space" = "Alt-F3"
 
 [[keymap]]
 name = "desktop_mint_xfce_gui"
 condition = "settings.DistroMintXfce and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Open app menu (Mint default)
 "Super-Space" = "Super-Space"
 
 [[keymap]]
 name = "desktop_zorin_xfce_gui"
 condition = "settings.DistroZorinXfce and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Open app menu
 "Super-Space" = "Alt-Pause"
 
 [[keymap]]
 name = "desktop_manjaro_xfce_gui"
 condition = "settings.DistroManjaroXfce and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Open app menu
 "Super-Space" = "Alt-F1"
 
 ## ------------------------------------------------------------
@@ -223,6 +288,7 @@ condition = "settings.DistroManjaroXfce and not (wm_class =~ '(?i)terminal|alacr
 name = "desktop_cinnamon_gui"
 condition = "settings.DesktopCinnamon and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Open app menu
 "Super-Space" = "Ctrl-Esc"
 
 ## ------------------------------------------------------------
@@ -233,12 +299,14 @@ condition = "settings.DesktopCinnamon and not (wm_class =~ '(?i)terminal|alacrit
 name = "desktop_mate_mint_gui"
 condition = "settings.DesktopMateMint and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Open app menu
 "Super-Space" = "Alt-Space"
 
 [[keymap]]
 name = "desktop_mate_ubuntu_gui"
 condition = "settings.DesktopMateUbuntu and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Open app launcher
 "Super-Space" = "LEFT_META"
 
 ## ------------------------------------------------------------
@@ -249,16 +317,22 @@ condition = "settings.DesktopMateUbuntu and not (wm_class =~ '(?i)terminal|alacr
 name = "desktop_budgie_terminals"
 condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox' and settings.DesktopBudgie"
 [keymap.mappings]
+# Workspace right
 "Ctrl-Right" = ["bind", "Combo(Ctrl-Alt-Right)"]
+# Workspace left
 "Ctrl-Left" = ["bind", "Combo(Ctrl-Alt-Left)"]
 
 [[keymap]]
 name = "desktop_budgie_gui"
 condition = "settings.DesktopBudgie and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Open app launcher
 "Super-Space" = "LEFT_META"
+# Workspace right
 "Super-Right" = "Ctrl-Alt-Right"
+# Workspace left
 "Super-Left" = "Ctrl-Alt-Left"
+# Minimize window
 "Super-h" = "Super-h"
 
 ## ------------------------------------------------------------
@@ -269,15 +343,20 @@ condition = "settings.DesktopBudgie and not (wm_class =~ '(?i)terminal|alacritty
 name = "desktop_elementary_terminals"
 condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox' and settings.DesktopPantheon"
 [keymap.mappings]
+# Workspace right
 "Ctrl-Right" = ["bind", "Combo(Super-Right)"]
+# Workspace left
 "Ctrl-Left" = ["bind", "Combo(Super-Left)"]
 
 [[keymap]]
 name = "desktop_pantheon_gui"
 condition = "settings.DesktopPantheon and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Show workspace selector
 "Super-F3" = "Super-d"
+# Run command
 "Super-Space" = "Alt-F2"
+# Maximize window
 "Ctrl-Super-f" = "Super-Up"
 
 ## ------------------------------------------------------------
@@ -288,13 +367,16 @@ condition = "settings.DesktopPantheon and not (wm_class =~ '(?i)terminal|alacrit
 name = "desktop_deepin_gui"
 condition = "settings.DesktopDeepin and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Minimize window
 "Super-h" = "Super-n"
+# Open file manager
 "Alt-Super-Space" = "Super-e"
 
 [[keymap]]
 name = "desktop_dde_gui"
 condition = "settings.DesktopDde and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Open app launcher
 "Super-Space" = "LEFT_META"
 
 ## ------------------------------------------------------------
@@ -305,13 +387,16 @@ condition = "settings.DesktopDde and not (wm_class =~ '(?i)terminal|alacritty|ki
 name = "desktop_sway_terminals"
 condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox' and settings.DesktopSway"
 [keymap.mappings]
+# Close terminal
 "Super-q" = "Shift-Ctrl-q"
 
 [[keymap]]
 name = "desktop_sway_gui"
 condition = "settings.DesktopSway and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Open app launcher
 "Super-Space" = "Super-d"
+# Close window
 "Super-q" = "Ctrl-q"
 
 ## ------------------------------------------------------------
@@ -322,6 +407,7 @@ condition = "settings.DesktopSway and not (wm_class =~ '(?i)terminal|alacritty|k
 name = "desktop_hyprland_gui"
 condition = "settings.DesktopHyprland and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Open app launcher
 "Super-Space" = "Super-d"
 
 ## ------------------------------------------------------------
@@ -332,6 +418,7 @@ condition = "settings.DesktopHyprland and not (wm_class =~ '(?i)terminal|alacrit
 name = "desktop_miraclewm_gui"
 condition = "settings.DesktopMiracleWm and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Open app launcher
 "Super-Space" = "Super-d"
 
 ## ------------------------------------------------------------
@@ -342,7 +429,9 @@ condition = "settings.DesktopMiracleWm and not (wm_class =~ '(?i)terminal|alacri
 name = "desktop_enlightenment_gui"
 condition = "settings.DesktopEnlightenment and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Close window
 "Super-q" = "Ctrl-Alt-x"
+# Open app menu
 "Super-Space" = "Ctrl-Alt-Space"
 
 ## ------------------------------------------------------------
@@ -353,6 +442,7 @@ condition = "settings.DesktopEnlightenment and not (wm_class =~ '(?i)terminal|al
 name = "desktop_icewm_gui"
 condition = "settings.DesktopIcewm and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Open app menu
 "Super-Space" = "LEFT_META"
 
 ## ------------------------------------------------------------
@@ -363,6 +453,7 @@ condition = "settings.DesktopIcewm and not (wm_class =~ '(?i)terminal|alacritty|
 name = "desktop_trinity_gui"
 condition = "settings.DesktopTrinity and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Open app menu
 "Super-Space" = "LEFT_META"
 
 ## ------------------------------------------------------------
@@ -373,6 +464,7 @@ condition = "settings.DesktopTrinity and not (wm_class =~ '(?i)terminal|alacritt
 name = "desktop_unity_gui"
 condition = "settings.DesktopUnity and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Open app launcher
 "Super-Space" = "LEFT_META"
 
 ## ------------------------------------------------------------
@@ -383,12 +475,14 @@ condition = "settings.DesktopUnity and not (wm_class =~ '(?i)terminal|alacritty|
 name = "desktop_manjaro_gui"
 condition = "settings.DistroManjaro and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Maximize window
 "Ctrl-Super-f" = "Super-Page_Up"
 
 [[keymap]]
 name = "desktop_manjaro_gnome_gui"
 condition = "settings.DistroManjaroGnome and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Close window
 "Super-q" = "Super-q"
 
 ## ------------------------------------------------------------
@@ -400,17 +494,24 @@ condition = "settings.DistroManjaroGnome and not (wm_class =~ '(?i)terminal|alac
 name = "desktop_chromebook_ibm_gui"
 condition = "keyboard_type =~ 'Chromebook, IBM' and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Alt-Tab cycle (Chromebook keyboard layout)
 "Alt-Tab" = ["bind", "Combo(Ctrl-Tab)"]
+# Alt-Shift-Tab cycle reverse
 "Alt-Shift-Tab" = ["bind", "Combo(Ctrl-Shift-Tab)"]
+# Alt-Grave cycle
 "Alt-Grave" = ["bind", "Combo(Ctrl-Shift-Tab)"]
+# Delete word backward
 "Alt-Backspace" = "Ctrl-Backspace"
 
 [[keymap]]
 name = "desktop_not_chromebook_gui"
 condition = "not (keyboard_type =~ 'Chromebook') and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Super-Tab cycle
 "Super-Tab" = ["bind", "Combo(Ctrl-Tab)"]
+# Super-Shift-Tab cycle reverse
 "Shift-Super-Tab" = ["bind", "Combo(Shift-Ctrl-Tab)"]
+# Delete word backward
 "Alt-Backspace" = "Ctrl-Backspace"
 
 ## ------------------------------------------------------------
@@ -422,16 +523,19 @@ condition = "not (keyboard_type =~ 'Chromebook') and not (wm_class =~ '(?i)termi
 name = "desktop_forced_numpad_toggle_on"
 condition = "not settings.forced_numpad and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Enable forced numpad mode
 "Alt-Numlock" = ["Set(forced_numpad=true)"]
 
 [[keymap]]
 name = "desktop_forced_numpad_toggle_off"
 condition = "settings.forced_numpad and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Disable forced numpad mode
 "Alt-Numlock" = ["Set(forced_numpad=false)"]
 
 [[keymap]]
 name = "desktop_forced_numpad_numlock_clear"
 condition = "settings.forced_numpad and not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
 [keymap.mappings]
+# Numlock acts as Escape in forced numpad mode
 "Numlock" = "Escape"

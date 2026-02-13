@@ -16,16 +16,22 @@
 name = "browsers_core"
 condition = "wm_class =~ 'firefox|librewolf|waterfox|zen|chrom|chrome|vivaldi|falkon'"
 [keymap.mappings]
+# Quit browser
 "Super-q" = "Ctrl-q"
+# Open Developer Tools
 "Super-Alt-i" = "Ctrl-Shift-i"
+# Open Web Console
 "Super-Alt-j" = "Ctrl-Shift-j"
 
 [[keymap]]
 name = "browsers_chromium"
 condition = "wm_class =~ 'chrom|chrome|vivaldi|falkon'"
 [keymap.mappings]
+# Open history
 "Super-y" = "Ctrl-h"
+# View page source
 "Super-Alt-u" = "Ctrl-u"
+# Open downloads
 "Super-Shift-j" = "Ctrl-j"
 
 ## ------------------------------------------------------------
@@ -36,15 +42,20 @@ condition = "wm_class =~ 'chrom|chrome|vivaldi|falkon'"
 name = "browser_firefox_macros"
 condition = "wm_class =~ '(?i)firefox|librewolf|waterfox|zen'"
 [keymap.mappings]
+# Open settings page (via URL bar)
 "Super-comma" = ["Ctrl-l", "Delay(120)", "Text(about:preferences)", "Delay(160)", "Enter"]
+# Delete to beginning of line in URL bar
 "Super-Backspace" = ["Shift-Home", "Backspace"]
+# Delete to end of line in URL bar
 "Super-Delete" = ["Shift-End", "Delete"]
 
 [[keymap]]
 name = "browser_firefox_overrides"
 condition = "wm_class =~ 'firefox|librewolf|waterfox|zen'"
 [keymap.mappings]
+# Open new private/incognito window
 "Shift-Super-n" = "Shift-Ctrl-p"
+# Switch to tab 1-9
 "Super-1" = "Alt-1"
 "Super-2" = "Alt-2"
 "Super-3" = "Alt-3"
@@ -53,6 +64,7 @@ condition = "wm_class =~ 'firefox|librewolf|waterfox|zen'"
 "Super-6" = "Alt-6"
 "Super-7" = "Alt-7"
 "Super-8" = "Alt-8"
+# Switch to last tab
 "Super-9" = "Alt-9"
 
 ## ------------------------------------------------------------
@@ -63,6 +75,7 @@ condition = "wm_class =~ 'firefox|librewolf|waterfox|zen'"
 name = "browser_chrome_settings"
 condition = "wm_class =~ '(?i)google-chrome|chromium|brave|microsoft-edge|vivaldi-stable'"
 [keymap.mappings]
+# Open settings page (via URL bar)
 "Super-comma" = ["Ctrl-l", "Delay(120)", "Text(chrome://settings)", "Delay(160)", "Enter"]
 
 ## ------------------------------------------------------------
@@ -73,13 +86,16 @@ condition = "wm_class =~ '(?i)google-chrome|chromium|brave|microsoft-edge|vivald
 name = "browser_vivaldi_macros"
 condition = "wm_class =~ '(?i)^vivaldi.*$'"
 [keymap.mappings]
+# Show keyboard shortcuts (via menu)
 "Super-slash" = ["F10", "Delay(200)", "H", "Delay(200)", "K"]
+# Open settings (via menu)
 "Super-comma" = ["F10", "Delay(200)", "S"]
 
 [[keymap]]
 name = "browser_vivaldi_settings_dialog"
 condition = "wm_class =~ '(?i)^vivaldi.*$' and wm_name =~ '(?i)^Vivaldi Settings:.*Vivaldi$'"
 [keymap.mappings]
+# Close settings dialog
 "Esc" = "Alt-F4"
 
 ## ------------------------------------------------------------
@@ -90,4 +106,5 @@ condition = "wm_class =~ '(?i)^vivaldi.*$' and wm_name =~ '(?i)^Vivaldi Settings
 name = "browser_falkon"
 condition = "wm_class =~ '(?i)^org.kde.falkon$|^falkon$'"
 [keymap.mappings]
+# Open preferences
 "Super-comma" = "Shift-Ctrl-comma"

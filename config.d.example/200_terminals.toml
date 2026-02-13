@@ -18,20 +18,31 @@
 name = "terminals_core_shortcuts"
 condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty'"
 [keymap.mappings]
+# Clipboard: Super+C/V → Ctrl+Shift+C/V (terminal standard)
 "Super-c" = "Ctrl-Shift-c"
 "Super-v" = "Ctrl-Shift-v"
+# Tab management: Super+W → close tab, Super+T → new tab
 "Super-w" = "Ctrl-Shift-w"
 "Super-t" = "Ctrl-Shift-t"
+# Window: Super+N → new window
 "Super-n" = "Ctrl-Shift-n"
+# Find: Super+F → find in terminal
 "Super-f" = "Ctrl-Shift-f"
+# Save terminal output (where supported)
 "Super-s" = "Ctrl-Shift-s"
+# Duplicate tab/session
 "Super-d" = "Ctrl-Shift-d"
+# Clear screen: Super+L → clear (some terminals)
 "Super-l" = "Ctrl-Shift-l"
+# Zoom: font size controls
 "Super-minus" = "Ctrl-minus"
 "Super-equal" = "Ctrl-Shift-equal"
+# Interrupt: Super+. sends Ctrl+C (SIGINT)
 "Super-dot" = "Ctrl-c"
+# Word delete: Alt+Backspace/Delete → delete word forward/backward
 "Alt-Backspace" = "Ctrl-w"
 "Alt-Delete" = ["Esc", "d"]
+# Line delete: Super+Backspace → delete to line start, Super+Delete → delete to line end
 "Super-Backspace" = "Ctrl-u"
 "Super-Delete" = "Ctrl-k"
 
@@ -39,6 +50,7 @@ condition = "wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|ko
 name = "terminals_general"
 condition = "wm_class =~ '(?i)terminal|alacritty|kitty|konsole|ghostty|wave|terminology|deepin-terminal|contour|hyper'"
 [keymap.mappings]
+# Word delete forward (Esc+d is readline forward-word-kill)
 "Alt-Delete" = ["Esc", "d"]
 
 ## ------------------------------------------------------------
@@ -50,26 +62,32 @@ condition = "wm_class =~ '(?i)terminal|alacritty|kitty|konsole|ghostty|wave|term
 name = "terminal_alacritty"
 condition = "wm_class =~ '(?i)^alacritty$'"
 [keymap.mappings]
+# Clear screen via Ctrl+L
 "Super-k" = "Ctrl-l"
 
 [[keymap]]
 name = "terminal_contour"
 condition = "wm_class =~ '(?i)^contour$'"
 [keymap.mappings]
+# Zoom out needs Shift in contour
 "Super-minus" = "Ctrl-Shift-minus"
 
 [[keymap]]
 name = "terminal_cosmic"
 condition = "wm_class =~ '(?i)^com.system76.cosmicterm$'"
 [keymap.mappings]
+# Zoom in without Shift (COSMIC-specific)
 "Super-equal" = "Ctrl-equal"
 
 [[keymap]]
 name = "terminal_deepin"
 condition = "wm_class =~ '(?i)^deepin-terminal$'"
 [keymap.mappings]
+# Close tab uses Alt+W instead of Ctrl+Shift
 "Super-w" = "Alt-w"
+# Super+J disabled (conflicts with DE shortcut)
 "Super-j" = ["Ignore"]
+# Zoom controls
 "Super-minus" = "Ctrl-minus"
 "Super-equal" = "Ctrl-equal"
 
@@ -77,17 +95,23 @@ condition = "wm_class =~ '(?i)^deepin-terminal$'"
 name = "terminal_ghostty"
 condition = "wm_class =~ '(?i)ghostty'"
 [keymap.mappings]
+# Zoom in without Shift
 "Super-equal" = "Ctrl-equal"
+# Split pane: horizontal and vertical
 "Super-d" = "Super-Shift-o"
 "Shift-Super-d" = "Super-Shift-e"
+# Inspector toggle
 "Super-Alt-i" = "Super-Shift-i"
+# Clear screen
 "Super-k" = "Ctrl-l"
 
 [[keymap]]
 name = "terminal_hyper"
 condition = "wm_class =~ '(?i)^hyper$'"
 [keymap.mappings]
+# Zoom in without Shift
 "Super-equal" = "Ctrl-equal"
+# Tab navigation pass-through (Hyper uses Ctrl+Tab/Shift+Ctrl+Tab)
 "Shift-Ctrl-Tab" = ["bind", "Combo(Shift-Ctrl-Tab)"]
 "Ctrl-Tab" = ["bind", "Combo(Ctrl-Tab)"]
 
@@ -95,6 +119,7 @@ condition = "wm_class =~ '(?i)^hyper$'"
 name = "terminal_kitty"
 condition = "wm_class =~ '(?i)^kitty$'"
 [keymap.mappings]
+# Clear screen
 "Super-l" = "Ctrl-l"
 "Super-k" = "Ctrl-l"
 
@@ -102,17 +127,23 @@ condition = "wm_class =~ '(?i)^kitty$'"
 name = "terminal_konsole"
 condition = "wm_class =~ '(?i)^konsole$|^org.kde.konsole$'"
 [keymap.mappings]
+# Settings dialog
 "Super-comma" = "Shift-Ctrl-comma"
+# Reset zoom
 "Super-0" = "Ctrl-Alt-0"
+# Clear screen
 "Super-k" = "Shift-Ctrl-k"
 
 [[keymap]]
 name = "terminal_terminology"
 condition = "wm_class =~ '(?i)^terminology$'"
 [keymap.mappings]
+# Close tab (End key workaround)
 "Super-w" = "Shift-Ctrl-End"
+# Copy/Paste use Alt combinations
 "Super-c" = "Alt-w"
 "Super-v" = "Alt-Enter"
+# Zoom with Ctrl+Alt
 "Super-0" = "Ctrl-Alt-0"
 "Super-minus" = "Ctrl-Alt-minus"
 "Super-equal" = "Ctrl-Alt-equal"
@@ -121,6 +152,7 @@ condition = "wm_class =~ '(?i)^terminology$'"
 name = "terminal_wave"
 condition = "wm_class =~ '(?i)^wave$'"
 [keymap.mappings]
+# Tab management uses Alt instead of Ctrl+Shift
 "Super-t" = "Alt-t"
 "Super-n" = "Alt-n"
 "Shift-Super-n" = "Shift-Alt-n"
@@ -131,6 +163,7 @@ condition = "wm_class =~ '(?i)^wave$'"
 name = "terminal_xfce4"
 condition = "wm_class =~ '(?i)^xfce4-terminal$'"
 [keymap.mappings]
+# Preferences via menu sequence
 "Super-comma" = ["Alt-e", "Delay(100)", "e"]
 
 ## ------------------------------------------------------------
@@ -142,10 +175,13 @@ condition = "wm_class =~ '(?i)^xfce4-terminal$'"
 name = "terminal_tab_nav_ctrlshifttab"
 condition = "wm_class =~ '(?i)com.raggesilver.blackbox|com.system76.cosmicterm|org.gnome.console|console|deepin-terminal|hyper|kitty|kgx'"
 [keymap.mappings]
+# Tab switching: Ctrl+Shift+Tab (prev) / Ctrl+Tab (next)
 "Shift-Super-Left_Brace" = "Ctrl-Shift-Tab"
 "Shift-Super-Right_Brace" = "Ctrl-Tab"
+# Page Up/Down as tab switchers
 "Shift-Super-Page_Up" = "Ctrl-Shift-Tab"
 "Shift-Super-Page_Down" = "Ctrl-Tab"
+# Arrow keys as tab switchers
 "Shift-Super-Left" = "Ctrl-Shift-Tab"
 "Shift-Super-Right" = "Ctrl-Tab"
 
@@ -153,6 +189,7 @@ condition = "wm_class =~ '(?i)com.raggesilver.blackbox|com.system76.cosmicterm|o
 name = "terminal_konsole_tab_switching"
 condition = "wm_class =~ '(?i)^konsole$|^org.kde.konsole$'"
 [keymap.mappings]
+# Konsole uses Shift+Left/Right for tab navigation
 "Shift-Ctrl-Tab" = ["bind", "Combo(Shift-Left)"]
 "Ctrl-Tab" = ["bind", "Combo(Shift-Right)"]
 "Ctrl-Grave" = ["bind", "Combo(Shift-Left)"]
@@ -165,6 +202,7 @@ condition = "wm_class =~ '(?i)^konsole$|^org.kde.konsole$'"
 name = "terminal_elementary_kitty_tab_switching"
 condition = "wm_class =~ '(?i)^io.elementary.terminal$|^kitty$'"
 [keymap.mappings]
+# Elementary Terminal and Kitty use Shift+Ctrl+Left/Right
 "Shift-Ctrl-Tab" = ["bind", "Combo(Shift-Ctrl-Left)"]
 "Ctrl-Grave" = ["bind", "Combo(Shift-Ctrl-Left)"]
 "Ctrl-Tab" = ["bind", "Combo(Shift-Ctrl-Right)"]
