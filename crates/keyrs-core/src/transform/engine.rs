@@ -24,6 +24,9 @@ use std::collections::HashSet;
 #[cfg(feature = "pure-rust")]
 use parking_lot::RwLock;
 
+#[cfg(feature = "pure-rust")]
+use smallvec::SmallVec;
+
 use crate::mapping::{ActionStep, Keymap, KeymapValue, Modmap, MultiModmap, MultipurposeManager, MultipurposeResult};
 use crate::transform::deadkeys::DeadKeyState;
 use crate::transform::ComboMatchResult;
@@ -1204,8 +1207,8 @@ impl TransformEngine {
     ///
     /// For example: [Ctrl, A] becomes:
     /// - [LCtrl, A], [RCtrl, A]
-    fn expand_modifiers(&self, combo: &Combo) -> Vec<Combo> {
-        let mut expansions = Vec::new();
+    fn expand_modifiers(&self, combo: &Combo) -> SmallVec<[Combo; 4]> {
+        let mut expansions = SmallVec::new();
 
         // For each modifier in the combo that could be non-specific...
         for (i, modifier) in combo.modifiers().iter().enumerate() {
