@@ -1,0 +1,192 @@
+# ============================================================================
+# FALLBACK KEYMAPS
+# ============================================================================
+# These keymaps are loaded last (900 series) so that app-specific keymaps
+# in 000-700 files take precedence. Fallbacks provide sensible defaults
+# for applications without specific configurations.
+# ============================================================================
+
+# ============================================================================
+# VSCode Family - Find Fix
+# ============================================================================
+
+[[keymap]]
+name = "fallback_vscode_find"
+condition = "wm_class =~ '(?i)code|code-oss|vscodium|cursor'"
+[keymap.mappings]
+# Find (fallback for VSCode family)
+"Super-f" = "Ctrl-f"
+
+# ============================================================================
+# General GUI Defaults
+# ============================================================================
+# Applied to all non-terminal applications as a baseline. These provide
+# macOS-style Super key navigation that works across most GUI apps.
+# ============================================================================
+
+[[keymap]]
+name = "fallback_gui_defaults"
+condition = "not (wm_class =~ '(?i)terminal|alacritty|kitty|wezterm|gnome-terminal|konsole|xfce4-terminal|ghostty|wave|terminology|deepin-terminal|contour|hyper|kgx|cosmicterm|blackbox')"
+[keymap.mappings]
+# Previous tab (bracket key)
+"Shift-Super-Left_Brace" = "Ctrl-Page_Up"
+# Next tab (bracket key)
+"Shift-Super-Right_Brace" = "Ctrl-Page_Down"
+# Open app menu
+"Super-Space" = "Alt-F1"
+# Show desktop
+"Super-F3" = "Super-d"
+# Toggle fullscreen
+"Ctrl-Super-f" = "Alt-F10"
+# Close window
+"Super-q" = "Alt-F4"
+# Ignore Alt-Tab (use Super-Tab instead)
+"Alt-Tab" = ["Ignore"]
+# Application switcher
+"Super-Tab" = ["bind", "Combo(Alt-Tab)"]
+# Application switcher reverse
+"Shift-Super-Tab" = ["bind", "Combo(Shift-Alt-Tab)"]
+# Same application window switcher
+"Super-Grave" = ["bind", "Combo(Alt-Grave)"]
+# Same application window switcher reverse
+"Shift-Super-Grave" = ["bind", "Combo(Shift-Alt-Grave)"]
+# Insert via Right Alt+Enter
+"RAlt-Enter" = "Insert"
+# Emacs-style: Beginning of line
+"Super-a" = "Home"
+# Emacs-style: End of line
+"Super-e" = "End"
+# Emacs-style: Character back
+"Super-b" = "Left"
+# Emacs-style: Character forward
+"Super-f" = "Right"
+# Emacs-style: Next line
+"Super-n" = "Down"
+# Emacs-style: Previous line
+"Super-p" = "Up"
+# Emacs-style: Kill to end of line
+"Super-k" = ["Shift-End", "Backspace"]
+# Emacs-style: Delete character forward
+"Super-d" = "Delete"
+# Beginning of line
+"Ctrl-Left" = "Home"
+# Select to beginning of line
+"Shift-Ctrl-Left" = "Shift-Home"
+# End of line
+"Ctrl-Right" = "End"
+# Select to end of line
+"Shift-Ctrl-Right" = "Shift-End"
+# Beginning of document
+"Ctrl-Up" = "Ctrl-Home"
+# Select to beginning of document
+"Shift-Ctrl-Up" = "Ctrl-Shift-Home"
+# End of document
+"Ctrl-Down" = "Ctrl-End"
+# Select to end of document
+"Shift-Ctrl-Down" = "Ctrl-Shift-End"
+# Delete word backward
+"Super-Backspace" = "Ctrl-Backspace"
+# Delete word forward
+"Super-Delete" = "Ctrl-Delete"
+# Delete to beginning of line
+"Ctrl-Backspace" = "Ctrl-Shift-Backspace"
+# Delete word forward (alternative)
+"Alt-Delete" = "Ctrl-Delete"
+# Delete word backward (alternative)
+"Shift-Alt-Backspace" = "Ctrl-Backspace"
+# Delete word forward (alternative)
+"Shift-Alt-Delete" = "Ctrl-Delete"
+# Virtual terminal 1
+"Ctrl-Super-F1" = "Ctrl-Alt-F1"
+# Virtual terminal 2
+"Ctrl-Super-F2" = "Ctrl-Alt-F2"
+# Virtual terminal 3
+"Ctrl-Super-F3" = "Ctrl-Alt-F3"
+# Virtual terminal 4
+"Ctrl-Super-F4" = "Ctrl-Alt-F4"
+# Virtual terminal 5
+"Ctrl-Super-F5" = "Ctrl-Alt-F5"
+# Virtual terminal 6
+"Ctrl-Super-F6" = "Ctrl-Alt-F6"
+# Virtual terminal 7
+"Ctrl-Super-F7" = "Ctrl-Alt-F7"
+
+# ============================================================================
+# Core General Shortcuts
+# ============================================================================
+# Super-to-Ctrl mappings for all alphabetics. Excluded from JetBrains IDEs
+# which have their own comprehensive mappings in 500_editors.toml.
+# ============================================================================
+
+[[keymap]]
+name = "fallback_core_shortcuts"
+condition = "not (wm_class =~ '(?i)jetbrains')"
+[keymap.mappings]
+# Select all
+"Super-a" = "Ctrl-a"
+# Bold (in rich text)
+"Super-b" = "Ctrl-b"
+# Copy
+"Super-c" = "Ctrl-c"
+# Duplicate / bookmark
+"Super-d" = "Ctrl-d"
+# Center / search end
+"Super-e" = "Ctrl-e"
+# Find
+"Super-f" = "Ctrl-f"
+# Find next / go to
+"Super-g" = "Ctrl-g"
+# Replace
+"Super-h" = "Ctrl-h"
+# Italic (in rich text)
+"Super-i" = "Ctrl-i"
+# Justify
+"Super-j" = "Ctrl-j"
+# Insert link
+"Super-k" = "Ctrl-k"
+# Left align
+"Super-l" = "Ctrl-l"
+# Minimize
+"Super-m" = "Ctrl-m"
+# New
+"Super-n" = "Ctrl-n"
+# Open
+"Super-o" = "Ctrl-o"
+# Print
+"Super-p" = "Ctrl-p"
+# Quit
+"Super-q" = "Ctrl-q"
+# Refresh / reload
+"Super-r" = "Ctrl-r"
+# Save
+"Super-s" = "Ctrl-s"
+# New tab
+"Super-t" = "Ctrl-t"
+# Underline
+"Super-u" = "Ctrl-u"
+# Paste
+"Super-v" = "Ctrl-v"
+# Close tab / window
+"Super-w" = "Ctrl-w"
+# Cut
+"Super-x" = "Ctrl-x"
+# Redo
+"Super-y" = "Ctrl-y"
+# Undo
+"Super-z" = "Ctrl-z"
+# Delete word backward
+"Super-backspace" = "Ctrl-Backspace"
+# Delete word forward
+"Super-delete" = "Ctrl-Delete"
+# Beginning of line
+"Super-left" = "Ctrl-left"
+# End of line
+"Super-right" = "Ctrl-right"
+# Select to beginning of line
+"Shift-Super-left" = "Ctrl-Shift-left"
+# Select to end of line
+"Shift-Super-right" = "Ctrl-Shift-right"
+# Delete word backward (alternative)
+"Shift-Alt-Backspace" = "Ctrl-Backspace"
+# Delete word forward (alternative)
+"Shift-Alt-Delete" = "Ctrl-Delete"
