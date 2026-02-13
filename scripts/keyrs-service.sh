@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# ============================================================
+# Configuration
+# ============================================================
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
@@ -19,21 +23,97 @@ TARGET_BIN="${BIN_DIR}/keyrs"
 TARGET_TUI_BIN="${BIN_DIR}/keyrs-tui"
 RUNTIME_CTL="${BIN_DIR}/keyrs-service"
 PROFILE_CACHE_DIR="${CONFIG_DIR}/profile-cache"
+BACKUPS_DIR="${CONFIG_DIR}/backups"
 
 SYSTEMCTL_BIN="${SYSTEMCTL_BIN:-systemctl}"
 UDEVADM_BIN="${UDEVADM_BIN:-udevadm}"
+
+# Flags
 DRY_RUN=false
 FORCE=false
 ASSUME_YES=false
+QUIET=false
+
+# Arguments
 BIN_SOURCE=""
 TUI_BIN_SOURCE=""
 COMPOSE_SOURCE_DIR=""
 SELECTED_PROFILE=""
 PROFILE_URL=""
+
+# Temp files for cleanup
+declare -a TEMP_FILES=()
+
 RUNTIME_ONLY=false
 if [[ "${KEYRS_RUNTIME_ONLY:-0}" == "1" || "${SCRIPT_PATH}" == "${RUNTIME_CTL}" ]]; then
   RUNTIME_ONLY=true
 fi
+
+# ============================================================
+# Colors (auto-detect terminal support)
+# ============================================================
+
+if [[ -t 1 ]] && command -v tput >/dev/null 2>&1; then
+  COLOR_RESET="$(tput sgr0 2>/dev/null || echo '')"
+  COLOR_RED="$(tput setaf 1 2>/dev/null || echo '')"
+  COLOR_GREEN="$(tput setaf 2 2>/dev/null || echo '')"
+  COLOR_YELLOW="$(tput setaf 3 2>/dev/null || echo '')"
+  COLOR_BLUE="$(tput setaf 4 2>/dev/null || echo '')"
+  COLOR_BOLD="$(tput bold 2>/dev/null || echo '')"
+else
+  COLOR_RESET=""
+  COLOR_RED=""
+  COLOR_GREEN=""
+  COLOR_YELLOW=""
+  COLOR_BLUE=""
+  COLOR_BOLD=""
+fi
+
+# ============================================================
+# Cleanup and Signal Handling
+# ============================================================
+
+cleanup() {
+  for f in "${TEMP_FILES[@]}"; do
+    [[ -f "${f}" ]] && rm -f "${f}"
+  done
+}
+
+trap cleanup EXIT
+trap 'log "Interrupted"; exit 130' INT
+trap 'log "Terminated"; exit 143' TERM
+
+# ============================================================
+# Logging Functions
+# ============================================================
+
+log() {
+  ${QUIET} || printf '[keyrs-service] %s\n' "$*"
+}
+
+log_info() {
+  ${QUIET} || printf '%s\n' "${COLOR_BLUE}ℹ${COLOR_RESET} $*"
+}
+
+log_success() {
+  ${QUIET} || printf '%s\n' "${COLOR_GREEN}✓${COLOR_RESET} $*"
+}
+
+log_warn() {
+  ${QUIET} || printf '%s\n' "${COLOR_YELLOW}⚠${COLOR_RESET} $*" >&2
+}
+
+log_error() {
+  printf '%s\n' "${COLOR_RED}✗${COLOR_RESET} $*" >&2
+}
+
+run() {
+  if ${DRY_RUN}; then
+    printf '[dry-run] %s\n' "$*"
+    return 0
+  fi
+  "$@"
+}
 
 usage() {
   local header
@@ -88,23 +168,12 @@ Options:
   --profile-url <url> Download profile from URL
   --force          Overwrite existing config files during install
   --yes            Skip confirmation prompt
+  --quiet          Suppress output (only errors)
   --dry-run        Print actions without executing system changes
   -h, --help       Show this help
 
 ${examples}
 USAGE
-}
-
-log() {
-  printf '[keyrs-service] %s\n' "$*"
-}
-
-run() {
-  if ${DRY_RUN}; then
-    printf '[dry-run] %s\n' "$*"
-    return 0
-  fi
-  "$@"
 }
 
 ensure_systemctl_user() {
@@ -122,6 +191,23 @@ ensure_udevadm() {
 }
 
 parse_args() {
+  # Parse global options first (before command)
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --quiet|-q)
+        QUIET=true
+        shift
+        ;;
+      -h|--help)
+        usage
+        exit 0
+        ;;
+      *)
+        break
+        ;;
+    esac
+  done
+
   COMMAND="${1:-}"
   if [[ -z "${COMMAND}" ]]; then
     usage
@@ -163,6 +249,10 @@ parse_args() {
         ;;
       --yes)
         ASSUME_YES=true
+        shift
+        ;;
+      --quiet|-q)
+        QUIET=true
         shift
         ;;
       --dry-run)
@@ -346,6 +436,7 @@ run_privileged() {
 write_service_file() {
   local tmp
   tmp="$(mktemp)"
+  TEMP_FILES+=("${tmp}")
   cat > "${tmp}" <<UNIT
 [Unit]
 Description=keyrs keyboard remapper
@@ -587,6 +678,7 @@ apply_config_cmd() {
   local output_path="${CONFIG_DIR}/config.toml"
   local tmp_path
   tmp_path="$(mktemp "${CONFIG_DIR}/config.toml.new.XXXXXX")"
+  TEMP_FILES+=("${tmp_path}")
 
   if [[ ! -d "${source_dir}" ]]; then
     log "Source config directory not found: ${source_dir}"
@@ -776,29 +868,26 @@ download_profile() {
 
   local tmp_archive
   tmp_archive="$(mktemp "/tmp/keyrs-profile.XXXXXX.tar.gz")"
+  TEMP_FILES+=("${tmp_archive}")
 
   if command -v curl >/dev/null 2>&1; then
     if ! curl -fsSL "${url}" -o "${tmp_archive}"; then
-      log "Failed to download profile from ${url}"
-      rm -f "${tmp_archive}"
+      log_error "Failed to download profile from ${url}"
       return 1
     fi
   elif command -v wget >/dev/null 2>&1; then
     if ! wget -q "${url}" -O "${tmp_archive}"; then
-      log "Failed to download profile from ${url}"
-      rm -f "${tmp_archive}"
+      log_error "Failed to download profile from ${url}"
       return 1
     fi
   else
-    log "Neither curl nor wget available for downloading profiles"
-    rm -f "${tmp_archive}"
+    log_error "Neither curl nor wget available for downloading profiles"
     return 1
   fi
 
   run tar -xzf "${tmp_archive}" -C "${target_dir}" --strip-components=1 2>/dev/null || \
     run tar -xzf "${tmp_archive}" -C "${target_dir}" 2>/dev/null || {
-    log "Failed to extract profile archive"
-    rm -f "${tmp_archive}"
+    log_error "Failed to extract profile archive"
     return 1
   }
 
@@ -845,8 +934,8 @@ apply_profile() {
 
   # Backup existing config
   if [[ -d "${CONFIG_COMPOSE_DIR}" ]]; then
-    local backup_dir="${CONFIG_DIR}/backups/config.d.$(date +%Y%m%d%H%M%S)"
-    run mkdir -p "${CONFIG_DIR}/backups"
+    local backup_dir="${BACKUPS_DIR}/config.d.$(date +%Y%m%d%H%M%S)"
+    run mkdir -p "${BACKUPS_DIR}"
     run mv "${CONFIG_COMPOSE_DIR}" "${backup_dir}"
     log "Previous config backed up to: ${backup_dir}"
   fi
@@ -856,6 +945,29 @@ apply_profile() {
 
   log "Applied profile to ${CONFIG_COMPOSE_DIR}"
   return 0
+}
+
+# Compose, validate, and restart service (common helper)
+validate_and_restart() {
+  run "${TARGET_BIN}" --compose-config "${CONFIG_COMPOSE_DIR}" --compose-output "${CONFIG_DIR}/config.toml"
+  run "${TARGET_BIN}" --check-config --config "${CONFIG_DIR}/config.toml"
+  run "${SYSTEMCTL_BIN}" --user restart "${SERVICE_NAME}"
+  run "${SYSTEMCTL_BIN}" --user --no-pager --full status "${SERVICE_NAME}"
+}
+
+# Resolve profile directory with error handling
+resolve_profile_dir() {
+  local profile_name="$1"
+  local profile_dir
+  profile_dir="$(get_profile_dir "${profile_name}")"
+
+  if [[ ! -f "${profile_dir}/profile.toml" ]]; then
+    log_error "Profile not found: ${profile_name}"
+    log "Run 'keyrs-service list-profiles' to see available profiles."
+    return 1
+  fi
+
+  echo "${profile_dir}"
 }
 
 profile_set_cmd() {
@@ -875,27 +987,18 @@ profile_set_cmd() {
   fi
 
   local profile_dir
-  profile_dir="$(get_profile_dir "${SELECTED_PROFILE}")"
-
-  if [[ ! -f "${profile_dir}/profile.toml" ]]; then
-    log "Profile not found: ${SELECTED_PROFILE}"
-    log "Run 'keyrs-service list-profiles' to see available profiles."
+  if ! profile_dir="$(resolve_profile_dir "${SELECTED_PROFILE}")"; then
     exit 1
   fi
 
   log "Setting profile: ${SELECTED_PROFILE}"
 
   if ! apply_profile "${profile_dir}"; then
-    log "Failed to apply profile"
     exit 1
   fi
 
-  run "${TARGET_BIN}" --compose-config "${CONFIG_COMPOSE_DIR}" --compose-output "${CONFIG_DIR}/config.toml"
-  run "${TARGET_BIN}" --check-config --config "${CONFIG_DIR}/config.toml"
-  run "${SYSTEMCTL_BIN}" --user restart "${SERVICE_NAME}"
-  run "${SYSTEMCTL_BIN}" --user --no-pager --full status "${SERVICE_NAME}"
-
-  log "Profile set successfully: ${SELECTED_PROFILE}"
+  validate_and_restart
+  log_success "Profile set: ${SELECTED_PROFILE}"
 }
 
 profile_select_cmd() {
@@ -903,29 +1006,21 @@ profile_select_cmd() {
   resolve_runtime_bin
 
   if ! select_profile_interactive; then
-    log "No profiles available"
+    log_error "No profiles available"
     exit 1
   fi
 
   local profile_dir
-  profile_dir="$(get_profile_dir "${SELECTED_PROFILE}")"
-
-  if [[ ! -f "${profile_dir}/profile.toml" ]]; then
-    log "Profile not found: ${SELECTED_PROFILE}"
+  if ! profile_dir="$(resolve_profile_dir "${SELECTED_PROFILE}")"; then
     exit 1
   fi
 
   if ! apply_profile "${profile_dir}"; then
-    log "Failed to apply profile"
     exit 1
   fi
 
-  run "${TARGET_BIN}" --compose-config "${CONFIG_COMPOSE_DIR}" --compose-output "${CONFIG_DIR}/config.toml"
-  run "${TARGET_BIN}" --check-config --config "${CONFIG_DIR}/config.toml"
-  run "${SYSTEMCTL_BIN}" --user restart "${SERVICE_NAME}"
-  run "${SYSTEMCTL_BIN}" --user --no-pager --full status "${SERVICE_NAME}"
-
-  log "Profile set successfully: ${SELECTED_PROFILE}"
+  validate_and_restart
+  log_success "Profile set: ${SELECTED_PROFILE}"
 }
 
 switch_profile_cmd() {
@@ -935,7 +1030,6 @@ switch_profile_cmd() {
   if [[ -n "${PROFILE_URL:-}" ]]; then
     local cache_dir="${PROFILE_CACHE_DIR}/url-$(date +%s)"
     if ! download_profile "${PROFILE_URL}" "${cache_dir}"; then
-      log "Failed to download profile from URL"
       exit 1
     fi
 
@@ -947,7 +1041,6 @@ switch_profile_cmd() {
   - Will validate and restart service"
 
     if ! apply_profile "${cache_dir}"; then
-      log "Failed to apply profile"
       exit 1
     fi
   elif [[ -n "${SELECTED_PROFILE:-}" ]]; then
@@ -957,11 +1050,7 @@ switch_profile_cmd() {
     fi
 
     local profile_dir
-    profile_dir="$(get_profile_dir "${SELECTED_PROFILE}")"
-
-    if [[ ! -f "${profile_dir}/profile.toml" ]]; then
-      log "Profile not found: ${SELECTED_PROFILE}"
-      log "Run 'keyrs-service list-profiles' to see available profiles."
+    if ! profile_dir="$(resolve_profile_dir "${SELECTED_PROFILE}")"; then
       exit 1
     fi
 
@@ -972,7 +1061,6 @@ switch_profile_cmd() {
   - Will validate and restart service"
 
     if ! apply_profile "${profile_dir}"; then
-      log "Failed to apply profile"
       exit 1
     fi
   else
@@ -982,12 +1070,8 @@ switch_profile_cmd() {
     exit 1
   fi
 
-  run "${TARGET_BIN}" --compose-config "${CONFIG_COMPOSE_DIR}" --compose-output "${CONFIG_DIR}/config.toml"
-  run "${TARGET_BIN}" --check-config --config "${CONFIG_DIR}/config.toml"
-  run "${SYSTEMCTL_BIN}" --user restart "${SERVICE_NAME}"
-  run "${SYSTEMCTL_BIN}" --user --no-pager --full status "${SERVICE_NAME}"
-
-  log "Profile switched successfully"
+  validate_and_restart
+  log_success "Profile switched"
 }
 
 main() {
