@@ -502,7 +502,7 @@ dependencies = [
 
 [[package]]
 name = "keyrs"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "clap",
  "crossterm",
@@ -519,7 +519,7 @@ dependencies = [
 
 [[package]]
 name = "keyrs-core"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "anyhow",
  "dirs",

@@ -1,6 +1,6 @@
 [package]
 name = "keyrs"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 
 [dependencies]
@@ -35,7 +35,7 @@ members = ["crates/keyrs-core"]
 resolver = "2"
 
 [workspace.package]
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 
 [workspace.dependencies]

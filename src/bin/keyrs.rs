@@ -41,7 +41,7 @@ use keyrs_core::Key;
 #[derive(Parser, Debug)]
 #[command(name = "keyrs")]
 #[command(author = "keyrs contributors")]
-#[command(version = "1.11.3")]
+#[command(version)]
 #[command(about = "Pure Rust Wayland key remapper", long_about = None)]
 struct Args {
     /// TOML configuration file

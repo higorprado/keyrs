@@ -719,21 +719,160 @@ install_cmd() {
 
 uninstall_cmd() {
   ensure_systemctl_user
-  confirm_or_abort \
-    "About to uninstall keyrs service integration:" \
-    "  - Will stop and disable: ${SERVICE_NAME}
-  - Will remove service file: ${SERVICE_PATH}
-  - Will keep binary/config files in ~/.local/bin and ~/.config/keyrs"
 
-  log "Uninstalling keyrs service"
+  local remove_binaries=false
+  local remove_config=false
+  local remove_udev=false
 
+  # Check what exists
+  local has_bin=false has_config=false has_udev=false
+  [[ -f "${TARGET_BIN}" ]] && has_bin=true
+  [[ -d "${CONFIG_DIR}" ]] && has_config=true
+  [[ -f "${UDEV_RULES_TARGET}" ]] && has_udev=true
+
+  echo ""
+  echo "${COLOR_YELLOW}About to uninstall keyrs service integration:${COLOR_RESET}"
+  echo "  - Will stop and disable: ${SERVICE_NAME}"
+  echo "  - Will remove service file: ${SERVICE_PATH}"
+  echo ""
+
+  # Prompt for binaries
+  if ${has_bin}; then
+    echo "Also remove installed binaries?"
+    echo "  - ${TARGET_BIN}"
+    if [[ -f "${TARGET_TUI_BIN}" ]]; then
+      echo "  - ${TARGET_TUI_BIN}"
+    fi
+    echo "  - ${RUNTIME_CTL}"
+    echo ""
+
+    local response=""
+    if ${ASSUME_YES}; then
+      response="n"
+    else
+      read -r -p "Remove binaries? [y/N] " response
+    fi
+    if [[ "${response}" =~ ^[Yy]$ ]]; then
+      remove_binaries=true
+    fi
+    echo ""
+  fi
+
+  # Prompt for config
+  if ${has_config}; then
+    echo "${COLOR_YELLOW}Also remove configuration files?${COLOR_RESET}"
+    echo "  - ${CONFIG_DIR}/"
+    echo ""
+    echo "  ${COLOR_RED}WARNING: This will permanently delete all your keyrs configurations,${COLOR_RESET}"
+    echo "  ${COLOR_RED}         profiles, backups, and settings.${COLOR_RESET}"
+    echo ""
+
+    local response=""
+    if ${ASSUME_YES}; then
+      response="n"
+    else
+      read -r -p "Remove config files? [y/N] " response
+    fi
+    if [[ "${response}" =~ ^[Yy]$ ]]; then
+      remove_config=true
+    fi
+    echo ""
+  fi
+
+  # Prompt for udev
+  if ${has_udev}; then
+    echo "Also remove udev rules?"
+    echo "  - ${UDEV_RULES_TARGET}"
+    echo ""
+    echo "  ${COLOR_BLUE}Note: This requires root privileges (sudo).${COLOR_RESET}"
+    echo ""
+
+    local response=""
+    if ${ASSUME_YES}; then
+      response="n"
+    else
+      read -r -p "Remove udev rules? [y/N] " response
+    fi
+    if [[ "${response}" =~ ^[Yy]$ ]]; then
+      remove_udev=true
+    fi
+    echo ""
+  fi
+
+  # Summary
+  echo "${COLOR_BOLD}Summary:${COLOR_RESET}"
+  echo "  - Stop and disable service: yes"
+  echo "  - Remove service file: yes"
+  echo "  - Remove binaries: $(${remove_binaries} && echo "yes" || echo "no")"
+  echo "  - Remove config files: $(${remove_config} && echo "yes" || echo "no")"
+  echo "  - Remove udev rules: $(${remove_udev} && echo "yes" || echo "no")"
+  echo ""
+
+  local confirm=""
+  if ${ASSUME_YES}; then
+    confirm="y"
+  else
+    read -r -p "Proceed? [y/N] " confirm
+  fi
+
+  if [[ ! "${confirm}" =~ ^[Yy]$ ]]; then
+    log "Aborted by user."
+    exit 1
+  fi
+
+  log "Uninstalling keyrs..."
+
+  # Stop and disable service
   run "${SYSTEMCTL_BIN}" --user disable --now "${SERVICE_NAME}" || true
+
+  # Remove service file
   if [[ -f "${SERVICE_PATH}" ]]; then
     run rm -f "${SERVICE_PATH}"
     log "Removed ${SERVICE_PATH}"
   fi
   run "${SYSTEMCTL_BIN}" --user daemon-reload
-  log_success "Uninstall complete (config and binary kept)"
+
+  # Remove binaries
+  if ${remove_binaries}; then
+    if [[ -f "${TARGET_BIN}" ]]; then
+      run rm -f "${TARGET_BIN}"
+      log "Removed ${TARGET_BIN}"
+    fi
+    if [[ -f "${TARGET_TUI_BIN}" ]]; then
+      run rm -f "${TARGET_TUI_BIN}"
+      log "Removed ${TARGET_TUI_BIN}"
+    fi
+    if [[ -f "${RUNTIME_CTL}" ]]; then
+      run rm -f "${RUNTIME_CTL}"
+      log "Removed ${RUNTIME_CTL}"
+    fi
+  fi
+
+  # Remove config
+  if ${remove_config}; then
+    if [[ -d "${CONFIG_DIR}" ]]; then
+      run rm -rf "${CONFIG_DIR}"
+      log "Removed ${CONFIG_DIR}"
+    fi
+  fi
+
+  # Remove udev rules
+  if ${remove_udev}; then
+    if [[ -f "${UDEV_RULES_TARGET}" ]]; then
+      run_privileged rm -f "${UDEV_RULES_TARGET}"
+      run_privileged "${UDEVADM_BIN}" control --reload-rules
+      run_privileged "${UDEVADM_BIN}" trigger --subsystem-match=input
+      log "Removed ${UDEV_RULES_TARGET}"
+    fi
+  fi
+
+  log_success "Uninstall complete"
+  if ! ${remove_binaries} || ! ${remove_config}; then
+    echo ""
+    log "To fully remove later:"
+    ${has_bin} && ! ${remove_binaries} && echo "  rm -f ${TARGET_BIN} ${TARGET_TUI_BIN} ${RUNTIME_CTL}"
+    ${has_config} && ! ${remove_config} && echo "  rm -rf ${CONFIG_DIR}"
+  fi
 }
 
 apply_config_cmd() {
