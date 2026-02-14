@@ -496,6 +496,7 @@ Wants=graphical-session.target
 
 [Service]
 Type=simple
+ExecStartPre=/bin/bash -c 'for i in {1..30}; do [ -n "\$WAYLAND_DISPLAY" ] && exit 0; sleep 0.5; done; exit 1'
 ExecStart=%h/.local/bin/keyrs --config %h/.config/keyrs/config.toml
 Restart=on-failure
 RestartSec=2

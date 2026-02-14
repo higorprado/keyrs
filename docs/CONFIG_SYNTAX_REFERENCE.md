@@ -162,15 +162,54 @@ only = ["AT Translated Set 2 keyboard", "Telink Wireless Gaming Keyboard"]
 
 If omitted, keyboards are autodetected.
 
-## 9. Output Delays
+## 9. Output Delays (Throttle)
+
+Output throttle delays help prevent keystroke ordering issues, especially with:
+- ibus input method frameworks
+- Complex macro sequences
+- Fast combo chains
+- Applications that drop rapid virtual keyboard events
 
 ```toml
 [delays]
-key_pre_delay_ms = 0
-key_post_delay_ms = 0
+key_pre_delay_ms = 8
+key_post_delay_ms = 12
 ```
 
-Allowed range (current parser): `0..150 ms` each.
+Fields:
+
+- `key_pre_delay_ms`: Milliseconds to wait before each output key event.
+  Purpose: Adds pacing before keystrokes are sent to the virtual device.
+  Range: `0..150 ms`. Default: `0`.
+
+- `key_post_delay_ms`: Milliseconds to wait after each output key event.
+  Purpose: Adds pacing after keystrokes to ensure apps register them in order.
+  Range: `0..150 ms`. Default: `0`.
+
+### When to use
+
+If you experience:
+- Keystrokes arriving out of order
+- Missing characters in text output
+- Shortcuts not registering reliably
+
+Try starting with:
+```toml
+[delays]
+key_pre_delay_ms = 8
+key_post_delay_ms = 12
+```
+
+### Built-in fallback
+
+Even with zero delays configured, keyrs applies a 1ms minimum pacing for text output to prevent dropped characters.
+
+### Per-sequence delays
+
+For fine-grained control, use `Delay(ms)` in sequences:
+```toml
+"Super-comma" = ["Ctrl-l", "Delay(120)", "Text(about:preferences)", "Delay(160)", "Enter"]
+```
 
 ## 10. Window Polling
 
