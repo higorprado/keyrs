@@ -254,27 +254,34 @@ pub struct WaylandClient {
 }
 
 impl WaylandClient {
+    fn parse_wayland_display_suffix(name: &str) -> Option<u32> {
+        let suffix = name.strip_prefix("wayland-")?;
+        if suffix.is_empty() || !suffix.chars().all(|c| c.is_ascii_digit()) {
+            return None;
+        }
+        suffix.parse::<u32>().ok()
+    }
+
     fn discover_wayland_displays() -> Vec<String> {
         let runtime_dir = match std::env::var("XDG_RUNTIME_DIR") {
             Ok(v) if !v.trim().is_empty() => v,
             _ => return Vec::new(),
         };
 
-        let mut displays = Vec::new();
+        let mut displays: Vec<(u32, String)> = Vec::new();
         if let Ok(entries) = fs::read_dir(runtime_dir) {
             for entry in entries.flatten() {
                 let name = entry.file_name();
                 if let Some(name) = name.to_str() {
-                    if name.starts_with("wayland-") {
-                        displays.push(name.to_string());
+                    if let Some(order) = Self::parse_wayland_display_suffix(name) {
+                        displays.push((order, name.to_string()));
                     }
                 }
             }
         }
 
-        displays.sort();
-        displays.reverse();
-        displays
+        displays.sort_by(|a, b| b.0.cmp(&a.0));
+        displays.into_iter().map(|(_, name)| name).collect()
     }
 
     /// Create a new Wayland client
@@ -460,6 +467,9 @@ mod tests {
         fs::create_dir_all(&tmp).unwrap();
         fs::write(tmp.join("wayland-1"), b"").unwrap();
         fs::write(tmp.join("wayland-0"), b"").unwrap();
+        fs::write(tmp.join("wayland-1.lock"), b"").unwrap();
+        fs::write(tmp.join("wayland-1-awww-daemon..sock"), b"").unwrap();
+        fs::write(tmp.join("wayland-abc"), b"").unwrap();
         fs::write(tmp.join("not-wayland"), b"").unwrap();
 
         let prev = std::env::var("XDG_RUNTIME_DIR").ok();
@@ -472,5 +482,29 @@ mod tests {
 
         assert_eq!(displays, vec!["wayland-1".to_string(), "wayland-0".to_string()]);
         let _ = fs::remove_dir_all(&tmp);
+    }
+
+    #[test]
+    fn test_parse_wayland_display_suffix() {
+        assert_eq!(
+            WaylandClient::parse_wayland_display_suffix("wayland-0"),
+            Some(0)
+        );
+        assert_eq!(
+            WaylandClient::parse_wayland_display_suffix("wayland-12"),
+            Some(12)
+        );
+        assert_eq!(
+            WaylandClient::parse_wayland_display_suffix("wayland-1.lock"),
+            None
+        );
+        assert_eq!(
+            WaylandClient::parse_wayland_display_suffix("wayland-1-awww-daemon..sock"),
+            None
+        );
+        assert_eq!(
+            WaylandClient::parse_wayland_display_suffix("not-wayland-1"),
+            None
+        );
     }
 }
