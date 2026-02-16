@@ -4,6 +4,7 @@
 //! window focus, app_id, and title for active windows on wlroots-based compositors.
 
 use std::collections::HashMap;
+use std::fs;
 use std::sync::{Arc, Mutex};
 use std::thread;
 
@@ -253,6 +254,29 @@ pub struct WaylandClient {
 }
 
 impl WaylandClient {
+    fn discover_wayland_displays() -> Vec<String> {
+        let runtime_dir = match std::env::var("XDG_RUNTIME_DIR") {
+            Ok(v) if !v.trim().is_empty() => v,
+            _ => return Vec::new(),
+        };
+
+        let mut displays = Vec::new();
+        if let Ok(entries) = fs::read_dir(runtime_dir) {
+            for entry in entries.flatten() {
+                let name = entry.file_name();
+                if let Some(name) = name.to_str() {
+                    if name.starts_with("wayland-") {
+                        displays.push(name.to_string());
+                    }
+                }
+            }
+        }
+
+        displays.sort();
+        displays.reverse();
+        displays
+    }
+
     /// Create a new Wayland client
     pub fn new() -> Self {
         Self {
@@ -267,15 +291,37 @@ impl WaylandClient {
     /// Returns true if connection was successful, false otherwise.
     /// This spawns a background thread to handle Wayland events.
     pub fn connect(&self) -> bool {
-        // Check if WAYLAND_DISPLAY is set
-        if std::env::var("WAYLAND_DISPLAY").is_err() {
+        // Try WAYLAND_DISPLAY first when set; otherwise probe discovered
+        // wayland-* sockets under XDG_RUNTIME_DIR.
+        let mut candidates = Vec::new();
+        for display in Self::discover_wayland_displays() {
+            if !candidates.iter().any(|existing| existing == &display) {
+                candidates.push(display);
+            }
+        }
+        if let Ok(display) = std::env::var("WAYLAND_DISPLAY") {
+            if !display.trim().is_empty()
+                && !candidates.iter().any(|existing| existing == &display)
+            {
+                candidates.push(display);
+            }
+        }
+        if candidates.is_empty() {
             return false;
         }
 
-        // Try to connect to the Wayland display
-        let connection = match Connection::connect_to_env() {
-            Ok(conn) => conn,
-            Err(_) => return false,
+        // Try each candidate display until one works.
+        let mut connection = None;
+        for display in candidates {
+            std::env::set_var("WAYLAND_DISPLAY", &display);
+            if let Ok(conn) = Connection::connect_to_env() {
+                connection = Some(conn);
+                break;
+            }
+        }
+        let connection = match connection {
+            Some(conn) => conn,
+            None => return false,
         };
 
         // Initialize the registry queue with WaylandState
@@ -314,6 +360,7 @@ impl WaylandClient {
                 match event_queue.blocking_dispatch(&mut state) {
                     Ok(_) => {}
                     Err(_) => {
+                        *connected_flag.lock().unwrap() = false;
                         break;
                     }
                 }
@@ -340,6 +387,11 @@ impl WaylandClient {
     /// Check if connected to Wayland
     pub fn is_connected(&self) -> bool {
         *self.connected.lock().unwrap()
+    }
+
+    #[cfg(test)]
+    pub(crate) fn set_connected_for_test(&self, connected: bool) {
+        *self.connected.lock().unwrap() = connected;
     }
 }
 
@@ -396,5 +448,29 @@ mod tests {
         let (app_id, title) = client.active_window();
         assert_eq!(app_id, "test_app");
         assert_eq!(title, "Test Window");
+    }
+
+    #[test]
+    fn test_discover_wayland_displays() {
+        let tmp = std::env::temp_dir().join(format!(
+            "keyrs-wayland-displays-{}",
+            std::process::id()
+        ));
+        let _ = fs::remove_dir_all(&tmp);
+        fs::create_dir_all(&tmp).unwrap();
+        fs::write(tmp.join("wayland-1"), b"").unwrap();
+        fs::write(tmp.join("wayland-0"), b"").unwrap();
+        fs::write(tmp.join("not-wayland"), b"").unwrap();
+
+        let prev = std::env::var("XDG_RUNTIME_DIR").ok();
+        std::env::set_var("XDG_RUNTIME_DIR", &tmp);
+        let displays = WaylandClient::discover_wayland_displays();
+        match prev {
+            Some(v) => std::env::set_var("XDG_RUNTIME_DIR", v),
+            None => std::env::remove_var("XDG_RUNTIME_DIR"),
+        }
+
+        assert_eq!(displays, vec!["wayland-1".to_string(), "wayland-0".to_string()]);
+        let _ = fs::remove_dir_all(&tmp);
     }
 }
