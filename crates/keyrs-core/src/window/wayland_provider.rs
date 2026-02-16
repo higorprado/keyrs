@@ -123,6 +123,7 @@ mod tests {
     #[test]
     fn test_wayland_provider_get_active_window_with_error_values() {
         let mut provider = WaylandContextProvider::new();
+        provider.client.set_connected_for_test(true);
 
         // Simulate error values from WaylandClient
         provider.client.update_active_window(
@@ -138,6 +139,7 @@ mod tests {
     #[test]
     fn test_wayland_provider_get_active_window_success() {
         let mut provider = WaylandContextProvider::new();
+        provider.client.set_connected_for_test(true);
 
         // Set valid window info
         provider.client.update_active_window(
