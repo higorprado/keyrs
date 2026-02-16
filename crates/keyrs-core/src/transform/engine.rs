@@ -1348,7 +1348,7 @@ impl TransformEngine {
     /// - changed: true if window context changed
     /// - hold_key_to_release: Some(hold_key) if a multipurpose hold was active and should be released
     pub fn update_from_window_manager(&mut self) -> (bool, Option<Key>) {
-        if let Some(ref manager) = self.window_manager {
+        if let Some(ref mut manager) = self.window_manager {
             match manager.get_active_window() {
                 Ok(info) => {
                     fn normalize_window_field(value: Option<String>) -> Option<String> {
@@ -1395,6 +1395,11 @@ impl TransformEngine {
                     (changed, None)
                 }
                 Err(_) => {
+                    // If the window provider is disconnected, attempt to reconnect.
+                    // This lets keyrs recover when startup ordering races the desktop session.
+                    if !manager.is_connected() {
+                        let _ = manager.connect();
+                    }
                     // Window query failed, keep current context
                     (false, None)
                 }
@@ -1518,6 +1523,42 @@ mod tests {
         }
     }
 
+    struct ReconnectingScriptedWindowProvider {
+        connected: Mutex<bool>,
+        window: WindowInfo,
+    }
+
+    impl ReconnectingScriptedWindowProvider {
+        fn new(window: WindowInfo) -> Self {
+            Self {
+                connected: Mutex::new(false),
+                window,
+            }
+        }
+    }
+
+    impl WindowContextProvider for ReconnectingScriptedWindowProvider {
+        fn connect(&mut self) -> Result<(), WindowError> {
+            *self.connected.lock() = true;
+            Ok(())
+        }
+
+        fn disconnect(&mut self) {
+            *self.connected.lock() = false;
+        }
+
+        fn is_connected(&self) -> bool {
+            *self.connected.lock()
+        }
+
+        fn get_active_window(&self) -> Result<WindowInfo, WindowError> {
+            if !*self.connected.lock() {
+                return Err(WindowError::NotConnected);
+            }
+            Ok(self.window.clone())
+        }
+    }
+
     #[test]
     #[cfg(feature = "pure-rust")]
     fn test_transform_config_default() {
@@ -1554,6 +1595,29 @@ mod tests {
         let ctx = engine.window_context.read().clone();
         assert_eq!(ctx.wm_class.as_deref(), Some("firefox"));
         assert_eq!(ctx.wm_name.as_deref(), Some("Mozilla Firefox"));
+    }
+
+    #[test]
+    #[cfg(feature = "pure-rust")]
+    fn test_update_from_window_manager_reconnects_provider() {
+        let mut engine = TransformEngine::new(TransformConfig::default());
+        engine.set_window_manager(Some(Box::new(ReconnectingScriptedWindowProvider::new(
+            WindowInfo::with_details(
+                Some("kitty".to_string()),
+                Some("terminal".to_string()),
+            ),
+        ))));
+
+        // First call fails query and triggers reconnect attempt.
+        let (changed, _) = engine.update_from_window_manager();
+        assert!(!changed);
+
+        // Second call should return the window context after reconnect.
+        let (changed, _) = engine.update_from_window_manager();
+        assert!(changed);
+        let ctx = engine.window_context.read().clone();
+        assert_eq!(ctx.wm_class.as_deref(), Some("kitty"));
+        assert_eq!(ctx.wm_name.as_deref(), Some("terminal"));
     }
 
     #[test]
