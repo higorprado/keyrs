@@ -71,6 +71,24 @@ Browser macro example:
 "Super-comma" = ["Ctrl-l", "Delay(120)", "Text(about:preferences)", "Delay(160)", "Enter"]
 ```
 
+## Choosing plain output vs `Combo(...)`
+
+Use plain output when you want to preserve currently held physical modifiers. Use `Combo(...)` in a non-`bind` sequence when you need the emitted key/combo to ignore held modifiers for that step.
+
+```toml
+# Direct remap semantics
+"Super-j" = "Enter"
+
+# Sequence-step combo semantics
+"Super-j" = ["Combo(Enter)"]
+```
+
+Decision rule:
+- Use plain string output when preserving held modifiers is desired.
+- Use `Combo(...)` inside a non-`bind` sequence when you need step-local output (held modifiers temporarily lifted).
+- `bind` keeps held modifiers; non-`bind` sequences do not.
+- `["Enter"]` does not force `Combo(...)` semantics; it behaves as single-key output.
+
 ## Stateful behavior with settings toggles
 
 Use `SetSetting(...)` for mode-like flows:
