@@ -102,6 +102,26 @@ Each mapping value can be:
 "Super-u" = "U+00E9"
 ```
 
+### When to use `Combo(...)` vs plain output
+
+Use plain output when you want a direct output key while preserving currently held physical modifiers. Use `Combo(...)` inside a non-`bind` sequence when you need the emitted key/combo to be isolated from held modifiers.
+
+```toml
+# Plain output: direct key output. Held physical modifiers remain held.
+"Super-j" = "Enter"
+
+# Sequence combo step: explicit combo in a macro.
+"Super-j" = ["Combo(Enter)"]
+```
+
+Rules of thumb:
+- Plain string (`"Enter"`, `"Ctrl-c"`) preserves held modifiers.
+- Non-`bind` sequences temporarily release held modifiers, run steps, then restore them.
+- Therefore `"Alt-Down" = "Enter"` can be seen by apps as Alt+Enter while Alt is physically held.
+- `"Alt-Down" = ["Combo(Enter)"]` isolates Enter from held Alt in that step.
+- `bind` is the opposite behavior: it keeps held modifiers for subsequent combo step(s).
+- `["Enter"]` is still treated like plain single-key output, not as a `Combo(...)` step.
+
 ## 5. Sequence Actions
 
 Supported in sequence arrays:
