@@ -31,6 +31,36 @@ What install does:
 - validates generated config
 - installs and enables `keyrs.service`
 
+## NixOS (Flake Module)
+
+`keyrs` now exposes:
+- `packages.<system>.keyrs`
+- `nixosModules.default`
+
+Example NixOS usage:
+
+```nix
+{
+  inputs.keyrs.url = "github:higorprado/keyrs";
+
+  outputs = { nixpkgs, keyrs, ... }: {
+    nixosConfigurations.host = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      modules = [
+        keyrs.nixosModules.default
+        {
+          services.keyrs.enable = true;
+          # Optional overrides:
+          # services.keyrs.configPath = "%h/.config/keyrs/config.toml";
+          # services.keyrs.extraArgs = [ "--verbose" ];
+          # services.keyrs.enableUdevRules = true;
+        }
+      ];
+    };
+  };
+}
+```
+
 ## Profile Commands
 
 Switch between pre-made configurations:

@@ -10,7 +10,7 @@ This project was heavily inspired by Toshy. Without Toshy, this project would no
 
 ```bash
 # Clone and build
-git clone https://github.com/yourusername/keyrs.git
+git clone https://github.com/higorprado/keyrs.git
 cd keyrs
 cargo build --release
 
@@ -29,6 +29,42 @@ keyrs-service status          # Check service status
 keyrs-service apply-config    # Apply config changes
 keyrs-service profile-set <name>  # Switch profiles
 ```
+
+## Nix / NixOS Install
+
+Build and run from this repo:
+
+```bash
+nix build .#keyrs
+./result/bin/keyrs --help
+```
+
+Use as a flake input in NixOS:
+
+```nix
+{
+  inputs.keyrs.url = "github:higorprado/keyrs";
+
+  outputs = { nixpkgs, keyrs, ... }: {
+    nixosConfigurations.host = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      modules = [
+        keyrs.nixosModules.default
+        {
+          services.keyrs.enable = true;
+        }
+      ];
+    };
+  };
+}
+```
+
+Available module options:
+- `services.keyrs.enable`
+- `services.keyrs.package`
+- `services.keyrs.configPath`
+- `services.keyrs.extraArgs`
+- `services.keyrs.enableUdevRules`
 
 ## What keyrs is useful for
 
